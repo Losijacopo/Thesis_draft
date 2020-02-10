@@ -35,7 +35,12 @@
 
 Dense and accurate disparity maps are the key factor for obtaining correct depth estimations for many computer vision applications such as autonomous driving, 3D reconstruction and robotics.  
 In these fields fast calculations over wide images are required due to the necessity of real-time implementation. 
-According to the current benchmark database ranks for stereo algorithms the one that performs best in term of calculation cost and accuracy is semi-global matching (SGM)\citep{Hirschmuller2008}. 
+According to the current benchmark database ranks for stereo matching one of the best performing algorithms in term of calculation cost and accuracy is semi-global matching (SGM)\citep{Hirschmuller2008}. 
+Basically, this algorithm uses the Mutual Information (MI) as matching cost. It combines concepts of both local and global stereo matching category. 
+Specifically, the local-based methods tend to estimate the disparity image trough a comparison of the matching cost from left and right views of the scene. 
+In order to recover from low accuracy proper of the previous strategy, global-based methods try to calculate the disparity values by minimizing an energy function. 
+In this context, Semi-Global Matching combines strong factors of global and local approaches allowing to obtain a good trade-off between computational cost and accuracy. \\
+Considering the whole algorithm, it can be ideally divided in three different main parts. These are the matching cost evaluation, the directional cost calculation and the last phase regards the post-processing. 
 
 \section{Structure of the Thesis}
 \label{section:structure} 

@@ -3,8 +3,8 @@
 \babel@toc {english}{}
 \babel@toc {english}{}
 \babel@toc {english}{}
-\contentsline {chapter}{Abbreviations and Acronyms}{iv}{chapter*.1}%
-\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}%
-\contentsline {section}{\numberline {1.1}Problem statement}{1}{section.1.1}%
-\contentsline {section}{\numberline {1.2}Structure of the Thesis}{1}{section.1.2}%
-\contentsline {chapter}{\numberline {A}First appendix}{3}{appendix.A}%
+\contentsline {chapter}{Abbreviations and Acronyms}{iv}{chapter*.1}% 
+\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}% 
+\contentsline {section}{\numberline {1.1}Problem statement}{1}{section.1.1}% 
+\contentsline {section}{\numberline {1.2}Structure of the Thesis}{1}{section.1.2}% 
+\contentsline {chapter}{\numberline {A}First appendix}{4}{appendix.A}% 
