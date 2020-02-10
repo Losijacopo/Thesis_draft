@@ -1,5 +1,39 @@
 This is BibTeX, Version 0.99dThe top-level auxiliary file: main.aux
 The style file: ieeetr.bst
-I found no \citation commands---while reading file main.aux
 Database file #1: sources.bib
-(There was 1 error message)
+You're missing a field name---line 3 of file sources.bib
+ : 
+ : %  author =   {{Aalto-yliopisto, Master's Programme in Computer, Communication and Information Sciences}},
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+You're missing a field name---line 10 of file sources.bib
+ : 
+ : %  author =  {{Aalto University, School of Science, Academic Committee of Science}},
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+You're missing a field name---line 19 of file sources.bib
+ : 
+ : %  author =   {{TeX Users Group}},
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+You're missing a field name---line 26 of file sources.bib
+ : 
+ : %  author =   {{Christian Schenk}},
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+You're missing a field name---line 34 of file sources.bib
+ : 
+ : %  author =   {Taavi Hupponen and Kimmo Karlsson and Jani Laitinen and Oskar Ojala and Antti Pirinen and Esa Seuranen and Laura Takkinen and von Loesch, Boris and Vestbø, Tor Arne},
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+You're missing a field name---line 41 of file sources.bib
+ : 
+ : %  author =  {{Aalto University Library}},
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+You're missing a field name---line 53 of file sources.bib
+ : 
+ : %  author =  {{Aalto University Library}},
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+(There were 7 error messages)
