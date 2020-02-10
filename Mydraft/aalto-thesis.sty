@@ -26,6 +26,21 @@
 
 % Improvements for mathematical formatting
 \RequirePackage{amsmath}
+\RequirePackage{amssymb}
+\RequirePackage{amstext}
+\RequirePackage{blindtext} % for casual texts
+\RequirePackage{booktabs}
+\RequirePackage{cuted}
+\RequirePackage{enumitem}
+\RequirePackage{imakeidx}
+\RequirePackage{listings}
+\RequirePackage{lmodern}
+\RequirePackage{textcomp} % registered and copyright symbol
+\RequirePackage{siunitx}
+\RequirePackage{lscape} % vertical instead to horizontal 
+\RequirePackage{makecell}
+\RequirePackage{mathrsfs, amsmath}
+\RequirePackage{mathtools}
 
 % The lastpage package provides a label that can be used to get the 
 % page number of the last page
@@ -181,75 +196,6 @@
   \renewcommand{\ATPROFSHIPNAME}{Major}
   \renewcommand{\ATPROFCODENAME}{Code}
   \renewcommand{\ATPROFSHIP}{\PROFESSORSHIP}
-}
-% Terms in Finnish
-% ------------------------------------------------------------------
-% You may change these if you wish
-\ifthen{\equal{#1}{finnish}}{
-  \renewcommand{\ATTITLENAME}{Työn nimi}
-  \renewcommand{\ATTITLE}{\FTITLE}
-  \renewcommand{\ATSUBTITLE}{\FSUBTITLE}
-  \ifthenelse{\NUMSUPERVISORS = 1}%
-    {\renewcommand{\ATSUPERVISORNAME}{Valvoja}}%
-    {\renewcommand{\ATSUPERVISORNAME}{Valvojat}}
-  \ifthenelse{\NUMINSTRUCTORS = 1}%
-    {\renewcommand{\ATINSTRUCTORNAME}{Ohjaaja}}%
-    {\renewcommand{\ATINSTRUCTORNAME}{Ohjaajat}}
-  \renewcommand{\ATSUPERVISOR}{\FSUPERVISOR}
-  \renewcommand{\ATINSTRUCTOR}{\FINSTRUCTOR}
-  \renewcommand{\ATDATENAME}{Päiväys}
-  \renewcommand{\ATDATE}{\FDATE}
-  \renewcommand{\ATTHESIS}{Diplomityö}
-  \renewcommand{\ATCITY}{Espoo}
-  \renewcommand{\ATUNIV}{Aalto-yliopisto}
-  \renewcommand{\ATSCHOOL}{Perustieteiden korkeakoulu}
-  \renewcommand{\ATDEGREEPROG}{Tieto-, tietoliikenne- ja informaatiotekniikan maisteriohjelma} 
-  \renewcommand{\ATABSTRACTNAME}{DIPLOMITYÖN TIIVISTELMÄ}
-  \renewcommand{\ATLOGO}{images/aalto-logo-fi}
-  \renewcommand{\ATAUTHORNAME}{Tekijä}
-  \renewcommand{\ATKEYWORDSNAME}{Asiasanat}
-  \renewcommand{\ATKEYWORDS}{\FKEYWORDS}
-  \renewcommand{\ATPAGESNAME}{Sivumäärä}  
-  \renewcommand{\ATLANGUAGE}{\FLANGUAGE}
-  \renewcommand{\ATLANGUAGENAME}{Kieli}
-  \renewcommand{\ATPROFSHIPNAME}{Pääaine}
-  \renewcommand{\ATPROFCODENAME}{Koodi}
-  \renewcommand{\ATPROFSHIP}{\FPROFESSORSHIP}
-}
-% Terms in Swedish
-% ------------------------------------------------------------------
-% You may change these if you wish
-\ifthen{\equal{#1}{swedish}}{
-  \renewcommand{\ATTITLENAME}{Arbetets namn}
-  \renewcommand{\ATTITLE}{\STITLE}
-  \renewcommand{\ATSUBTITLE}{\SSUBTITLE}
-  \ifthenelse{\NUMSUPERVISORS = 1}%
-    {\renewcommand{\ATSUPERVISORNAME}{Övervakare}}%
-    {\renewcommand{\ATSUPERVISORNAME}{Övervakare}}
-  \ifthenelse{\NUMINSTRUCTORS = 1}%
-    {\renewcommand{\ATINSTRUCTORNAME}{Handledare}}%
-    {\renewcommand{\ATINSTRUCTORNAME}{Handledare}}
-  \renewcommand{\ATSUPERVISOR}{\SSUPERVISOR}
-  \renewcommand{\ATINSTRUCTOR}{\SINSTRUCTOR}
-  \renewcommand{\ATDATENAME}{Datum}
-  \renewcommand{\ATDATE}{\SDATE}
-  \renewcommand{\ATTHESIS}{Diplomarbete}
-  \renewcommand{\ATCITY}{Esbo}
-  \renewcommand{\ATUNIV}{Aalto-universitetet}
-  \renewcommand{\ATSCHOOL}{Högskolan för teknikvetenskaper}
-  \renewcommand{\ATDEGREEPROG}{Magisterprogrammet i data-,
-    kommunikations- och infor\-mations\-teknik} 
-  \renewcommand{\ATABSTRACTNAME}{SAMMANDRAG AV DIPLOMARBETET}
-  \renewcommand{\ATLOGO}{images/aalto-logo-se}
-  \renewcommand{\ATAUTHORNAME}{Utfört av}
-  \renewcommand{\ATKEYWORDSNAME}{Nyckelord}
-  \renewcommand{\ATKEYWORDS}{\SKEYWORDS}
-  \renewcommand{\ATPAGESNAME}{Sidantal}  
-  \renewcommand{\ATLANGUAGENAME}{Språk}
-  \renewcommand{\ATLANGUAGE}{\SLANGUAGE}
-  \renewcommand{\ATPROFSHIPNAME}{Huvudämne}
-  \renewcommand{\ATPROFCODENAME}{Kod}
-  \renewcommand{\ATPROFSHIP}{\SPROFESSORSHIP}
 }
 }
 
