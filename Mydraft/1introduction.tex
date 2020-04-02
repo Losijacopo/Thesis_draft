@@ -33,16 +33,54 @@
 
 \section{Problem statement}
 
-Dense and accurate disparity maps are the key factor for obtaining correct depth estimations for many computer vision applications such as autonomous driving, 3D reconstruction and robotics.  
-In these fields fast calculations over wide images are required due to the necessity of real-time implementation. 
-According to the current benchmark database ranks for stereo matching one of the best performing algorithms in term of calculation cost and accuracy is semi-global matching (SGM)\citep{Hirschmuller2008}. 
-Basically, this algorithm uses the Mutual Information (MI) as matching cost. It combines concepts of both local and global stereo matching category. 
+Dense and accurate disparity maps are the key factor for obtaining correct depth estimations for many computer vision applications such as autonomous driving, 3D reconstruction, object detection and robotics.  
+Therefore, stereo matching and disparity estimation can be identified as fundamental problems in the current developments of computer vision \citep{Seki2017}.\\
+Multiple methods for disparity estimation has been developed for many years \citep{Seki2017}. 
+Specifically, older strategies are focused on local-based or global-based methods. On the contrary, deep learning based strategies applied to local or global methods has been recently proposed. 
+The latter approach aims to a precise local correspondence exploiting deep learning and applying Semi-global matching (SGM) as the regularization step of the pipeline. 
+Therefore, deep learning techniques such as FlowNet and DispNet \citep{Seki2017} are used as the end-to-end part of the pipeline.
+According to the current benchmark database ranks for stereo matching algorithms, e.g. the one published in the KITTI website, the state of the art implementations are based on deep learning methods. 
+However, these strategies lack in accuracy compared to the standard pipelines. 
+This is probably due to the difference between real environment and the training database as underlined in \citep{Seki2017} \citep{Poggi2019}.\\
+As aforementioned, the state of the art methods to recover dense disparity maps from stereo pairs are focused on deep convolutional neural networks trained end-to-end \citep{Tonioni2020}. 
+Most of these techniques, which will be subsequently described, exploit as regularization phase the Semi-global matching (SGM) method.
+Actually, among local and global approaches, the Hirschmuller's algorithm \citep{Hirschmuller2008} appears to be the best performing in terms of computational cost and accuracy. 
+For this reason, it is the preferred trade-off for most real time applications.\\
+Considering the multiple algorithm for stereo correspondence, they can be conventionally classified \citep{Scharstein2001} into two general categories, local and global approaches.
 Specifically, the local-based methods tend to estimate the disparity image trough a comparison of the matching cost from left and right views of the scene. 
-In order to recover from low accuracy proper of the previous strategy, global-based methods try to calculate the disparity values by minimizing an energy function. 
-In this context, Semi-Global Matching combines strong factors of global and local approaches allowing to obtain a good trade-off between computational cost and accuracy. \\
-Considering the whole algorithm, it can be ideally divided in three different main parts. These are the matching cost evaluation, the directional cost calculation and the last phase regards the post-processing.\\
-The matching cost is evaluated considering each one of the pixel in the left image and the corresponding point in the right image. 
-Actually, the whole implementation of this part exploit two different algorithms, the Center-Symmetric Census Transform \citep{Spangenberg2013} and the evaluation of the Hamming Distance between correspondent pixels. 
+In order to recover from low accuracy proper of the previous strategy, global-based methods try to calculate the disparity values by minimizing an energy function.
+In this context, Semi-Global Matching (SGM) combines strong factors of global and local approaches allowing to obtain a good trade-off between computational cost and accuracy. \\
+Technically speaking, SGM applies a pixelwise, Mutual Information (MI) based matching cost for analysing pixel intensity value differences of input images \citep{Hirschmuller2008}.
+Moreover, pixelwise matching is enhanced with a smoothness constraint, which leads to a global cost function. 
+Then, post-processing techniques are applied to remove outliers and filter the image.\\
+Referring to the analysis performed by Scharstein and Szeliski \citep{Scharstein2001}, SGM carries out four main steps, as well as most of the stereo matching algorithms. 
+These are defined as: matching cost computation, cost aggregation, disparity computation and disparity refinement. \\
+Considering the former, it is usually based on absolute, squared or sampling insensitive difference between pixel intensities \citep{Hirschmuller2008}. Although those methods allow to reach a reliable accuracy, they are sensitive to radiometric difference. 
+Thus, cost based on image gradients or window-based methods, such as rank and census transform \citep{Ko2017}, became an optimal choice. 
+Furthermore, Mutual Information results as a good trade-off for dealing with complex radiometric relationships between images.\\
+In the second phase, cost aggregation collects the matching costs considering multiple directions and the disparity levels. 
+Following, disparity evaluation is defined for each pixel, as the one with the lowest cost. This is the approach typically used for local methods. 
+Global algorithms, rather, used to get rid of the aggregation step and define a global energy function. 
+Over that function, pixel similarity and disparity smoothness are enforced with different strategies. In this latter case, the best disparity is identified finding the minimum of the cost function. This is achieved with multiple techniques such as: Dynamic Programming (DP) \citep{Birchfield1999}, Belief Propagation \citep{Klaus2006} or Graph Cuts \citep{Kolmogorov2001}.\\
+Disparity refinement tends to differ more among the different methods. Usually, post-processing techniques such as filtering, outlier removal and consistency check are in general applied.\\
+As anticipated above, among the top-ranked stereo matching algorithms, SGM results to be the best performing in terms of computational time and accuracy. 
+Its benefits stand in the hierarchical computation of the matching cost, which exploit Mutual Information. 
+Cost aggregation is achieved taking into account a global energy function and a pathwise pixel optimization. 
+The final disparity is chosen with a winner takes all strategy. 
+Disparity refinement is completed by consistency check between left and right disparity images. \\
+Besides the challenge of building up the optimal algorithm for recovering a disparity image from a stereo image pair, it is necessary to develop an analysis of the basis of stereo correspondence and its importance for multiple applications such as: autonomous driving, robotics, object detection and 3D reconstruction. \\
+First of all, stereo matching is defined as the process of estimating a 3D model of a scene, starting from two or more images. 
+Therefore, the matching pixel between the images are found and their 2D positions are converted into 3D depths. 
+Thus, how this operation of building a dense depth map, assigning relatives depth to the input image pixels, is achieved. 
+This is based on the disparity, defined as the amount of horizontal motion between two properly configured images of a stereo pair. 
+This one is then inversely proportional to the distance from the observer, i.e. the camera. 
+Although this concepts are relatively simple to understand, the challenging task within this process stands in establishing dense and accurate inter-image correspondences\citep{Szeliski2011}.
+As already underlined, stereo matching is one of the most widely studied topic in computer vision from years and it continues to be one of the most active research in that field. 
+In fact, modelling of human visual systems, robotic navigation and manipulation and autonomous driving \citep{Poggi2019} and 3D model building are some of the possible applications.\\
+The explanations of the fundamental principles of stereo matching, such as epipolar geometry and rectification, follows.\\
+
+
+
 
 \section{Structure of the Thesis}
 \label{section:structure} 

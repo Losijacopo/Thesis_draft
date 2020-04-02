@@ -23,7 +23,7 @@ You're missing a field name---line 26 of file sources.bib
 I'm skipping whatever remains of this entry
 You're missing a field name---line 34 of file sources.bib
  : 
- : %  author =   {Taavi Hupponen and Kimmo Karlsson and Jani Laitinen and Oskar Ojala and Antti Pirinen and Esa Seuranen and Laura Takkinen and von Loesch, Boris and Vestbø, Tor Arne},
+ : %  author =   {Taavi Hupponen and Kimmo Karlsson and Jani Laitinen and Oskar Ojala and Antti Pirinen and Esa Seuranen and Laura Takkinen and von Loesch, Boris and Vestbï¿½, Tor Arne},
 (Error may have been on previous line)
 I'm skipping whatever remains of this entry
 You're missing a field name---line 41 of file sources.bib
@@ -36,4 +36,10 @@ You're missing a field name---line 53 of file sources.bib
  : %  author =  {{Aalto University Library}},
 (Error may have been on previous line)
 I'm skipping whatever remains of this entry
+Warning--I didn't find a database entry for "Tonioni2020"
+Warning--I didn't find a database entry for "Scharstein2001"
+Warning--I didn't find a database entry for "Klaus2006"
+Warning--I didn't find a database entry for "Kolmogorov2001"
+Warning--I didn't find a database entry for "Szeliski2011"
+Warning--empty journal in Poggi2019
 (There were 7 error messages)
