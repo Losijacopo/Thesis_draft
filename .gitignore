@@ -2,5 +2,8 @@
 *.zip
 Mydraft/images/
 
-# Log files
+# Log and sync files
 *.log
+*.gz
+*.toc
+*.out

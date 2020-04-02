@@ -51,4 +51,14 @@ V.~Kolmogorov and R.~Zabih, ``{Computing visual correspondence with occlusions
 R.~Szeliski, ``{Computer vision: algorithms and applications},'' {\em Choice
   Reviews Online}, vol.~48, no.~09, pp.~48--5140--48--5140, 2011.
 
+\bibitem{hartley2004multiple}
+R.~Hartley and A.~Zisserman, ``Multiple view geometry in computer vision.
+  cambridge university press, isbn: 0521540518,'' 2004.
+
+\bibitem{Zabih1994}
+R.~Zabih and J.~Woodfill, ``{Non-parametric local transforms for computing
+  visual correspondence},'' {\em Lecture Notes in Computer Science (including
+  subseries Lecture Notes in Artificial Intelligence and Lecture Notes in
+  Bioinformatics)}, vol.~801 LNCS, pp.~151--158, 1994.
+
 \end{thebibliography}

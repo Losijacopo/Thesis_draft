@@ -77,9 +77,100 @@ This one is then inversely proportional to the distance from the observer, i.e. 
 Although this concepts are relatively simple to understand, the challenging task within this process stands in establishing dense and accurate inter-image correspondences\citep{Szeliski2011}.
 As already underlined, stereo matching is one of the most widely studied topic in computer vision from years and it continues to be one of the most active research in that field. 
 In fact, modelling of human visual systems, robotic navigation and manipulation and autonomous driving \citep{Poggi2019} and 3D model building are some of the possible applications.\\
-The explanations of the fundamental principles of stereo matching, such as epipolar geometry and rectification, follows.\\
+The explanations of the fundamental principles of stereo matching, such as epipolar geometry, rectification and disparity map, follows.\\
 
+\subsection{Stereo geometry}
+\label{subsection:stereogeom}
+\begin{figure}[t]
+	\begin{center}
+		{\includegraphics[width=.8\textwidth]{images/epipolar-geometry}}
+\caption{Epipolar geometry}
+\label{fig:epipolargeom}
+	\end{center}
+\end{figure}
+Main goal of epipolar geometry is the computation of pixels correspondences among the input images. 
+Neighbouring pixels information, cameras positions and their calibration data are fundamental to achieve that.
+Figure \ref{fig:epipolargeom} demonstrate a pixel in one image $\mathbf{p}_1$ projected to its correspondent epipolar line segment in the other image, which is lower bounded by the projection of the first camera center into the second camera plane, i.e. the epipole $\mathbf{e}_2$. 
+Projecting the epipolar line in the second image back to the first, another line would be obtained, bounded by the correspondent epipole $\mathbf{e}_1$. 
+The extensions to infinity of these two segment are identified as the epipolar lines, which are defined by the intersection of the two image planes with the epipolar plane.
+A fundamental property is that the epipolar plane passes through both camera centers $\mathbf{C}_1$ and $\mathbf{C}_2$, as well as point $\mathbf{P}$. 
+Therefore, they lie in the same plane. \\
 
+\subsection{Rectification}
+\label{subsection:rectification}
+\begin{figure}[t]
+	\begin{center}
+		{\includegraphics[width=.8\textwidth]{images/rectification}}
+\caption{Image rectification -- Source: L. Lebeznik}
+\label{fig:rectification}
+	\end{center}
+\end{figure}
+
+Epipolar geometry for a pair of cameras is relative to pose and calibration of the camera and can be computed using the fundamental matrix, which can be obtained applying the eight point algorithm \citep{hartley2004multiple}.
+Computing this geometry allows, then, to find the correspondent pixels between the two images using the constraint of the epipolar lines.
+This is possible, because, as explained in \ref{subsection:stereogeom}, considered a pixel in one image, the correspondent one lies on the relative epipolar line.\\
+Beside that, pixels correlations can be more efficiently performed by rectifying the input images \citep{hartley2004multiple}.
+In Figure \ref{fig:rectification} is clearly visible the outcome of this process and its advantages.
+As shown, corresponding horizontal scanlines are epipolar lines. 
+The essential importance of this standard rectified geometry is clearly explained by the following equation,
+\begin{equation} \label{eqn:disparity-depth}
+	d = f \frac{B}{Z}
+\end{equation}
+
+that leads to a linear relationship between 3D depth $Z$ and disparity $d$, where $f$ is the focal length (in pixel) and $B$ the baseline.
+Moreover, the relationship between the corresponding pixels in the left and right images can be defined as follows:
+\begin{equation} \label{eqn:corresponding-pixel}
+	x' = x + d(x, y), \; y' = y
+\end{equation}
+
+Thus, the main step for recovering a depth image of a scene is the estimation of the disparity map $d(x,y)$.\\
+As introduced at the beginning, the best disparity map is estimated after the rectification process. 
+This is performed by comparing the similarity of corresponding pixels, as defined in equation \ref{eqn:corresponding-pixel}, and storing them in a disparity space image $C(x,y,d)$, which is then processed with multiple algorithms. 
+
+\subsection{Stereo methods and dense correspondence}
+\label{stereomethods}
+In this section a brief delineation of the general pipeline implemented in most of the stereo matching method is presented. 
+Moreover, as a theoretical completion of what introduced above, some generic algorithm are further explained.\\
+Stereo algorithm follows in general a subspace of the following methods: matching cost computation, cost aggregation, disparity computation and optimization and disparity refinement \citep{Scharstein2001}.\\
+A preliminary distinction, based on those phases, separates stereo methods between local or window-base global methods.\\
+In local methods, the disparity computation in a certain region depends on the pixel intensities within a limited window.\\
+On the contrary, global algorithms, are based on an energy function.
+In this one smoothness assumptions are defined and then a global optimization problem is solved. 
+These algorithm are mainly distinguished considering the minimization strategy, such that, simulated annealing, graph cuts or belief propagation.\\
+Between these two classes there are iterative and hierarchical algorithms. 
+The latter aim to constraint gradually the disparity estimation from the coarser to the finer levels \citep{Hirschmuller2008}.\\
+Considering the first general step of stereo matching algorithms, the matching cost, there are multiple measures to define it.
+Among the most prevalent pixel-based algorithm can be included square intensity differences, absolute intensity differences, mean-squared error and mean absolute difference.\\
+Other common matching cost comprehend normalized cross-correlation, which is similar to sum-of-squared-difference (SSD), and binary methods. 
+However, the latter tend to not be used any longer. \\
+On the other hand, lately, more robust algorithms are used for their insensitivity to non-stationary exposure and illumination changes. 
+Entropy measures and non-parametric functions such as, rank and census transform \citep{Zabih1994}, sampling insensitive difference\citep{Birchfield1999} and hierarchical mutual information \citep{Hirschmuller2008}, are some examples.
+In particular, they allow to obtain accurate performance when considerable exposure or appearance variations are present. \\
+Drawing up some conclusion regarding the local methods, the core steps are the matching cost calculation and the aggregation phase. 
+Disparity estimation, then, becomes trivial. Each pixel takes the disparity levels whose cost value is the minimum. 
+This approach is said to be a local \textit{winner-take-all} optimization. 
+A drawback of this approach is that the matches are imposed for the reference image. 
+While points is the support image might have multiple correct matches. 
+For this reason, cross-checking and post-processing become more relevant here.\\
+Summarizing the general pipeline of global stereo matching methods, they often get rid of the aggregation step. 
+They usually perform sort of optimization steps after disparity estimation, exploiting the smoothness constraints as aggregation part. \\
+Goal of this approach is to find the solution to a global energy function, i.e. the disparity $d$ that minimizes the energy,
+\begin{equation}\label{eqn:energyfct}
+	E(d) = E_d(d) + \lambda E_s(d)
+\end{equation}
+where $E_d(d)$ is the data term and $E_s(d)$ the smoothness term.
+Adopting the aforementioned disparity space image (DSI) matching cost, the data energy is calculated as:
+\begin{equation}\label{dataterm}
+	E_d(d) = \sum_{(x,y)} C(x, y, d(x, y))
+\end{equation}
+where $C$ is the DSI.
+Then, the smoothness term is usually defined as:
+\begin{equation}\label{smoothterm}
+	E_s(d) = \sum_{(x,y)} \rho (d(x,y) - d(x + 1, y)) + \rho (d(x,y) - d(x, y + 1))
+\end{equation}
+where $\rho$ is some monotonically increasing function of disparity difference. \\
+After the energy function has been clearly identified, different categories of algorithms can be exploited to recover a (local) minimum.
+Graph cut, belief propagation and Markov random field (MRF) based methods have been proved to give the most accurate results. 
 
 
 \section{Structure of the Thesis}
