@@ -1,4 +1,4 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 
 \bibitem{Seki2017}
 A.~Seki, M.~Pollefeys, T.~Corporation, E.~T. Z{\"{u}}rich, and Microsoft,
@@ -10,12 +10,22 @@ A.~Seki, M.~Pollefeys, T.~Corporation, E.~T. Z{\"{u}}rich, and Microsoft,
 M.~Poggi, D.~Pallotti, F.~Tosi, and S.~Mattoccia, ``{Guided Stereo Matching},''
   2019.
 
+\bibitem{Tonioni2020}
+A.~Tonioni, F.~Tosi, M.~Poggi, S.~Mattoccia, and L.~D. Stefano, ``{Real-Time
+  Self-Adaptive Deep Stereo},'' pp.~195--204, 2020.
+
 \bibitem{Hirschmuller2008}
 H.~Hirschm{\"{u}}ller, ``{Stereo processing by semiglobal matching and mutual
   information},'' {\em IEEE Transactions on Pattern Analysis and Machine
   Intelligence}, vol.~30, no.~2, pp.~328--341, 2008.
 
-\bibitem{Ko2017}
+\bibitem{Scharstein2001}
+D.~Scharstein, R.~Szeliski, and R.~Zabih, ``{A taxonomy and evaluation of dense
+  two-frame stereo correspondence algorithms},'' {\em Proceedings - IEEE
+  Workshop on Stereo and Multi-Baseline Vision, SMBV 2001}, no.~December,
+  pp.~131--140, 2001.
+
+\bibitem{Ko2017Ko2017}
 J.~Ko and Y.~S. Ho, ``{Stereo matching using census transform of adaptive
   window sizes with gradient images},'' {\em 2016 Asia-Pacific Signal and
   Information Processing Association Annual Summit and Conference, APSIPA
@@ -25,5 +35,20 @@ J.~Ko and Y.~S. Ho, ``{Stereo matching using census transform of adaptive
 S.~Birchfield and C.~Tomasi, ``{Depth discontinuities by pixel-to-pixel
   stereo},'' {\em International Journal of Computer Vision}, vol.~35, no.~3,
   pp.~269--293, 1999.
+
+\bibitem{Klaus2006}
+A.~Klaus, M.~Sormann, and K.~Karner, ``{Segment-based stereo matching using
+  belief propagation and a self-adapting dissimilarity measure},'' {\em
+  Proceedings - International Conference on Pattern Recognition}, vol.~3,
+  pp.~15--18, 2006.
+
+\bibitem{Kolmogorov2001}
+V.~Kolmogorov and R.~Zabih, ``{Computing visual correspondence with occlusions
+  using graph cuts},'' {\em Proceedings of the IEEE International Conference on
+  Computer Vision}, vol.~2, pp.~508--515, 2001.
+
+\bibitem{Szeliski2011}
+R.~Szeliski, ``{Computer vision: algorithms and applications},'' {\em Choice
+  Reviews Online}, vol.~48, no.~09, pp.~48--5140--48--5140, 2011.
 
 \end{thebibliography}

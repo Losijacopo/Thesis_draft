@@ -1,3 +1,6 @@
-# Big files and log files
+# Big files and unnecessary folders
 *.zip
+images/
+
+# Log files
 *.log
