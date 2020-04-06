@@ -61,4 +61,26 @@ R.~Zabih and J.~Woodfill, ``{Non-parametric local transforms for computing
   subseries Lecture Notes in Artificial Intelligence and Lecture Notes in
   Bioinformatics)}, vol.~801 LNCS, pp.~151--158, 1994.
 
+\bibitem{yang2008stereo}
+Q.~Yang, L.~Wang, R.~Yang, H.~Stew{\'e}nius, and D.~Nist{\'e}r, ``Stereo
+  matching with color-weighted correlation, hierarchical belief propagation,
+  and occlusion handling,'' {\em IEEE Transactions on Pattern Analysis and
+  Machine Intelligence}, vol.~31, no.~3, pp.~492--504, 2008.
+
+\bibitem{bleyer2009stereo}
+M.~Bleyer, M.~Gelautz, C.~Rother, and C.~Rhemann, ``A stereo approach that
+  handles the matting problem via image warping,'' in {\em 2009 IEEE Conference
+  on Computer Vision and Pattern Recognition}, pp.~501--508, IEEE, 2009.
+
+\bibitem{Hernandez-Juarez2016}
+D.~Hernandez-Juarez, A.~Chacon, A.~Espinosa, D.~Vazquez, J.~C. Moure, and A.~M.
+  Lopez, ``{Embedded real-time stereo estimation via Semi-Global Matching on
+  the GPU},'' {\em Procedia Computer Science}, vol.~80, pp.~143--153, 2016.
+
+\bibitem{howfindinfo}
+
+
+\bibitem{bibinstructions}
+
+
 \end{thebibliography}

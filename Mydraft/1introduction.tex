@@ -32,6 +32,7 @@
 
 
 \section{Problem statement}
+\label{sec:problemstat}
 
 Dense and accurate disparity maps are the key factor for obtaining correct depth estimations for many computer vision applications such as autonomous driving, 3D reconstruction, object detection and robotics.  
 Therefore, stereo matching and disparity estimation can be identified as fundamental problems in the current developments of computer vision \citep{Seki2017}.\\
@@ -168,11 +169,55 @@ Then, the smoothness term is usually defined as:
 \begin{equation}\label{smoothterm}
 	E_s(d) = \sum_{(x,y)} \rho (d(x,y) - d(x + 1, y)) + \rho (d(x,y) - d(x, y + 1))
 \end{equation}
-where $\rho$ is some monotonically increasing function of disparity difference. \\
+where $\rho$ is some monotonically increasing function of disparity difference. 
+For some implementations, the smoothness energy term can also be based on intensity differences,
+\begin{equation}\label{smoothtermintensity}
+	\rho_d(d(x,y) - d(x + 1, y)) \cdot \rho_I(\Vert I(x,y) - I(x + 1,y) \Vert)
+\end{equation}
+where $\rho_I$ is a monotonically decreasing function, which depends on the intensity differences and makes the smoothness costs lower at high-intensity gradients.\\
 After the energy function has been clearly identified, different categories of algorithms can be exploited to recover a (local) minimum.
-Graph cut, belief propagation and Markov random field (MRF) based methods have been proved to give the most accurate results. 
-
-
+Graph cut, belief propagation and Markov random field (MRF) based methods have been proved to give the most accurate results. \\
+Mentioning some hybrid methods, there are cooperative algorithms and others based on coarse to fine incremental steps.
+Cooperative algorithms were some of the earliest proposed for disparity estimation. They are influenced by human stereo vision processing models. 
+They operate by iteratively improve disparity evaluations using non-linear calculations, leading to a result similar to the one of the global methods.
+Iterative algorithms are, instead among the current best algorithms.
+The main idea is to successively choose the best disparity among all of the possible ones. 
+A coarse-to-fine framework is usually used to speed up the computations.\\
+Dealing with global optimization methods, it is worth to mention dynamic programming (DP) technique.
+Unlike solutions based on equation \ref{eqn:energyfct}, dynamic programming allows to reach global minimum exploiting independent scanlines.
+This approach works over a slice of the DSI, i.e. the matching cost cube, finding the path associated to the minimum cost.
+The generic implementation of DP along a scanline $y$ and for each input state in a 2D cost matrix $D(m, n)$ leads to combine its DSI value with its previous cost values as follows,
+\begin{equation}\label{eqn:dynamicprog}
+	C'(m,n) = C(m + n, m - n, y)
+\end{equation}
+Correct cost selection in presence of occluded pixels and difficulties with scanline consistency are some of the weakness of DP.
+Multiple algorithms have been proposed to recover from these problems. 
+Scharstein and Szeliski \citep{Scharstein2001} proposed an alternative to standard DP, improving recursively independent scanlines in the global energy function,
+\begin{equation}\label{eqn:DPoptimization}
+	D(x,y,d) = C(x,y,d) + \min_{d'}\{ D(x - 1, y, d') + \rho_{d} (d - d') \}
+\end{equation}
+An upgrade of this scanline optimization is the aggregation cost approach used in semi-global matching \citep{Hirschmuller2008}.
+In this case, a cumulative cost function is evaluated from at least eight directions.
+Intuitively, this approach accesses accurate results and it is highly efficient. \\
+Considering more recent improvements to stereo matching, segmentation-based techniques hold a prominent position.
+In this case, an initial segmentation of the reference image is performed.
+Then, disparities are estimated pixelwise using local methods.
+Citing couple of recent approaches, Klaus, Sormann and Karner \citep{Klaus2006} segment the image with mean shift, to get initial disparity estimations. 
+Then they apply re-fitting with global planes, and perform final MRF with loopy belief propagation. \\
+Wang and Zheng \citep{Wang2008} built a similar top ranked algorithm.
+They segment the image with local plane fits. 
+Then run cooperative optimization of neighbouring plane fit parameters. 
+Others developed similar approaches exploiting color correlation and left-right consistency check for occlusion detection \citep{yang2008stereo} or focusing on alpha mattes fractional pixel extraction \citep{bleyer2009stereo}.\\
+As explained in section \ref{sec:problemstat} the area of stereo matching and disparity estimation is one of the most extensively researched topic in computer vision.
+Nowadays approaches based on convolutional neural networks and deep learning are going to be the highly ranked in the standard database.
+Although, their performance in accuracy tends to decrease a lot when moving from dataset images to real ones.\\
+Therefore, novel strategies based on standard stereo geometry algorithms could reach consistent accuracy even in real time \citep{Hernandez-Juarez2016}.
+Thus, as described above, after the structure of the cost volume or DSI has been delineated, the actual pixelwise photoconsistency measures are computed.
+Multiple methods to achieve this has been proposed during years and already explained in the previous paragraphs.
+Then, depth computation is obtained with different form of optimizations. 
+These ranges among local, global or hybrid frameworks. \\
+Consequently, starting from classical stereo-based methods and building up a novel pipeline, accurate real time depth map estimations can be achieved.
+ 
 \section{Structure of the Thesis}
 \label{section:structure} 
 

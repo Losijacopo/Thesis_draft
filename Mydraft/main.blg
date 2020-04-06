@@ -36,6 +36,12 @@ You're missing a field name---line 53 of file sources.bib
  : %  author =  {{Aalto University Library}},
 (Error may have been on previous line)
 I'm skipping whatever remains of this entry
+Warning--I didn't find a database entry for "Wang2008"
+Warning--I didn't find a database entry for "HaapasaloThesis"
+Warning--I didn't find a database entry for "becker:1996:mvbt"
+Warning--I didn't find a database entry for "haapasalo:2009:tmvbt"
 Warning--empty journal in Poggi2019
 Warning--empty journal in Tonioni2020
+Warning--all relevant fields are empty in howfindinfo
+Warning--all relevant fields are empty in bibinstructions
 (There were 7 error messages)
