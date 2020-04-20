@@ -64,108 +64,79 @@ A fundamental property, that makes this geometry extremely useful, is that image
 Assuming that only $m_l$ is known, that geometry allows to constraint the corresponding point $m_r$. 
 The epipolar plane is defined by the baseline and the ray that comes from $m_l$. 
 Hence, knowing that $m_r$ lies on the same plane, that point belongs to $l_r$, i.e. the intersection between the epipolar and the second image plane. 
-Therefore, exploiting this property, the searching of corresponding points is constrained to only one line inside the image. 
+Therefore, exploiting this property, the searching of corresponding points is constrained to only one line inside the image.\\
+Mathematical definition of the epipolar geometry is the fundamental matrix $F$.
+As already demonstrated through Figure \ref{fig:epipolargeom-2}, for each point $p_L$ in one image, the corresponding epipolar line $e_R$ to that point belongs to the other image plane. 
+Moreover, any point $p_R$ in the second image, which is related to point $p_L$, lies on $e_R$.
+Hence, the epipolar line is described as the projection in the second image of the ray that comes from the point in the first image, passing through its camera center.
+This defines a map, $p_L \rightarrow e_R$, which relates the points in one image with the corresponding epipolar lines in the second image.
+This correlation, between points and lines, is represented by the fundamental matrix $F$.\\
+Considering the aforementioned map $p_L \rightarrow e_R$ described by $F$, an important property of the fundamental matrix is defined,
+\begin{equation}\label{eqn:fundmatprop}
+	p_R^\top F p_L = 0
+\end{equation}
+Therefore, assuming two corresponding points $P_L$ and $p_R$, it is known that $p_R$ lies on the epipolar line $l_R = F p_L$. 
+Thus, the mathematical correlation is,
+\begin{equation}
+	0 = p_R^\top e_R = p_R^\top F p_L
+\end{equation}
+Reciprocally, if image points comply the relation \ref{eqn:fundmatprop}, then the rays identified by these points are coplanar. 
+For point corresponding this is a necessary condition.
+Equation \ref{eqn:fundmatprop} is extremely important because it allows to characterize the fundamental matrix without reference to the camera matrices \cite{hartley2004multiple}.
+Thus, using at least 7 correspondences, it is possible to recover the fundamental matrix $F$. 
+This estimation is known as \textit{weak calibration}.\\
+\textbf{Maybe add 8-point algorithm description}
 
+\subsection{Rectification}
+\label{subsec:rectification}
+
+Image rectification is defined as the process of obtaining a pair of \textit{matched epipolar projections} from a pair of stereo images, which are taken from generally differing viewpoints.
+In the rectified projections the epipolar lines become parallel with respect to the x-axis. 
+Thus, they match between the stereo pair and so the disparities are in the x-direction only.\\
+In order to obtain a rectified stereo pair, 2D projective transformations are employed to the images, so that the epipolar lines can match.
+Using this method, the transformations are built up in a way that the corresponding points have almost the same x-coordinate.
+Actually, this strategy leads to a minimal distortion on the images, being the two transformations arbitrary. 
+However, working on rectified images, the matching problem is highly simplified, being correlated only to epipolar geometry and near-correspondence. \\
+Core problem of this section is to find the appropriate projective transformation $H$. 
+Indeed, to get epipolar lines parallel with x-axis, the epipole should be mapped to an infinite point. 
+This, has to be done correctly, otherwise intensive projective distortion of the image can happen.
+For this reason, constraints are put on the definition of $H$.\\
+First of all, restricting $H$ to be a rigid transformation in the neighbourhood of a given point\footnote{this means that to first-order, the neighbourhood of the point may be subjected to rotation and translation only}, the errors are reduced.\\
+Once the epipole has been mapped to infinity, it is then necessary define a map to match the corresponding epipolar lines.
+This resampling is build up in such a way that, being $e_L$ and $e_R$ any pair of epipolar lines, then,
+\begin{equation}
+	H^{-\top} e_L = H'^{-\top} e_R
+\end{equation}
+Satisfying the condition above, a matched pair of transformations is recovered.\\
+Specifically, at first $H'$ is chosen, so that it can map the epipole $e_R$ to infinity. 
+Then the matching transformation $H$ is defined minimizing the sum-of-square distances,
+\begin{equation}\label{eqn:matchtransfconstr}
+	\sum_i d(H p_{L_i}, H'p_{R_i})^2
+\end{equation}
+
+Therefore, the full algorithm can be summarized as follows.\\
+The outcome of this resampling process is a pair of stereo images whose epipolar lines are horizontal.
+Hence, the disparities are calculated along the epipolar lines. 
+First of all, at least seven corresponding matches are defined.
+This allows to compute the fundamental matrix $F$, applying the so called eight-point algorithm, and after that the two epipoles are found.
+After that, there is the selection of the projective transformation $H'$, that maps the epipole of the support image to infinity.
+The corresponding transformation $H$ is found solving the least-square problem.
+Finally both of the input images are resampled according to $H$ and $H'$.
 
 \section{Stereo methods and dense correspondence}
 \label{sec:stereometh}
-Never ever copy anything into your theses from somebody else's text
-(nor your own previously published text). Never. Not even for starting
-point to be rewritten later. The risk is that you forgot the copied
-text to your thesis and end up to be accused of plagiarism. Plagiarism
-is a serious crime in studies and science and can ruin your career
-even its beginning. To repeate: never cut and paste text into your
-thesis!
+
+\textbf{Take the part already written in the introduction}\\
+\textbf{Refactoring needed between the 2 chapters}
 
 \subsection{Stereo geometry based methods}
 
 \subsection{Deep learning based methods}
+\label{subsec:deeplearnmeth}
 
-All work is based on someone else's work. You should find the relevant
-sources of your field and choose the best of them. Also, you should
-refer to the original source where a fact has been mentioned first
-time. Remember source evaluation (criticism) with all sources you
-find.
 
-Good starting points for finding references in computer science are: 
-\begin{itemize}
-% You can use this command to set the items in the list closer to each other
-% (ITEM SEParation, the vertical space between the list items) 
-\setlength{\itemsep}{0pt}
-\item Aalto library's Computer Science Guide: \url{http://libguides.aalto.fi/computer} 
-(in English) and \url{http://libguides.aalto.fi/tietotekniikka} (in Finnish)
-\item Finna Portal (Aalto Library): \url{https://aalto.finna.fi/?lng=en-gb} (in English) 
-and \url{https://aalto.finna.fi/} (in Finnish)
-\item ACM Digital library: \url{http://portal.acm.org/}
-\item IEEExplore: \url{http://ieeexplore.ieee.org}
-\item ScienceDirect: \url{http://www.sciencedirect.com/}
-\item \ldots although Google Scholar (\url{http://scholar.google.com/}) will
-find links to most of the articles from the abovementioned sources, if you
-search from within the university network
-\end{itemize}
-
-Some of the publishers do not offer all the text of the articles
-freely, but the library has agreed on the rights to use the whole
-text. Thus, you should sometimes use computers in the domain of the
-university in order to get the full text. Sometimes the Finna Portal
-can also help getting the whole article instead of just the abstract.
-The library has also a self-study guide to information retrieval~\cite{howfindinfo}.
-
-Instead of normal Google, use Google Scholar
-(\url{http://scholar.google.fi/}). It finds academic publications whereas
-normal Google find too much commercial advertisements or otherwise
-biased information. Wikipedia articles should be referred to in the master
-thesis only very, very seldomly. You can use Wikipedia for understanding
-some basics and finding more sources, but often you cannot be sure if
-the article is correct and unbiased.
-
-One important part of the sources that you have found is the reference
-list. This way you can find the original sources that all the other
-research of the field refer. Often you can also find more information
-with the name of the researchers that are often referred in the
-articles.
-
-\subsection{Sources and reference list}
-
-The main point in referring to sources is to separate your own
-thinking and text from that of others. Facts of the research area can
-be given without reference, but otherwise you should refer to
-sources. This means two things: marking the source in the text where
-it has been used, and listing the sources usually in the end of the
-thesis in a way that help the reader to find the original source. 
-Aalto library has a comprehensive citation guide
-~\cite{bibinstructions}.
-
-There are several bibliography styles, meaning how to form the
-bibliography in the end of the thesis and how to mark the references
-in the text. You should ask from your supervisor or instructors which
-style you should use. This thesis template uses the number style that
-is often used in software engineering. Here, the bibliography is in
-the alphabetical order, not in the order where the sources are
-referred, and the sources are marked with numbers in the text. In all
-styles, the key idea is to collect as much information of the sources
-as is possible in the bibliography, and then let the latex environment take
-care of organizing the necessary information to the reference list.
-
-The other bibliographic styles are also used in the CS field. For example, usability
-uses the Harvard style where instead of numbers, the reference is
-marked into the text with author's name and publishing year. You can
-change the bibliography style in the thesis-example.tex file. You get
-the normal text reference, e.g. (Haapasalo, 2010), with latex command
-\texttt{citet} or the plain \texttt{cite}, and with command
-\texttt{citep}, you get the text reference ``Haapasalo (2010)'' that
-you can use as subject of a sentence. Next, we tell more about how to mark
-the references in the text.
 
 \subsection{Referring to sources}
-
-In addition to the list in the end of the thesis, you have to mark the
-source in the text where the source is used. There are three places
-for the reference: in a sentence before the period, in the end of a
-sentence after the period, or in the end of a paragraph. All of them
-have different meaning. The main point is that first you paraphrase
-the source using your own words and then mark the source. Next, we
-give short examples that are marked with \emph{emphasised text}.
 
 \emph{Haapasalo~\cite{HaapasaloThesis} researched database algorithms
   that allows use of previous versions of the content stored in the
