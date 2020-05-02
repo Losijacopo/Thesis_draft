@@ -57,7 +57,7 @@ Then, post-processing techniques are applied to remove outliers and filter the i
 Referring to the analysis performed by Scharstein and Szeliski \citep{Scharstein2001}, SGM carries out four main steps, as well as most of the stereo matching algorithms. 
 These are defined as: matching cost computation, cost aggregation, disparity computation and disparity refinement. \\
 Considering the former, it is usually based on absolute, squared or sampling insensitive difference between pixel intensities \citep{Hirschmuller2008}. Although those methods allow to reach a reliable accuracy, they are sensitive to radiometric difference. 
-Thus, cost based on image gradients or window-based methods, such as rank and census transform \citep{Ko2017Ko2017}, became an optimal choice. 
+Thus, cost based on image gradients or window-based methods, such as rank and census transform \citep{Ko2017}, became an optimal choice. 
 Furthermore, Mutual Information results as a good trade-off for dealing with complex radiometric relationships between images.\\
 In the second phase, cost aggregation collects the matching costs considering multiple directions and the disparity levels. 
 Following, disparity evaluation is defined for each pixel, as the one with the lowest cost. This is the approach typically used for local methods. 

@@ -134,72 +134,110 @@ Finally both of the input images are resampled according to $H$ and $H'$.
 \subsection{Deep learning based methods}
 \label{subsec:deeplearnmeth}
 
+Considering that disparity estimation from a rectified stereo pair is still one of the most important tasks in computer vision, the latest years have seen an important development of deep learning based methods. \\
+Usually these approaches comprises a main pipeline, based on a standard local or global method, whose parameters are finely tuned exploiting Convolutional Neural Networks (CNNs). 
+Therefore, in most of the cases, Semi Global Matching (SGM) is used as regularization method, because of its accuracy and low computational time. 
+Then, deep learning based methods are used for tuning the penalty parameters, which are related to smoothness and discontinuity of the disparity map. 
+As described above, those penalties are empirically adjusted in the standard methods. 
+Therefore, the CNNs based approach aims at learn the penalties, in correlation with the 3D structure of the objects in the scene, to achieve an improvement in the disparity map. \\
+As aforementioned, several of these deep learning approaches has been proposed in the latest years, and some of them has been able to reach state of the art level of accuracy on the KITTI datasets.\\
+Even though these method suffer drop in accuracy when shifting from synthetic to real images, it is worth to describe some of them, which are ranked among the state of the art methods in the KITTI benchmark. \\
+Seki and Pollefeys proposed SGM-Nets\cite{Seki2017}, a CNNs based method for penalty estimation, which exploit SGM as regularization technique in the main pipeline. 
+They used small image patches and their locations as inputs to the network to predict penalties for the 3D object structures. 
+Actually, they developed a novel loss function for training the networks, which inputs are small image patches and their position. 
+Moreover, they managed to separate positive and negative disparity changes, thus to get object structures more discriminatively.\\
+More in detail, SGM-Net produces $P_1$ and $P_2$ for each pixel. 
+This is achieved though a training and a testing phase. 
+In the former, the network is iteratively trained by minimizing a \textit{Path cost} and a \textit{Neighbor Cost}. 
+In testing, the standard SGM pipeline is run using the penalties estimated by the network. 
+Actually, the \textit{Path Cost} is how the authors of the paper called the loss function that they developed, which they minimized using forward and back propagation. 
+Moreover, they introduced the \textit{Neighbor cost} function for removing the ambiguous disparities traversed along along the path, which can lead to wrong penalties.\\
+Another approach similar to the one just described is the method developed by Kuzmin et al. \cite{Kuzmin2017}. 
+The core of their method is the prediction of the local parameters of cost volume aggregation process, which they perform exploiting a deep convolutional network. 
+Thus, as in \cite{Seki2017}, they avoid to apply deep learning of pixel appearance descriptors, using classical matching scores instead. 
+Thus, they refuse learning high dimensional descriptors and matching them, as it used to happen in most of the first deep learning based algorithm.
+On the contrary, they focus the learning on the cost-aggregation step. 
+Thus, they defined the overall matching cost using a combination of census transform and sum-of-absolute-differences. 
+Then, they carry out the cost-aggregation phase, which is peculiar for smoothing the general matching cost and correct the wrong matches, applying the domain transform \cite{Gastal2011},\cite{Pham2013}.
+Basically, they develop a deep convolutional neural network to estimate on a pixel basis the cost-aggregation parameters and make them spatially varying. 
+In this way, they were able to have smoother disparities on the same object and avoid smoothing across object boundaries. 
+Therefore, combining standard methods for the matching cost and applying end-to-end deep learning process to the cost-aggregation step, they obtain state-of-the-art accuracy in the KITTI 2015 dataset. 
+Differently from \cite{Zbontar2016}, \cite{Zbontar2015} and similarly to \cite{Mayer2016}, they build up an end-to-end learning method that comprises all the part of depth map computation in it. 
+Furthermore, unlike \cite{Mayer2016}, their approach exploits classical stereo matching techniques as modules within a more complex neural network structure. 
+Their process encompasses the definition of a general cost volume, the cost-aggregation step over that volume and the final winner-takes-all label selection. 
+Then, left-right consistency and filling of occluded pixels are performed as post-processing.\\
+A different approach with respect to the previous one stands in the implementation developed by \^{Z}bontar and LeCun \cite{Zbontar2016}.
+They focus their attention on the matching cost computation, which is usually the first step of a stereo matching algorithm. 
+They developed their method using a convolutional neural network to learn similarity measures on small image patches. 
+Specifically, they structure the training in a supervised manner building up a binary classification data set with examples of similar and dissimilar pairs of patches. 
+Moreover, they carry out two different architectures, one adjusted for speed, and another one for accuracy. 
+Thus, the output of the network handles the initialization of the stereo matching cost. 
+After that, post processing steps are applied: cross-based cost aggregation, semi-global matching and finally disparity refinement techniques such as, left-right consistency check, subpixel enhancement, median and bilateral filters.\\
+Technically speaking, they present a convolutional neural network that is trained on pairs of small image patches, for which the disparity value is known. 
+Then, they initialize the matching cost using the output of the network.
+After that, they propose a series of common post-processing steps, which are though crucial to obtain accurate results.
+Cross-based cost aggregation is exploited for combining matching cost between neighbouring pixels with similar intensities. Then, constraints are enforced for smoothness and left-right consistency check applied for detect and eliminate errors in occluded regions. 
+The final disparity map is then obtained applying median and bilateral filters, useful for subpixel enhancement. \\
+Related problems to \cite{Zbontar2016} are the works by Haeusler et al. \cite{Haeusler2013} and by Spyropoulos et al. \cite{Spyropoulos2014}. 
+Using a similar approach, they concentrate their attention on predicting the confidence of the calculated matching cost. 
+Specifically, in the first cited approach \cite{Haeusler2013}, the aim was using a random forest classifier to connect multiple confidence measures. 
+Similarly, the authors of \cite{Spyropoulos2014} focused in estimating the confidence of the matching cost by training a random forest classifier. 
+Then, they employed the predictions as mild constraints in a Markov Random Field (MRF) aiming at reducing the errors of the stereo method.\\
+Focusing on confidence prediction intended at the estimation of dense disparity map, it is worth to cite the work of \cite{Seki2016}.
+They adopted two channels disparity patches as inputs of a Convolutional Neural Network (CNN), predicting the correctness of stereo correspondences, that is the confidence. 
+Using these specific patches, they managed to simultaneously train features and classifiers.
+Furthermore, they incorporate the predicted confidence into Semi-Global Matching (SGM), adjusting its parameters directly. \\
+Unlike methods based on hand crafted features, which lead to limited accuracy, authors of \cite{Seki2016} leverage CNNs to overcome that problem. 
+In fact, CNNs support high performance from low level processing, such as patch based matching, to high level, like scene classification and object detection. \\
+Therefore, as previously introduced, they conceive a two channels disparity patch, based on the concept of standard confidence features.
+Then they apply those patches as input to the network, obtaining a simultaneous training of discriminative features and classifiers.
+Moreover, they also developed three different types of network structures to manage the trade-off between computational time and accuracy. 
+Finally, the confidence was combined into SGM, so that dense disparity map could be obtained. \\
+
+\subsubsection{Confidence measures}
+
+Considering some of the deep learning based methods described in \ref{subsec:deeplearnmeth}, becomes necessary to define the main typology of features proposed during the years to estimate the confidence of stereo correspondences. \\
+Because of many features were introduced by different works in computer vision field, Hu and Mordohai \cite{Hu2012} developed a broad evaluation of them, leading to the definition of five groups, used for categorize those features. \\
+The first group is correlated to the matching cost. 
+This means that correct correspondence are unlike to be connected to large matching costs. 
+The second group focuses on local properties of the cost curve. 
+That is, confidence measure becomes the curvature around the minimum matching cost. 
+For example, flat curves, which have smaller values, and describe texture-less areas express higher ambiguity.
+Features related to local minima of the cost curve form the third group. 
+As an example, the so called \textit{Peak Ratio (PKR)}, is calculated as the minimum matching cost divided by the second local minima.
+Then, a probability mass function over disparity defined using the entire cost curve describes the fourth group.
+The last group includes features that highlight the consistency between left and right disparity map, i.e. correct matches indicate more consistent disparity.\\
+A similar but more recent work is the one carried out in \cite{Poggi2017} driven by the deep breakthrough lately happened in computer vision field. 
+In fact, changing such as, availability of bigger and more challenging datasets, novel and more accurate stereo algorithms and confidence measures, leverage techniques based on deep learning.
+Therefore, the authors of \cite{Poggi2017} focus on implement a complete and updated quantitative analysis of the state-of-the-art confidence measures.\\
+As a matter of fact, after the analysis performed in \cite{Hu2012}, major improvements have happened in computer vision field.
+Among those the most relevant can be summarized as follows:
+\begin{itemize}
+	\item enhanced confidence prediction algorithms based on deep learning \cite{poggi2016learning} and on random-forests \cite{Spyropoulos2014}, \cite{Park2015};
+	\item larger dataset providing challenging indoor and outdoor scenes \cite{Mayer2016};
+	\item more accurate stereo algorithms and novel implementation of the SGM pipeline \cite{Seki2016}, \cite{Zbontar2016}
+\end{itemize}
+Therefore, in \cite{Poggi2017}, the authors extend and update the taxonomy previously performed in \cite{Hu2012}, especially focusing on machine learning techniques.
+Then they aim at evaluating the algorithms' performance over the novel and larger datasets, concentrating on the correlation between the availability of training data and the correctness of confidence measure prediction. 
+Moreover, they estimate the accuracy of the methods when handling new data and calculate the effectiveness of the predictions when included in state-of-the-art pipelines.\\
+Considering that among the multiple confidence measures proposed, all of them deal with the cost curve and the relationship between left and right image or disparity map, basing on \cite{Hu2012}, Poggi et al. \cite{Poggi2017} grouped confidence measures according to their input cues. 
+Specifically, they considered 76 confidence measures, which were then grouped into 8 categories and evaluate them employing three state-of-the-art stereo algorithms and three ground truth datasets: Middlebury 2014 \cite{Scharstein2014}, KITTI 2012 \cite{geiger2013vision} and KITTI 2015 \cite{menze2015object}.
+Performing that exhaustive analysis, the authors carried out the results that learning based approaches seem to be more efficient than conventional ones. 
+Especially, using disparity maps as input cue more accurate results are achieved in terms of correct matches, adaptation to new data and stereo accuracy improvement. 
+Beside that, training remains an issue for those methods though. 
+As a matter of fact, for deep learning based approaches the general amount of training data is still limited and in most case they struggle when dealing with new real data.\\
 
 
-\subsection{Referring to sources}
 
-\emph{Haapasalo~\cite{HaapasaloThesis} researched database algorithms
-  that allows use of previous versions of the content stored in the
-  database.} This kind of marking means that this paragraph (or until
-the next reference is given) is based on the source mentioned in the
-beginning.  Giving the source you should use only the family name of
-the first author of the article, and not give any hints about what is
-the type of the article that is referred nor its title.
 
-\emph{B+-trees offers one way to index data that is stored in to a
-  database. Multiversion B+-trees (MVBT) offer also a way to restore
-  the data from previous versions of the database. Concurrent MVBT
-  allows many simultaneous updates to the database that is was not
-  possible with MVBT.~\cite{HaapasaloThesis}} When the marking is
-after the period, the reference is retrospective: all the paragraph
-(or after previous reference marking) is based on the source given in
-its end. If the content is very broad, you can start with saying
-\emph{According to Haapasalo}, then continue referring the source with
-several separate sentences, and in the end put the marking of your
-source \emph{ that shows that CMVBT are the
-  best. ~\cite{HaapasaloThesis}}. 
 
-If your paragraph has several sources, the above mentioned styles are
-not proper. The reader of your thesis cannot know which of your
-sources give which of the statements. In this case, it is better to
-use more finegraded refering where the reference markings that are
-embedded in the sentences. For example, \emph{the multiversion B+-tree
-  (MVBT) index of Becker et al.~\cite{becker:1996:mvbt} allows database
-  users to query old versions of the database, but the index is not
-  transactional.
-  It's successor, the transactional MBVT (TMVBT), allows a single transaction
-  running in its own thread or process to update the database concurrently
-  with other transactions that only read the
-  database~\cite{haapasalo:2009:tmvbt}. 
-  Further development, titled the concurrent MBVT (CMVBT),
-  allows several transactions to perform updates to the database at the same
-  time~\cite{HaapasaloThesis}}. 
-  Here, the references are marked before
-  the period in the sentences where they are used. You should never
-  but all these sources in the end of the paragraph. Referring several
-  source at once should only used when you give a set of examples.
 
-Finally, direct quotes are allowed. However, often you should avoid
-them since they do not usually fit in to your text very well. Using
-direct quotes has two tricks: quotation marks and the source.  \emph{
-  ``Even though deletions in a multiversion index must not physically
-  delete the history of the data items, queries and range scans can
-  become more efficient, if the leaf pages of the index structure are
-  merged to retain optimality.''~\cite{HaapasaloThesis}} Quotes are
-hard to make neatly since you should use only as much as needed
-without changing the text. Moreover, you often do not really
-understand what the author has mentioned with his wordings if you
-cannot write the same with your own words. Remember also that never
-cut and paste anything without marking the quotation marks right away,
-and in general, never cut and paste anything at all!
 
-Sometimes getting the original source can be almost impossible. In an
-extremely desperate situation, you can refer with structure \emph{ms
-  X~[\ldots] according to mr Y~[\ldots] defined that}, if you find a
-source that refers to the original source. Note also that the
-reference marking is never used as sentence element (example of how 
-\textbf{not} to do it: \emph{\cite{HaapasaloThesis} describes
-an optimal algorithm for indexing multiversiond databases.}).
+
+
+
+
+
 
 
 

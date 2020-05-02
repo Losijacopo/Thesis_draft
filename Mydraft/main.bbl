@@ -25,7 +25,7 @@ D.~Scharstein, R.~Szeliski, and R.~Zabih, ``{A taxonomy and evaluation of dense
   Workshop on Stereo and Multi-Baseline Vision, SMBV 2001}, no.~December,
   pp.~131--140, 2001.
 
-\bibitem{Ko2017Ko2017}
+\bibitem{Ko2017}
 J.~Ko and Y.~S. Ho, ``{Stereo matching using census transform of adaptive
   window sizes with gradient images},'' {\em 2016 Asia-Pacific Signal and
   Information Processing Association Annual Summit and Conference, APSIPA
@@ -61,6 +61,11 @@ R.~Zabih and J.~Woodfill, ``{Non-parametric local transforms for computing
   subseries Lecture Notes in Artificial Intelligence and Lecture Notes in
   Bioinformatics)}, vol.~801 LNCS, pp.~151--158, 1994.
 
+\bibitem{Wang2008}
+Z.~F. Wang and Z.~G. Zheng, ``{A region based stereo matching algorithm using
+  cooperative optimization},'' {\em 26th IEEE Conference on Computer Vision and
+  Pattern Recognition, CVPR}, 2008.
+
 \bibitem{yang2008stereo}
 Q.~Yang, L.~Wang, R.~Yang, H.~Stew{\'e}nius, and D.~Nist{\'e}r, ``Stereo
   matching with color-weighted correlation, hierarchical belief propagation,
@@ -76,5 +81,103 @@ M.~Bleyer, M.~Gelautz, C.~Rother, and C.~Rhemann, ``A stereo approach that
 D.~Hernandez-Juarez, A.~Chacon, A.~Espinosa, D.~Vazquez, J.~C. Moure, and A.~M.
   Lopez, ``{Embedded real-time stereo estimation via Semi-Global Matching on
   the GPU},'' {\em Procedia Computer Science}, vol.~80, pp.~143--153, 2016.
+
+\bibitem{Kuzmin2017}
+A.~Kuzmin, D.~Mikushin, and V.~Lempitsky, ``{End-to-End learning of cost-volume
+  aggregation for real-time dense stereo},'' {\em IEEE International Workshop
+  on Machine Learning for Signal Processing, MLSP}, vol.~2017-Septe, pp.~1--6,
+  2017.
+
+\bibitem{Gastal2011}
+E.~S. Gastal and M.~M. Oliveira, ``{Domain transform for edge-aware image and
+  video processing},'' {\em ACM Transactions on Graphics}, vol.~30, no.~4,
+  2011.
+
+\bibitem{Pham2013}
+C.~C. Pham and J.~W. Jeon, ``{Domain transformation-based efficient cost
+  aggregation for local stereo matching},'' {\em IEEE Transactions on Circuits
+  and Systems for Video Technology}, vol.~23, no.~7, pp.~1119--1130, 2013.
+
+\bibitem{Zbontar2016}
+J.~{\v{Z}}bontar and Y.~Lecun, ``{Stereo matching by training a convolutional
+  neural network to compare image patches},'' {\em Journal of Machine Learning
+  Research}, vol.~17, pp.~1--32, 2016.
+
+\bibitem{Zbontar2015}
+J.~{\v{Z}}bontar and Y.~{Le Cun}, ``{Computing the stereo matching cost with a
+  convolutional neural network},'' {\em Proceedings of the IEEE Computer
+  Society Conference on Computer Vision and Pattern Recognition},
+  vol.~07-12-June, no.~1, pp.~1592--1599, 2015.
+
+\bibitem{Mayer2016}
+N.~Mayer, E.~Ilg, P.~Hausser, P.~Fischer, D.~Cremers, A.~Dosovitskiy, and
+  T.~Brox, ``{A Large Dataset to Train Convolutional Networks for Disparity,
+  Optical Flow, and Scene Flow Estimation},'' {\em Proceedings of the IEEE
+  Computer Society Conference on Computer Vision and Pattern Recognition},
+  vol.~2016-Decem, pp.~4040--4048, 2016.
+
+\bibitem{Haeusler2013}
+R.~Haeusler, R.~Nair, D.~Kondermann, C.~Mostegel, M.~Rumpler, F.~Fraundorfer,
+  H.~Bischof, M.~G. Park, K.~J. Yoon, I.~H. {Md Yusof}, M.~An, M.~H. Barghi,
+  W.~Luo, A.~G. Schwing, Z.~Chen, X.~Sun, L.~Wang, Y.~Yu, and C.~Huang, ``{A
+  Deep Visual Correspondence Embedding Model},'' {\em Proceedings of the IEEE
+  Computer Society Conference on Computer Vision and Pattern Recognition},
+  vol.~07-12-June, no.~i, pp.~885--894, 2015.
+
+\bibitem{Spyropoulos2014}
+A.~Spyropoulos, N.~Komodakis, and P.~Mordohai, ``{Learning to detect ground
+  control points for improving the accuracy of stereo matching},'' {\em
+  Proceedings of the IEEE Computer Society Conference on Computer Vision and
+  Pattern Recognition}, vol.~i, pp.~1621--1628, 2014.
+
+\bibitem{Seki2016}
+A.~Seki and M.~Pollefeys, ``{Patch based confidence prediction for dense
+  disparity map},'' {\em British Machine Vision Conference 2016, BMVC 2016},
+  vol.~2016-Septe, no.~c, pp.~23.1--23.13, 2016.
+
+\bibitem{Hu2012}
+X.~Hu and P.~Mordohai, ``{A quantitative evaluation of confidence measures for
+  stereo vision},'' {\em IEEE Transactions on Pattern Analysis and Machine
+  Intelligence}, vol.~34, no.~11, pp.~2121--2133, 2012.
+
+\bibitem{Poggi2017}
+M.~Poggi, F.~Tosi, and S.~Mattoccia, ``{Quantitative Evaluation of Confidence
+  Measures in a Machine Learning World},'' {\em Proceedings of the IEEE
+  International Conference on Computer Vision}, vol.~2017-Octob,
+  pp.~5238--5247, 2017.
+
+\bibitem{poggi2016learning}
+M.~Poggi and S.~Mattoccia, ``Learning from scratch a confidence measure.,'' in
+  {\em BMVC}, 2016.
+
+\bibitem{Park2015}
+M.~G. Park and K.~J. Yoon, ``{Leveraging stereo matching with learning-based
+  confidence measures},'' {\em Proceedings of the IEEE Computer Society
+  Conference on Computer Vision and Pattern Recognition}, vol.~07-12-June,
+  pp.~101--109, 2015.
+
+\bibitem{Scharstein2014}
+D.~Scharstein, H.~Hirschm{\"{u}}ller, Y.~Kitajima, G.~Krathwohl,
+  N.~Ne{\v{s}}i{\'{c}}, X.~Wang, and P.~Westling, ``{High-resolution stereo
+  datasets with subpixel-accurate ground truth},'' {\em Lecture Notes in
+  Computer Science (including subseries Lecture Notes in Artificial
+  Intelligence and Lecture Notes in Bioinformatics)}, vol.~8753, no.~1,
+  pp.~31--42, 2014.
+
+\bibitem{geiger2013vision}
+A.~Geiger, P.~Lenz, C.~Stiller, and R.~Urtasun, ``Vision meets robotics: The
+  kitti dataset,'' {\em The International Journal of Robotics Research},
+  vol.~32, no.~11, pp.~1231--1237, 2013.
+
+\bibitem{menze2015object}
+M.~Menze and A.~Geiger, ``Object scene flow for autonomous vehicles,'' in {\em
+  Proceedings of the IEEE conference on computer vision and pattern
+  recognition}, pp.~3061--3070, 2015.
+
+\bibitem{scharstein2003high}
+D.~Scharstein and R.~Szeliski, ``High-accuracy stereo depth maps using
+  structured light,'' in {\em 2003 IEEE Computer Society Conference on Computer
+  Vision and Pattern Recognition, 2003. Proceedings.}, vol.~1, pp.~I--I, IEEE,
+  2003.
 
 \end{thebibliography}
