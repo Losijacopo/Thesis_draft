@@ -180,4 +180,9 @@ D.~Scharstein and R.~Szeliski, ``High-accuracy stereo depth maps using
   Vision and Pattern Recognition, 2003. Proceedings.}, vol.~1, pp.~I--I, IEEE,
   2003.
 
+\bibitem{bradski2008learning}
+G.~Bradski and A.~Kaehler, {\em Learning OpenCV: Computer vision with the
+  OpenCV library}.
+\newblock " O'Reilly Media, Inc.", 2008.
+
 \end{thebibliography}
