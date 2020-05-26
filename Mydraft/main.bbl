@@ -185,4 +185,20 @@ G.~Bradski and A.~Kaehler, {\em Learning OpenCV: Computer vision with the
   OpenCV library}.
 \newblock " O'Reilly Media, Inc.", 2008.
 
+\bibitem{Hirschmuller2007}
+H.~Hirschm{\"{u}}ller and D.~Scharstein, ``{Evaluation of cost functions for
+  stereo matching},'' {\em Proceedings of the IEEE Computer Society Conference
+  on Computer Vision and Pattern Recognition}, 2007.
+
+\bibitem{Patil2013}
+S.~Patil, J.~S. Nadar, J.~Gada, S.~Motghare, and S.~S. Nair, ``{Comparison of
+  Various Stereo Vision Cost Aggregation Methods},'' {\em International Journal
+  of Engineering and Innovative Technology}, vol.~2, no.~8, pp.~222--226, 2013.
+
+\bibitem{Demetz2013}
+O.~Demetz, D.~Hafner, and J.~Weickert, ``{The complete rank transform: A tool
+  for accurate and morphologically invariant matching of structures},'' {\em
+  BMVC 2013 - Electronic Proceedings of the British Machine Vision Conference
+  2013}, 2013.
+
 \end{thebibliography}

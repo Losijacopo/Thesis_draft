@@ -165,6 +165,15 @@ Exploiting that service various functionalities can be included in the IDE.
 \subsection{C++ programming language}
 \label{subsection:c++-env}
 
+Subsequently to the initial preparatory phase, in which the main employed environment was MATLAB, the actual design of the final algorithm has been developed basing on the C++ syntax.\\
+The decision of exploiting MATLAB only for the initial planning of the work and for the first tests correlated to the feasibility of the various ideas was mainly due to multiple reasons, which cover different aspects of the entire design of the project.
+First of all, since the beginning there was the intention of designing an algorithm that would be adaptable to different types of hardware and which would be further adjusted to other programming languages, e.g. CUDA, in order to obtain better final performances.
+Moreover, considering plausible forthcoming commercial issues, there was the need to ensure a developing as free from copyright as possible. 
+Flexibility and efficiency were other fundamental drivers of that choice. 
+As widely know in the technological field, C++ programming language can ensure velocity and efficiency of the designed software as well as flexibility with different types of hardware.
+In fact, it can be optimal for coding both at high levels of abstraction, and at low levels, e.g. at machine language level.
+Then, in relation with this very project implementation, using C++ was possible to widely exploit the functions of the OpenCV library. \\
+Therefore, adopting C++ as the fundamental programming language of this Master's Thesis project, it was possible to reach a sufficient level of computational speed, trying to minimize the memory requirements and simultaneously keep a high amount of abstraction, necessary for working effectively in the computer vision field. 
 
 
 \subsection{OpenCV cross-platform library}
@@ -193,7 +202,12 @@ Thus, it has been chosen as one of the main assets of the developed work, becaus
 \subsection{CloudCompare 3D editing and processing software}
 \label{subsection:cloud-compare-env}
 
-
+CloudCompare is a software that was exploited during this project almost exclusively for the accurate 3D point cloud visualization, which it can easily provide.
+Therefore, it can be considered as a side software used in this work, which help to get coherent visualizations of the result, things that results difficult or overcomplicated employing OpenCV functions and C++. 
+On the contrary, with this software was easy to visualize the computed results, and deeply understand if the modifications made in the code works correctly, improving the final results.\\
+Therefore, to provide a brief presentation of this software, it is basically a 3D point cloud processing software.
+Originally, it was developed to operate comparison between two dense 3D points clouds, such as the ones collected with laser scanner, or between a point cloud and a triangular mesh.
+On top of that, it has been further expand to a more multi-purposes point cloud processing software, providing multiple advanced algorithms for data handling and processing. 
 
 
 

@@ -228,6 +228,92 @@ Beside that, training remains an issue for those methods though.
 As a matter of fact, for deep learning based approaches the general amount of training data is still limited and in most case they struggle when dealing with new real data.\\
 
 
+\section{Image processing techniques}
+\label{section:image-proc-technique}
+
+In almost all the computer vision methods image processing technique are applied in different phases of the algorithm pipeline in order to model the image in a form convenient for subsequent analysis. 
+Image processing stage is a key component of most of the computer vision applications, such as object recognition, stereo matching, computational photography, scene reconstruction, 3D pose recognition or motion flow, in order to achieve reasonable results. 
+Different types of processing operations are usually applied, depending on the type of task demanded.
+For example commonly applied procedures includes exposure correction, color balancing, noise reduction, smoothness enhancement, sharpness increasing or feature detection.\\
+In relation to this Master's thesis project, it is worth to focus on some of those operations, which result to be most relevant for the designed algorithm. 
+Especially, point operators, area-based and global image transform techniques will be analysed. 
+Particularly, neighborhood (area based) operators will receive specific attention, being the ones specifically employed in the developed algorithm. \\
+
+\subsection{Point operators}
+\label{subsection:point-operators}
+
+Point operators are defined as the simplest type of image processing transforms \cite{Szeliski2011}.
+For these operators the output pixel value is entirely related to the corresponding input pixel value.
+Brightness and contrast adjustment, or color correction and transformation represents some of those techniques.\\
+Basically, an image processing operator is identified, in the continuous domain, by the following function that takes one or more input images and generates a corresponding output:
+\begin{equation}
+ \label{eqn:img-operator}
+ g(x) = h(f(x)) \quad 	\mbox{or} \quad g(x) = h(f_0(x), ..., f_n(x))
+\end{equation}
+where $x$ is in the D-dimensional domain of the functions and $f$ and $g$ operate over some range.
+Specifically, for discrete images, the domain comprises a finite number of pixel locations, i.e. $x = (i, j)$, so that:
+\begin{equation}
+	g(i, j) = h(f(i,j))
+\end{equation}
+Among these pixel-based operators it is sufficient to cite color transforms, image matting and histogram equalization. 
+Therefore, considering color images as arbitrary vector-valued functions, it is coherent to identify them as highly correlated signals with strong connections to the image formation process. \\
+Taking into account particular image editing application, where for example the goal is to take a foreground object from a scene and to put it into a different background.
+The first step of this processing is called matting, that is cut of a specific object from scene. 
+Whereas, the second part, the positioning over a different background is defined compositing.\\
+Histogram equalization is, rather, a more widely exploited technique. 
+This algorithm is based on the histogram of the individual color channels and luminance values.
+Thus, using information about minimum, maximum and average intensity values of the image it is possible to equalize the pixel intensity value of the whole image, that is identify the intensity mapping function $f(I)$ such that the resulting histogram is flat. 
+
+\subsection{Neighborhood operator}
+\label{subsection:neighbor-operator}
+
+Differently from the previous type of operators, in this case the output pixel value is evaluated on the basis of its neighboring pixel values.
+This category of operators is usually applied for local tone adjustment, but more specifically for multiple kinds of image filtering, such as blurring, sharpening, feature detection or noise removal.
+Considering these local transforms, it is important to distinguish between linear and non-linear filtering operators.\\
+Linear operators are the most generally used in terms of are-based operators. 
+They relate weighted combinations of pixels in a neighborhood in order to estimate the output pixel's value. 
+Basically, they can be described by the following function:
+\begin{equation}
+ \label{eqn:local-linear-oper}
+ g(i, j) = \sum_{k,l} f(i + k, j + l)h(k, l)
+\end{equation}
+where the entries in the weight kernel $h(k, l)$ are called \textit{filter coefficients}.
+More simply, the relation \ref{eqn:local-linear-oper} can be written as:
+\begin{equation}
+	\label{eqn:compact-loc-lin-op}
+	g = f \otimes h
+\end{equation}
+An important mention has to be done in relation to the separable filters.
+As a matter of fact, when filters are applied to a 2D image and convolution is taken into account, that requires $K^2$ operations per pixels, i.e. multiplication and summation, defining $K$ as the kernel size.
+In most cases, the filtering process can be accelerated carrying out a one-dimensional horizontal convolution and subsequently a vertical convolution. 
+This procedure requires, in fact, only $2K$ operations per pixels.
+However, this cannot be always done, but it can be applied only to the convolution kernels that are said to be \textit{separable}. \\
+The proof of that property for a convolution kernel can be achieved by inspecting at its analytic form, as shown in \cite{Freeman1991}.
+More precisely that can also be checked handling the 2D kernel as a 2D matrix $\mathbf{K}$ and taking its singular value decomposition (SVD), as follows:
+\begin{equation}
+	\label{eqn:svd-check-separable}	
+	\mathbf{K} = \sum_{i} \sigma_i \mathbf{u}_i \mathbf{v}_i^\top
+\end{equation}
+Therefore, it is proved that if only the first singular value $\sigma_0$ is non-zero, the kernel is separable and $\sqrt{\sigma_0}u_0$ and $\sqrt{\sigma_0}v_0^\top$ give the vertical and horizontal kernels respectively \cite{Szeliski2011}.
+Among linear filters, there are some that are commonly used for pre and post processing operations over images, which were tested in this project too.\\
+The moving average or box filter is regarded as the simplest one. 
+It basically performs a convolution over the image with a kernel of all ones and the result is then scaled. 
+The bilinear kernel is, instead, a specific version of the \textit{Bartlett} filter. 
+Actually, the bilinear filter is the outer product of two linear splines.\\
+Useful kernel for accurate noise removal are the \textit{Gaussian} kernels.
+As the operators introduced previously, they are example of low-pass kernels, whose effect is softening higher frequencies, which are correlated with the noise components of the signals\footnote{In the Fourier frequency-space the noise appears to be a high frequency signals}. \\
+Taking into account the non-linear filters, they are usually exploited when dealing with the need of achieve more accurate results with respect to the outcome given by linear operators.
+Moreover, on top of that, there are the morphological operators, which are neighborhood kernels working with binary images.\\
+Focusing on the non-linear operators, some of them has been employed in the designed of this project, in particular in the image pre-processing step of the main pipeline and in the post-processing phase.
+Among all the available non-linear area-based kernels, it worth to mention the applied ones.\\
+The median filter is one of these. 
+Basically, it takes the median value from each pixel's neighborhood.
+This kind of filter becomes quite performing when dealing with shot noise, which is difficult to be removed if applied a standard Gaussian kernel.
+However, moderate computational cost and the fact that it modify the values pixel-wise are drawbacks of this filter, which has to be taken into account.
+
+
+\section{Data and estimations error types}
+\label{section:error-types}
 
 
 
