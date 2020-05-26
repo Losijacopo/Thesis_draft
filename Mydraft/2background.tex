@@ -310,6 +310,89 @@ The median filter is one of these.
 Basically, it takes the median value from each pixel's neighborhood.
 This kind of filter becomes quite performing when dealing with shot noise, which is difficult to be removed if applied a standard Gaussian kernel.
 However, moderate computational cost and the fact that it modify the values pixel-wise are drawbacks of this filter, which has to be taken into account.
+For this reason, a \textit{weighted} median filter can be implied, instead. 
+In this case, each pixel of the subregion is counted a different number of times depending on its distance from the center.
+Therefore, this can be equivalently formulated as the minimization of the weighted objective function:
+\begin{equation}
+	\label{eqn:weighted-median-filt}
+	\sum_{k, l} w(k,l) \vert f(i + k, j + l) - g(i, j) \vert^{p}
+\end{equation}
+where $g(i,j)$ is the requested output value and $p = 1$ for the weighted median. \\
+Besides its heavier computational cost, compared to the linear filtering, non-linear noise removing operators are usually preferred because of their more accurate \textit{edge preserving} capability. 
+Hence, when cleaning away noisy frequencies, they tend to soft less the edges.\\
+\begin{figure}[t]
+	\begin{center}
+		{\includegraphics[width=.8\textwidth]{images/filter-example-original-shot-noise.png}}
+\caption{Original test image for filter comparison. Shot noise is added on top of the image. Credits \cite{Szeliski2011}}
+\label{fig:filter-example-original}
+	\end{center}
+\end{figure}
+
+\begin{figure}[t]
+	\centering
+	\subfigure[Gaussian filtered test image]{
+ 		\includegraphics[width=0.4\textwidth]{images/filter-example-gaussian.png}
+ 		\label{fig:gaussian-filt}
+}
+	\subfigure[Median filtered test image]{
+ 		 \includegraphics[width=0.4\textwidth]{images/filter-example-median.png}
+ 		 \label{fig:median-filt}
+}
+\caption{Test images example taken from \textit{Computer Vision: Algorithms and Applications} \cite{Szeliski2011}}
+\label{fig:filter-image-example}
+\end{figure}
+
+Figure \ref{fig:filter-example-original} shows a test image where shot noise is added.
+Thus, as visible in Figure \ref{fig:filter-image-example}, the Gaussian filter, trying to cancel most of the noise, tends to flatten high-frequency details, which are localized close to strong edges.
+Contrarily to the result in Figure \ref{fig:gaussian-filt}, the median filter, shown in Figure \ref{fig:median-filt}, is more edge preserving.\\
+Hence, the median filter was chosen in the initial part of the pipeline of this project for the image pre-processing phase, especially for its capability of preserving the edges, without, then, smoothing away the discontinuities.\\
+Bilateral filtering is another type of non-linear operator, which was tested during the development of the designed algorithm.
+Basically, during the image pre-processing implementation this specific kernel was one of the analysed options.
+In fact, it is one of the most common option for noise cancelling in computer vision algorithm.
+technically speaking, in the bilateral filter, the value of each transformed pixel is a weighted combination of its neighboring pixel values, as defined by the following equality:
+\begin{equation}
+	\label{eqn:bilateral-filter}
+	g(i, j) = \frac{\sum_{k,l} f(k,l)w(i,j,k,l)}{\sum_{k,l}w(i,j,k,l)}
+\end{equation}
+where the coefficient $w(i,j,k,l)$ is correlated to the multiplication between a +textit{domain kernel}, defined in equation \ref{eqn:domain-kernel}, and a data-based \textit{range kernel}, illustrate by equation \ref{eqn:range-kernel}.
+\begin{equation}
+	\label{eqn:domain-kernel}
+	d(i,j,k,l) = \exp \Big( - \frac{(i - k)^2 + (j - l)^2}{2 \sigma^2_d} \Big)
+\end{equation}
+\begin{equation}
+	\label{eqn:range-kernel}
+	r(i,j,k,l) = \exp \Big( - \frac{\Vert f(i,j) - f(k,l) \Vert^2}{2 \sigma^2_r} \Big)
+\end{equation}
+Therefore, the \textit{bilateral weight function} can be finally expressed as:
+\begin{equation}
+	\label{eqn:bilateral-weight-fnct}
+	w(i,j,k,l) = \exp \Big( - \frac{(i - k)^2 + (j - l)^2}{2 \sigma^2_d}  - \frac{\Vert f(i,j) - f(k,l) \Vert^2}{2 \sigma^2_r}\Big)
+\end{equation}
+An unavoidable drawback of the bilateral filter is closely correlated to its computational time, if compared to regular separable filter.
+For this reason, as outlined in \cite{Szeliski2011}, multiple acceleration methods have been developed during the last decade.
+Nonetheless, those algorithms are prone to a higher memory used w.r.t. the regular filtering, thus they should not be applied to full-color image filtering.\\
+A last family of non-linear operators that should be introduce in this chapter consists of morphological filters.
+Regarding the designed algorithm, morphological operators have been actually implemented in the post-processing phase in order to remove small estimation error in the 3D point cloud, enhancing the final dense depth 3D reconstruction of the scene.\\
+From a theoretical point of view, \textit{morphological operations} are typically implemented over binary or thresholded images. 
+This kind of filtering techniques are executed by first convolving the input image with a binary structuring element, which could have different shapes, and after that the result value is defined basing on the outcome of the convolution.\\
+If a binary image $f$ is considered and $s$ is the morphological kernel, the convolution operation is defined as:
+\begin{equation}
+	\label{eqn:morph-convol}
+	c = f \otimes s
+\end{equation}
+where $c$ is the number of 1s inside each structuring element when shifting through the image.
+Therefore, designating $S$, the kernel size, the principal morphological operations, which has been tested in the post-processing phase of the algorithm pipeline, comprise:
+\begin{itemize}
+	\item \textbf{dilation: } $\mathit{dilate}(f,s) = \theta(c, 0)$
+	\item \textbf{erosion: } $\mathit{erode}(f,s) = \theta(c, S)$
+	\item \textbf{opening: } $\mathit{open}(f,s) = \mathit{dilate}(\mathit{erode}(f, s), s)$
+	\item \textbf{closing: } $\mathit{close}(f,s) = \mathit{erode}(\mathit{dilate}(f, s), s)$
+\end{itemize}
+
+\section{Edge detection algorithms}
+\label{section:edge-detect}
+
+Strictly correlated to the latter family of non-linear operation analysed and to the overall performance of the designed algorithm
 
 
 \section{Data and estimations error types}
