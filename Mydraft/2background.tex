@@ -389,10 +389,20 @@ Therefore, designating $S$, the kernel size, the principal morphological operati
 	\item \textbf{closing: } $\mathit{close}(f,s) = \mathit{erode}(\mathit{dilate}(f, s), s)$
 \end{itemize}
 
-\section{Edge detection algorithms}
+\section{Edge detection and segmentation algorithms}
 \label{section:edge-detect}
 
-Strictly correlated to the latter family of non-linear operation analysed and to the overall performance of the designed algorithm
+Strictly correlated to the latter family of non-linear operation analysed and to the overall performance of the designed algorithm there is the concept of edge detection.\\
+Techniques for finding object boundaries in an image are extremely relevant in computer vision and especially when dealing with stereo matching and disparity estimation. 
+As a matter of fact, object borders coincide with occlusion points in 3D, where the majority of wrong matches takes place in depth estimation. 
+Moreover, segmentation methods are strongly related to this topic and remarkably useful in the preparatory phase of an accurate stereo matching algorithm.\\
+Specifically to this work, segmentation techniques have not been completely developed.
+This was due to the fact that the initial data provided by the laser points grid already gives a good amount of information for obtaining an accurate 3D dense disparity map.
+Beside that, after the evaluation of the first reasonable results obtained, further improvements of the algorithm has been considered to enhance smoothness and continuity among the estimations.
+Thus, edge detection and segmentation methods appear to be effective initial operations for multiple reasons, such as, reducing the computational time of the entire pipeline and increasing accuracy and density of the final estimations.\\
+Therefore, it is worth to present a brief but sufficient theoretical outline of the most common algorithms designed in the computer vision area, considering that they will be part of the future improvements, which will be applied to work developed so far. \\
+
+
 
 
 \section{Data and estimations error types}
