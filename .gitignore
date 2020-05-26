@@ -1,6 +1,5 @@
 # Big files and unnecessary folders
 *.zip
-Mydraft/images/
 
 # Log and sync files
 *.log
