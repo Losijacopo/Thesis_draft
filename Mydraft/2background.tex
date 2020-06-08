@@ -394,15 +394,57 @@ Therefore, designating $S$, the kernel size, the principal morphological operati
 
 Strictly correlated to the latter family of non-linear operation analysed and to the overall performance of the designed algorithm there is the concept of edge detection.\\
 Techniques for finding object boundaries in an image are extremely relevant in computer vision and especially when dealing with stereo matching and disparity estimation. 
-As a matter of fact, object borders coincide with occlusion points in 3D, where the majority of wrong matches takes place in depth estimation. 
+As a matter of fact, object borders coincide with occlusion points in 3D, where the majority of wrong matches takes place (in depth estimation). 
 Moreover, segmentation methods are strongly related to this topic and remarkably useful in the preparatory phase of an accurate stereo matching algorithm.\\
 Specifically to this work, segmentation techniques have not been completely developed.
-This was due to the fact that the initial data provided by the laser points grid already gives a good amount of information for obtaining an accurate 3D dense disparity map.
-Beside that, after the evaluation of the first reasonable results obtained, further improvements of the algorithm has been considered to enhance smoothness and continuity among the estimations.
+This was due to the fact that the initial data provided by the laser points grid gives already a good amount of information for obtaining an accurate 3D dense disparity map.
+Beside that, after the evaluation of the first reasonable results, further improvements of the algorithm has been considered to be an enhancement for smoothness and continuity among the estimations.
 Thus, edge detection and segmentation methods appear to be effective initial operations for multiple reasons, such as, reducing the computational time of the entire pipeline and increasing accuracy and density of the final estimations.\\
-Therefore, it is worth to present a brief but sufficient theoretical outline of the most common algorithms designed in the computer vision area, considering that they will be part of the future improvements, which will be applied to work developed so far. \\
+Therefore, it is worth to present a brief but sufficient theoretical outline of the most common edge detection algorithms designed in the computer vision area, considering that they will be part of the future improvements, which will be applied to work developed so far. \\
+From a qualitative point of view edges are usually located in areas where there are changing in color or texture.
+However, segmenting an image basing on this information is usually complicated and specific methods has been developed for that.\\
+Therefore, for pure edge detection, regions of fast intensity variation are taken into account.
+Specifically, edges are usually located in an image where there are steep slopes, in terms of intensity.
+Mathematically, these surface's characteristics can be defined through its gradient, i.e.:
+\begin{equation}
+	\label{eqn:gradient}
+	\mathbf{J}(\mathbf{x}) = \nabla I(\mathbf{x}) = \Big( \frac{\partial I}{\partial x} , \frac{\partial I}{\partial y} \Big) (\mathbf{x})
+\end{equation} 
+where the local gradient vector $\mathbf{J}$ symbolizes the direction of the steepest ascent in terms of intensity. 
+Because the percentage of noise is higher at high frequencies, and considering that derivatives enhance those frequencies, a low-pass filter, e.g. Gaussian, is usually applied before the gradient.\\
+Nevertheless, to make edge detection really efficient, it would be desired to refine that continuous gradient to the single pixel locations on the edge contours. 
+This can be achieved by finding the \textit{local maxima} in the gradient magnitude along its direction.
+Therefore, the maxima are calculated by taking the derivative of the gradient, that means apply a dot between a gradient operator and the previous result.
+This will lead to the so called \textit{Laplacian}:
+\begin{equation}
+	\label{eqn:laplacian}
+	S_{\sigma}(\mathbf{x}) = \nabla \cdot \mathbf{J}_{\sigma}(\mathbf{x}) = [\nabla^2 G_{\sigma}](\mathbf{x}) \ast I(\mathbf{x})
+\end{equation}
+where $\sigma$ symbolizes the Gaussian filter used for the initial image smoothing.
+This final result is usually called \textit{Laplacian of Gaussian}(LoG) kernel, which is a separable filter.
+However, commonly a slightly different kernel is employed, the \textit{Difference of Gaussian} (DoG), which gives a similar result.\\
+Hence, once the function $S(\mathbf{x})$ has been defined, its \textit{zero crossing} is computed and so the edge elements can be estimated. \\
+Obviously, if high accuracy is needed, higher-order steerable filters can be exploited.\\
+Furthermore, taking into account the standard DoG kernel, the fundamental parameter is $\sigma$, i.e. the filter spatial scale parameters.
+In fact, it influences the amount of noise on the image and thus the edges scale. \\
+It has already been presented that defining confined edges is convenient for multiple applications, such as in the pre-processing image phase of a stereo matching algorithm.
+Considering that, combining together these edges, designing a sort of continuous contour, would be even more useful.\\
+For example, if the procedure explained above for defining the edges is taken into account, meaning that the edges were defined through zero crossing, link them together becomes quite simple. 
+As a matter of fact, adjacent edges have the same endpoints. 
+Then, multiple methods exist to encode the edges together forming the contours.\\
+Strongly related to edge detections, there is the topic of segmentation, i.e. group together pixels that share the same characteristic.
+In computer vision segmentation algorithms are among the first studied and designed topics (\cite{ohlander1978picture}, \cite{Brice1970}, \cite{haralick1985image}) and they are still nowadays a widely analysed problem (\cite{comaniciu2002mean}, \cite{cremers2007review}). 
+Some basic segmentation techniques related to the morphological filters has already been presented in the subsection \ref{subsection:neighbor-operator}. 
+In this section, the analysis of some commonly used algorithm is carried out.
+Since in this field the researches have been numerous simple explanations of some of them, such as \textit{active contours}, \textit{region splitting and merging}, \textit{mean shift}, \textit{normalized cuts} and \textit{binary Markov random fields} are presented. \\
 
+\subsection{Active Contours}
+\label{subsection:active-conturs}
 
+Active contours \cite{balke1998active} method groups together different techniques, such as \textit{snakes} \cite{kass1988snakes}, \textit{intelligent scissors} \cite{mortensen1995intelligent} and \textit{level set} algorithms.
+These methods reach the final solution iteratively thanks to the combination of image and arbitrary user-guidance.\\
+Since the merely theoretical purpose of this analysis and considering that these specific methods have not been widely tested in this project, it is not necessary to describe in detail all of these algorithms.
+Therefore, if there would be interest  in the mathematical background of the aforementioned techniques, we remind to the manual by Szeliski \cite{Szeliski2011}.\\
 
 
 \section{Data and estimations error types}
