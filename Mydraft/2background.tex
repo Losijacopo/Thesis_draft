@@ -438,13 +438,41 @@ Some basic segmentation techniques related to the morphological filters has alre
 In this section, the analysis of some commonly used algorithm is carried out.
 Since in this field the researches have been numerous simple explanations of some of them, such as \textit{active contours}, \textit{region splitting and merging}, \textit{mean shift}, \textit{normalized cuts} and \textit{binary Markov random fields} are presented. \\
 
-\subsection{Active Contours}
-\label{subsection:active-conturs}
+\paragraph*{Active Contours}
 
 Active contours \cite{balke1998active} method groups together different techniques, such as \textit{snakes} \cite{kass1988snakes}, \textit{intelligent scissors} \cite{mortensen1995intelligent} and \textit{level set} algorithms.
 These methods reach the final solution iteratively thanks to the combination of image and arbitrary user-guidance.\\
 Since the merely theoretical purpose of this analysis and considering that these specific methods have not been widely tested in this project, it is not necessary to describe in detail all of these algorithms.
-Therefore, if there would be interest  in the mathematical background of the aforementioned techniques, we remind to the manual by Szeliski \cite{Szeliski2011}.\\
+Therefore, if there would be interest in the mathematical background of the aforementioned techniques, we remind to the manual by Szeliski \cite{Szeliski2011}.\\
+
+\paragraph*{Region splitting and merging}
+
+Differently from algorithms entirely based on threshold selection and connected components computation, a useful segmentation technique is related to a recursive splitting of the entire image into subregions, which are then merged together hierarchically. 
+Therefore, region splitting and merging is fundamentally focused on multiple stages of split and merge of image areas, at different level of density, mainly basing on region statistics. \\
+An example of this approach is the \textit{watershed} algorithm \cite{vincent1991watersheds}.
+The core of this algorithm stands on dividing the whole image into different \textit{catchment basins}, which are identified taking into account all the local minima present and labelling them. 
+In order to make the algorithm suitable also for color images, it is usually applied to the gradient magnitude of the figure. \\
+Moreover, an interesting algorithm, which appeared to be useful as a pre-processing phase of more complex algorithms such as stereo matching, optic flow and object recognition, is centred in region merging.
+Actually, areas of the image close among each other are combined together considering their average color difference. 
+Therefore, if it is below a certain threshold the adjacent portions of the image are merged into a so-called \textit{superpixel} \cite{mori2004recovering}.  \\
+
+\paragraph*{Mean shift}
+
+Mean-shift algorithms, as well as mode finding, k-means and mixture of Gaussian, consider position, color or other features of image points and cluster them as they would be taken from a probability density function, finding the peaks of that distribution.\\
+
+\paragraph*{Normalized Cuts}
+
+The idea of the Shi and Maki algorithm \cite{shi2000normalized} is to divide the image into groups distinguished by weak affinities, i.e. similarities. 
+Therefore, in this methods pixels that show strong similarities will belong to the same group. 
+The different groups are, then, separated taking into account the sum of the weights of all the cuts among pixels of different regions.
+Because, this could lead to unreasonable clusters, the normalized cut measure is used.\\
+
+
+\paragraph*{Markov Random Field}
+
+Markov Random Field (MRF) optimization is an energy-based algorithm.
+These energy minimization problems based on MRF are usually solved employing graph cuts techniques.
+
 
 
 \section{Data and estimations error types}

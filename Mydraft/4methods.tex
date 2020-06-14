@@ -16,12 +16,12 @@ Considering the standard algorithms for recovering a dense depth image from a st
 The decision of starting to concentrate on that evaluation of the stereo matching problem was mainly driven by the recent methods designed for dense disparity estimation.
 As a matter of fact, most of the algorithms created in the last decade are based on the Hirschm\"{u}ller idea or, at least, they make reference to several aspects of the functions outlined in \cite{Hirschmuller2008}.
 This fact is clearly comprehensible considering that the SGM method was classified as the best algorithm at the time of its publication and it is currently one of the top-ranked algorithm in terms of sub-pixel accuracy and computational time.
-Hence, taking into account the benchmark data based on two of the most employed dataset, i.e. \cite{Scharstein2014} and \cite{geiger2013vision}, and after an initial general review of the literature publish in this field, it results that the top-performing algorithms use key features of SGM in their main pipeline. 
+Hence, taking into account the benchmark data based on two of the most employed dataset, i.e. Middlebury \cite{Scharstein2014} and KITTI \cite{geiger2013vision} datasets, and after an initial general review of the literature publish in this field, it results that the top-performing algorithms use key features of SGM in their main pipeline. 
 Moreover, it is worth to point out that the majority of the most accurate real time deep learning based algorithm tends to adopt the main functions of the SGM model, exploiting neural networks to ensure real time evaluations of the disparities.
 Therefore, it was initially though that a reasonable option for the developing of an algorithm, which would work in real time providing accurate outcomes, would focus the attention of the Hirschm\"{u}ller method.\\
 As already introduced in section \ref{sec:stereometh}, the SGM method combines the idea of the standard local based algorithms, where the main cost calculations are made over limited size windows, and global algorithm, for which the best pixel disparity estimation is based on a global energy function. 
 Thus, mainly because its hierarchical cost calculation, SGM method outperformed the top-ranked algorithm over the dataset \cite{scharstein2003high}, proving real-time performance of that dataset images. 
-However, with the current dataset, such as Middlebury 2014 \cite{Scharstein2014} and KITTI \cite{geiger2013vision}, \cite{menze2015object}, the standard Semi-Global Matching algorithm provide optimal results in terms of accuracy but it tends to slightly suffer if computational time is considered.
+However, with the current dataset, such as Middlebury 2014 \cite{Scharstein2014}, KITTI 2012 \cite{geiger2013vision} and KITTI 2015 \cite{menze2015object}, the standard Semi-Global Matching algorithm provide optimal results in terms of accuracy but it tends to slightly suffer if computational time is considered.
 For this reason, the most recent real time methods for dense disparity estimation establish the cost computation part of their pipeline over the SGM idea, although, they exploit hardware efficiency or even neural network structures to reach extremely fast computations.\\
 Thus, considering this project, it was decided to initially build up the main pipeline on the SGM method structure and employ the stereo device designed by the company to reach real time performances, without loosing in accuracy. 
 Furthermore, as previously anticipated, an upstream choice was made. 
@@ -35,10 +35,58 @@ As aforementioned in chapter \ref{chapter:environment}, these preliminary evalua
 In that phase an implementation sufficiently similar to the standard SGM method was designed. 
 Thus, the focus was centred on the different types of algorithms used for matching the corresponding pixels and, then, on the part of the pipeline related to the matching and the aggregation costs, as precisely defined by Scharstein and Szeliski in \cite{Scharstein2001}.
 The adoption of this working strategy was due to the following motivations. 
-First of all, the predominant current researching aim of this project, whose purpose would most likely further shifts in more market based one, the need of test the effective performance in accuracy of pure SGM based method and the requirement of analyse the relative efficiency between that algorithm and a method, whose pipeline would be based on the information acquired exploiting the company device. \\
+First of all, the predominant research aim of this project, whose purpose would most likely further shifts in more market based one, then the need of test the effective performance in accuracy of pure SGM based method and the requirement of analyse the relative efficiency between that algorithm and our method, whose pipeline would be based on the information acquired exploiting the company device. \\
 Considering that a fundamental part of this initial testing phase was focused on the matching cost evaluation, multiple matching algorithm has been tested in order to find the most efficient one mainly in terms of accuracy. 
-Therefore, basing on the work done in \cite{Hirschmuller2007}, \cite{Patil2013} and \cite{Ko2017}, and making reference to the algorithm used for computing visual correspondence described in \cite{Zabih1994} and \cite{Demetz2013}, the performance of different matching cost algorithms has been analysed. 
+Therefore, basing on the work done in \cite{Hirschmuller2007}, \cite{Patil2013} and \cite{Ko2017}, and making reference to the algorithm used for computing visual correspondence described in \cite{Zabih1994} and \cite{Demetz2013}, the performance of different matching cost algorithms has been analysed.\\
 
+\subsection{Census transform}
+\label{subsection:census-transform}
+
+A crucial phase of the SGM algorithm stands in the matching cost computation.
+As briefly explained in the background \ref{chapter:background} chapter, this cost is evaluated by computing the difference in the value of intensity among corresponding pixels.
+Therefore, especially when dealing with unexpected luminance variation inside the analysed scene, it comes out that non-parametric local transforms are optimal as the support for that correlation \cite{Zabih1994}.
+As a matter of fact, these kind of measurements do not rely on the actual intensity values of the pixels, but on the relative local intensities instead.
+Therefore, using this kind of models, a considerable number of outliers can be tolerated and improved results are visible especially along object boundaries.\\
+Among the commonly used and best performing non-parametric local transform, census and rank transform are described.
+Moreover, couple of different implementations of those two classes of transform are introduced.\\
+It is widely known in computer vision field that correspondence problem is crucial in depth estimation from stereo pairs.
+Correspondence can be, thus, defined by transforming the images with a specific method and then establishing correlations.
+In that, the key factor is the transformation, which must tolerate unexpected variation in intensity, for example due to unwanted light source, and in general changes in image bias and gain.\\
+Therefore, non-parametric area-based transform rely on local ordering of intensities and not on the actual intensity values.
+If an image is considered, and defining as $p$ a random pixel, its intensity becomes $I(p)$. 
+Then, let $N_d(p)$ be the set of pixel in a certain square neighbourhood of size $d$, where $p$ is the central pixel. 
+Hence, the binary function $\xi(p, p')$ takes value 1 if $I(p') < I(p)$, 0 otherwise.
+A non-parametric local transform only rely on the set of pixels in the specific neighbourhood.
+Therefore, the \textit{Census transform}, $R_{\tau}(p)$ maps the image subregion surrounding $p$ to an array of bits representing the set of local pixels whose intensity is less or equal than that of $p$. 
+Mathematically, the census transform can be formulated as:
+\begin{equation}
+	\label{eqn:census-transform}
+	R_{\tau}(p) = \bigotimes_{[i, j] \in D} \xi(p, p +[i, j])
+\end{equation}
+where, $N(p) = p \oplus D$, with $\oplus$ is the Minkowski sum and $D$ the set of displacements, and denoting with $\otimes$ the concatenation. 
+After the census transform has been applied, the actual comparison among corresponding pixels in done by computing their \textit{Hamming} distance.\\ 
+Higher accuracy in corresponding pixel matching can be achieved using an extension of the Census transform, defined as center-symmetric Census transform \cite{Spangenberg2013}.
+Therefore, if a square image subregion is taken into account, which has dimensions $n \times m$, we already know from equation \ref{eqn:census-transform} that $s(u, v) = 0, if u \leq v, 1$ otherwise, where now $s( )$ is the sign function.
+Precisely, in this notation the census transform can be thus defined as:
+\begin{equation}
+	\label{eqn:census-transf-2}
+	CT_{m,n}(x, y) = \bigotimes_{i = -n'}^{n'} \bigotimes_{j = -m'}^{m'} s(I(x, y), I(x + i), y + j)
+\end{equation}
+where $n' = [n/2]$, and $m' = [m/2]$.
+Hence, as shown in Figure, the center-symmetric census transform can be mathematically defined as:
+\begin{equation}
+	\label{eqn:center-symmetric-census}
+	CS-CT_{m,n}(x, y) = \bigotimes_{(i, j) \in L} s(I(x - i, y - j), I(x + i, y + j))
+\end{equation}
+where $L = L_1 \cup L_2$, $L_1 = R_{-n',0} \times R_{-m',0} \setminus {(0, 0)}$, $L_2 = R_{1,n'} \times R_{-m',1}$ and $R_{a, b} = {x \in \mathbb{Z} \vert a \leq x \leq b}$.
+Because, only center-symmetric pairs of pixels are compared, the formulation in equation \ref{eqn:center-symmetric-census} needs less bit than the one in \ref{eqn:census-transf-2} to describe the same patch. 
+As aforementioned, the actual matching cost is then computed using the Hamming distance between corresponding pixels. 
+
+\subsection{Rank Transform}
+\label{subsection:rank-transform}
+
+\subsection{Conventional intensity based methods}
+\label{subsection:conventional-methods}
 
 \section{Deep-learning based methods}
 \label{section:deep-learning-method}
