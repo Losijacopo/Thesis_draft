@@ -57,6 +57,7 @@
 \usepackage{subfigure}
 %\usepackage{systeme}
 \usepackage{verbatim}
+\usepackage[ELEC]{aaltologo}
 
 % The TikZ package allows you to create professional technical figures.
 % The learning curve is quite steep, but it is definitely worth it if 
@@ -111,7 +112,7 @@
 % ------------------------------------------------------------------
 \newcommand{\TITLE}{Structured light assisted real time stereo photogrammetry for robotics and automation} 
 \newcommand{\SUBTITLE}{Novel implementation of stereo matching}
-\newcommand{\DATE}{\date}
+\newcommand{\DATE}{\today}
 
 % Supervisors and instructors
 % ------------------------------------------------------------------
@@ -126,6 +127,7 @@
 
 % Example of twosupervisors:
 \newcommand{\SUPERVISOR}{Professor Juho Kannala\\
+  Professor Daniele Fontanelli\\
   Professor Nicola Conci}
 
 % If you have only one instructor, just write one name here
@@ -136,6 +138,7 @@
 % then the supervisor names shown here are printed in the cover page. Otherwise,
 % the supervisor names defined above are used.
 \newcommand{\COVERSUPERVISOR}{Professor Juho Kannala, Aalto University\\
+  Professor Daniele Fontanelli, University of Trento\\
   Professor Nicola Conci, University of Trento}
 
 % The same option is for the instructors, if you have multiple instructors.
@@ -147,7 +150,7 @@
 % ------------------------------------------------------------------
 \newcommand{\PROFESSORSHIP}{Autonomous Systems}
 % Professorship code is the same in all languages
-\newcommand{\PROFCODE}{}
+\newcommand{\PROFCODE}{ELEC3055}
 \newcommand{\KEYWORDS}{stereo vision; matching cost; census transform; hamming distance; binary pattern; semi-global matching}
 \newcommand{\LANGUAGE}{English}
 
@@ -348,11 +351,11 @@ Thank you, and keep up the good work!
 % 
 \input{5implementation.tex}
 %
-%\input{6evaluation.tex}
+\input{6evaluation.tex}
 % 
-%\input{7discussion.tex}
+\input{7discussion.tex}
 % 
-%\input{8conclusions.tex}
+\input{8conclusions.tex}
 
 
 % Load the bibliographic references

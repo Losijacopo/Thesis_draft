@@ -43,19 +43,111 @@ Therefore, basing on the work done in \cite{Hirschmuller2007}, \cite{Patil2013} 
 \section{Deep-learning based methods}
 \label{section:deep-learning-method}
 
-
+As introduced in section~\ref{subsec:deeplearnmeth} the deep learning method approach for stereo matching was not chosen as the base method for the developing of this project for different reasons, which have already been explained in Chapter~\ref{chapter:background}.\\
+However, the structure of a deep learning based project was extremely useful in the definition of the strategy used for the designing of our work.
+Fundamental is the novel stereo matching method developed by Poggi et al.~\cite{Poggi2019}, who exploited a small quantity of sparse initial depth data to enhance the overall stereo matching problem.
+In their paper, they presented \textit{Guided Stereo Matching}, an innovative stereo algorithm, which uses a sparse set of accurate depth measurement obtained from reliable hardware system, e.g. a LiDAR, with the aim of improving the general performance of a standard depth estimation algorithm.\\
+Therefore, considering the structure of our system, the strategy used in \cite{Poggi2019} appears to have valuable insights, which would be exploited in the definition of our own work.
+Actually, they proposed to use sparsify yet reliable depth measurements for the following tasks: improve the general accuracy of the neural network designed for achieving the depth estimations, reduce the domain shift, i.e. the drops in accuracy that deep learning based methods face when dealing with data from a new environment, and the potential improvement of result when training the network starting from that sparse set of inputs.\\
+Similarly to that approach, in this project, we decide to base our overall estimations on the knowledge of the sparse group of 3D measurements coming from the company device.
+However, differently from them, the algorithm described in this thesis uses as the standard methods in the  stereo matching pipeline, which appear to work better for multiple types of environments. \\
+Thus, taking into account the results provided in~\cite{Poggi2019}, where the authors demonstrate how their strategy outperforms the current state-of-the-art stereo matching methods, we assumed that a reasonable approach to apply would exploit the initial cues coming from the laser grid of points in order to improve the performance of the main algorithm. 
+As a matter of fact, in their paper, Poggi et al.~\cite{Poggi2019} assert that the initial set of estimations can be obtained with whatever device that can give sparse data.\\
+Consequently, during the initial stages of the development some tests have been performed designing a simulated point grid, in order to have a clear outcome of the reliability of this strategy.
+Hence, employing the Middlebury 2014 dataset, the initial set of clues was designed taking the sparse depth information from the ground truth images available. 
+Obviously, the depth measurements coming from the dataset can be considered highly accurate, differently from the data from the LadiMo device, which would most likely be affected by some sort of noise, mainly Gaussian. 
+Nevertheless, it is actually extremely useful to perform these tests in order to figure out since the first phases of the project, the qualitative performance of the adopted strategy.
+The details of the conducted tests are widely described in Chapter~\ref{chapter:implementation}, where some of the temporary results obtained are proposed too.\\
 
 
 \section{Pure derivative based data estimation algorithm}
 \label{section:deriv-based-algorithm}
 
+As previously introduced, two different algorithm structures have been implemented and compared in this project, in addition to the standard Semi-Global Block Matching (SGBM) algorithm, whose result was used as a baseline for carrying out an appropriate comparison with the novel implementation designed. 
+Therefore, the first one of these methods is closely related to the standard SGM implementation, it exploits the initial knowledge of the sparse depth estimations, however, the core of the algorithm follows the Hirshm\"{u}ller algorithm \cite{Hirschmuller2008}. 
+Differently, the other implementation designed is more strictly related to the initial sparse depth clues, and it is focused on those for the overall pipeline of the algorithm.
+As it will be reported in Chapter~\ref{chapter:evaluation}, this latter approach will provide a faster yet, in general, equally accurate implementation.
+Therefore, these two designed strategies will be deeply explained in Chapter~\ref{chapter:implementation}.
+Beside that, it is worth to propose here a concise outline of both of them, in order to introduce their main features.\\
+Regarding the last introduced method, it highly exploits the information coming from the input sparse clues.
+Therefore, starting from that initial 3D point cloud and using a pair of stereo images of the considered scene, a dense point cloud is built by estimating the space positions of an high amount of scene points. 
+The key of this algorithm actually stands on the way in which those estimations are carried out. 
+Thus, considering the point grid given by the stereo device, the local derivatives among neighboring points are evaluated. 
+These will be then used for two main scopes: identify if inside a specific subpatch of the point cloud there could be an edge, that is that points belonging to the same small cluster have indeed highly different values of depth, and for computing the denser point cloud by interpolating the 3D value of neighboring points and exploiting the values of the pre-calculated derivatives for making the interpolation faster.\\
+It can be, hence, easily understood how core of this strategy stands on the local derivatives estimation. 
+As a matter of fact, let us consider a square cluster of 4 neighboring points from the initial point cloud, it is possible to evaluate the \textit{internal} and the \textit{external} derivatives among these points.
+Specifically, the former are referred to be identified by the vectors that points \textit{inside} the square patch. 
+Instead, the external derivatives are said to be the ones evaluated using the other points, which are neighbors to the patch corners. 
+Figure \textbf{PUT FIGURE HERE} shows the aforementioned point cloud patch. 
+Summarizing, the denser 3D point cloud is estimated by filling up each one of the subpatches that can be identified from the initial grid. 
+In order to perform this, the estimations are carried out exploiting the derivative vectors, which are weighted by the distance from the new estimated point and each one of the window corners.
+This detail, in fact, shows that four temporary estimations are done for each new point. 
+In this way, the best estimation is actually chosen by projecting the evaluated 3D point to the image plane and calculating the matching cost between the corresponding pixels for each temporary estimation.
+For the matching cost, as it will be more widely explained in Chapter~\ref{chapter:implementation}, different methods have been investigated.
+However, the plain absolute difference appeared to be the best in terms of performance for that algorithm.
+In fact, at the end of the whole computation, similar results have been found with different matching cost algorithms.
+Hence, in that case, it is worth nothing to use most expensive methods, which will make the computations heavier giving only slightly better results.
+Besides that, specific penalties have been added on top of the pure matching cost to enhance the distance from the respective window corner in terms of x and y coordinates.\\
+Summing up the general outcome gained from this approach, it results to be a lightweight yet effective method.
+As it will be presented in the Chapter~\ref{chapter:evaluation}, this algorithm provides 3D dense point clouds that can be considered sufficiently accurate for a general use employing a relatively low amount of resources.
+Despite that, internal parameters of that method can be adjusted, depending on the user needs, in order to obtain outcomes with a different grade of accuracy. 
+Evidently, this will affect the performance in terms of computational time and used resources, however, this is always considered for every testing environment. \\
+
 \section{SGM based data estimation algorithm}
 \label{section:sgm-based-algorithm}
 
+As aforementioned, the second method that has been designed is based on a more standard approach, closely related to the SGBM algorithm. 
+Basically, it exploits the information coming from the input point grid to make the standard pipeline of the SGBM method faster, which could be extremely expensive when dealing with high density images.
+Actually, the initial points information is employed to select the disparity levels on which the main algorithm is run. 
+Simply speaking, the final implementation can be considered as a \textit{disparity-wise} Semi-Global Block Matching, where there are not usually continuous changing in the disparity levels, especially if edges are detected inside the specific image patch.\\
+Taking into account the general performance of this approach, it runs slower than the previous strategy. 
+Moreover, the final 3D point cloud shows an higher density, however, looking at the achieved results, the increase in accuracy obtained in this case seems not to be worth it the observed rise in computations. \\
+Therefore, at the reached stage of the project, it appears that a slightly decrease in accuracy can be considered reasonable for a quite high increase in computation speed. 
+However, every use case has to be widely analysed in order to choose the most profitable solution.
+Additionally, it is necessary to point out that this project should be regarded as still in a researching phase. 
+Multiple tests have been performed with both dataset, i.e. almost perfect, and real images. 
+However, for a good analysis of the specific use case, it is necessary to run various tests on the specific working environment, and eventually, adjusting parameters or side sections of the main pipeline.\\
+Beside that, a further discussion over those topics will be presented in Chapter~\ref{chapter:discussion}. 
+Anyhow, it was considered helpful for a deeper understanding of the results that will be presented in the Chapter~\ref{chapter:evaluation}, to introduce also here some brief comments over the outlined algorithms.\\
+Hereafter, a short overview on the pre and post-processing techniques employed in the whole project is presented. 
+Further details will be described in the following chapter. 
+Anyway, it is useful to introduce here the main techniques used and especially the differences in performance, which have been analysed, and also their scope in relation to the final accuracy of the algorithms.
 
 \section{Pre-processing techniques}
 \label{section:pre-process-tech}
 
+In the first section of the algorithm pre-processing techniques have turned out to be, not indispensable, but useful for the accuracy of the final results.
+The focus was especially centred on the noise removal. 
+As a matter of fact, if a stereo pair is given, it is generally affected by Gaussian, i.e. random, noise, which can be due to multiple reasons, such as instability of environmental conditions, lightning, local temperature gradients that can affect the stereo system or errors in the setting of the stereo device. \\
+Therefore, for those reasons and for the purpose of launching the algorithm having the input image as clearer as possible, especially in terms of pixels' intensity, blurring filters have been tested and analysed during the development of this first phase of the pipeline. 
+Specifically, median and bilateral filters occur to be ideal for smoothing away noisy components in the frequency spectrum, keeping the performance of the whole algorithm reasonable. \\
+The details of that analysis are left to Chapter~\ref{chapter:implementation}.
+However, it is worth to indicate that, even if heavier from a computational side, the median filter came out as the preferred choice for image blurring when dealing with real stereo pairs.
+As a matter of fact, when the images from the datasets have been tested, there was not any needs to apply some sort of pre-processing, being them already cleaned from noisy components. \\
+Talking about the real dataset and especially about the initial grid of points obtained from the company stereo device, some pre-processing operations have been performed over those data too. 
+The goal of this process was the requirement of starting the main computations basing on accurate and possibly complete data. 
+Focusing on that, it actually happened that the input point cloud was, in general, not fully complete. 
+Instead, some of the points had missing data.
+This was probably due to occlusion, in fact most of the \textit{bad} points areas were located on edges or on regions affected by shadows. \\
+Therefore, this problem was tackled in the following way.
+First of all, all those input data have been analysed and, specifically, the percentage of completely missing values with respected to the total amount of points was calculated. 
+This was performed to obtain an initial estimation of the percentage of errors present in the input data, thus to evaluate the degree of effort that it should be required to have a final accurate result.
+Precisely, let us think about the case of having an extremely low amount of errors, e.g. the 1.5\% of the entire point cloud. 
+Moreover, consider the condition in which these errors are sparsified and, additionally, that would be sufficiently complicated to fill in those missing data.
+Thus, in this situation, it would be worth nothing to spend resources to improve the completeness of the input data, reaching an outcome that would be, most likely, only slightly more accurate and for which the whole algorithm would be way heavier and more complicated. 
+On the contrary, a feasible option can be the one of running multiple time a very lightweight algorithm, exploiting the most accurate new estimated points to improve the density of the successive 3D clouds.\\
+For the actual purposes of this Chapter it is unnecessary to present further details of this data processing, which would be more widely analysed in the following sections. \\
+On the other hand, it is convenient to introduce here some features about the post-processing operations, which have been carried out in the last section of the algorithm.\\
+
 \section{Post-processing techniques}
 \label{section:post-process-tech}
 
+Considering the results achieved with both the Middlebury 2014 dataset and the real environment images an additional blurring process has been run over the final data. 
+Differently from the the smoothing operations employed in the first part of the depth estimation method, in this phase the morphological filters emerge to be the most appropriate trade-off between final result and computational resources. \\
+Also during the designing of this area of the project several tests have been carried out in order to obtain an estimation of the most suitable post-processing technique to run over the final result.\\
+Therefore, considering the disparity images achieved using the stereo pair from the \textit{perfect} dataset, the application of an additional median filter seemed more appropriate.
+However, for the outcome accessed using images taken with the LadiMo device, the use of morphological filters appear more convenient. 
+Additionally, several of those have been tested. 
+Opening, closing, erosion and dilation have been run over both the raw disparity result and over the raw denser 3D point cloud.
+Moreover, in order to have a clear idea of the performance of the different kernels, even mixture of those morphology operations have been generated. \\
+At the end, the application of an opening filter gave the most accurate result on the 3D point cloud. 
