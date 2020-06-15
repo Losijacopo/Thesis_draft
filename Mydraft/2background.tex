@@ -21,7 +21,7 @@ Then, the concept of epipolar geometry is outlined and after that the notions of
 
 \begin{figure}[t]
 	\begin{center}
-		{\includegraphics[width=.8\textwidth, height=7cm, keepaspectratio]{images/triangulation}}
+		{\includegraphics[width=.8\textwidth, height=5cm, keepaspectratio]{images/triangulation}}
 \caption{3D triangulation by finding point $P'$ that lies nearest to all of the optical rays}
 \label{fig:triangulation}
 	\end{center}
@@ -31,15 +31,21 @@ Triangulation is the problem of detecting 3D points positions from a collection 
 Figure \ref{fig:triangulation} shows one of the easiest methods to tackle this problem. 
 Objective is to evaluate the 3D position of $P'$ that have the smallest error to all of the 3D optical rays coming from the camera centers, which identify the 2D point locations in the image plane, i.e. $P_r$ and $P_l$.
 As shown in Figure \ref{fig:triangulation}, the rays starts from the camera centers, $O_j$ and go in direction of $r$ and $l$, which can be defined using the camera matrix $ \{ P_j = K_j [ R_j | t_j ] \} $.
-The closest point to $P$ on this ray minimizes the distance
-\begin{equation}\label{eqn:mindist}
+The closest point to $P$ on this ray minimizes the distance,
+
+\begin{equation}
+\label{eqn:mindist}
 	\Vert O_j + d_j \hat{v}_j - P \Vert^2
 \end{equation}
+
 Therefore, because of the minimum is $d_j = \hat{v}_j \cdot (p - c_j)$, the nearest points are calculated as:
+
 \begin{equation}\label{eqn:closestpoint}
 	q_j = O_j + (\hat{v}_j \hat{v}_j^\top)(P - O_j) = O_j + (P - O_j)_{\Vert}
 \end{equation}
+
 Hence, the optimal value for $P$, obtained solving a least square problem, becomes,
+
 \begin{equation}\label{eqn:solP}
 	P = \Big[ \sum_j (I - \hat{v}_j \hat{v}_j^\top ) \Big]^{-1} = \Big[ \sum_j (I - \hat{v}_j \hat{v}_j^\top )O_j \Big]
 \end{equation}
@@ -49,7 +55,7 @@ Hence, the optimal value for $P$, obtained solving a least square problem, becom
 
 \begin{figure}[t]
 	\begin{center}
-		{\includegraphics[width=.8\textwidth, height=7cm, keepaspectratio]{images/epipolar-geometry-2}}
+		{\includegraphics[width=.8\textwidth, height=5cm, keepaspectratio]{images/epipolar-geometry-2}}
 \caption{Epipolar geometry. Image point $m$ back-projects to a ray in a 3D space defined by $C$ and $m$. This ray becomes a line $l'$ in the second view. The image of $X$ must lie on $l'$}
 \label{fig:epipolargeom-2}
 	\end{center}
@@ -72,14 +78,19 @@ Hence, the epipolar line is described as the projection in the second image of t
 This defines a map, $p_L \rightarrow e_R$, which relates the points in one image with the corresponding epipolar lines in the second image.
 This correlation, between points and lines, is represented by the fundamental matrix $F$.\\
 Considering the aforementioned map $p_L \rightarrow e_R$ described by $F$, an important property of the fundamental matrix is defined,
-\begin{equation}\label{eqn:fundmatprop}
+
+\begin{equation}
+\label{eqn:fundmatprop}
 	p_R^\top F p_L = 0
 \end{equation}
+
 Therefore, assuming two corresponding points $P_L$ and $p_R$, it is known that $p_R$ lies on the epipolar line $l_R = F p_L$. 
 Thus, the mathematical correlation is,
+
 \begin{equation}
 	0 = p_R^\top e_R = p_R^\top F p_L
 \end{equation}
+
 Reciprocally, if image points comply the relation \ref{eqn:fundmatprop}, then the rays identified by these points are coplanar. 
 For point corresponding this is a necessary condition.
 Equation \ref{eqn:fundmatprop} is extremely important because it allows to characterize the fundamental matrix without reference to the camera matrices \cite{hartley2004multiple}.
@@ -104,12 +115,15 @@ For this reason, constraints are put on the definition of $H$.\\
 First of all, restricting $H$ to be a rigid transformation in the neighbourhood of a given point\footnote{this means that to first-order, the neighbourhood of the point may be subjected to rotation and translation only}, the errors are reduced.\\
 Once the epipole has been mapped to infinity, it is then necessary define a map to match the corresponding epipolar lines.
 This resampling is build up in such a way that, being $e_L$ and $e_R$ any pair of epipolar lines, then,
+
 \begin{equation}
 	H^{-\top} e_L = H'^{-\top} e_R
 \end{equation}
+
 Satisfying the condition above, a matched pair of transformations is recovered.\\
 Specifically, at first $H'$ is chosen, so that it can map the epipole $e_R$ to infinity. 
 Then the matching transformation $H$ is defined minimizing the sum-of-square distances,
+
 \begin{equation}\label{eqn:matchtransfconstr}
 	\sum_i d(H p_{L_i}, H'p_{R_i})^2
 \end{equation}
@@ -246,15 +260,19 @@ Point operators are defined as the simplest type of image processing transforms 
 For these operators the output pixel value is entirely related to the corresponding input pixel value.
 Brightness and contrast adjustment, or color correction and transformation represents some of those techniques.\\
 Basically, an image processing operator is identified, in the continuous domain, by the following function that takes one or more input images and generates a corresponding output:
+
 \begin{equation}
  \label{eqn:img-operator}
  g(x) = h(f(x)) \quad 	\mbox{or} \quad g(x) = h(f_0(x), ..., f_n(x))
 \end{equation}
+
 where $x$ is in the D-dimensional domain of the functions and $f$ and $g$ operate over some range.
 Specifically, for discrete images, the domain comprises a finite number of pixel locations, i.e. $x = (i, j)$, so that:
+
 \begin{equation}
 	g(i, j) = h(f(i,j))
 \end{equation}
+
 Among these pixel-based operators it is sufficient to cite color transforms, image matting and histogram equalization. 
 Therefore, considering color images as arbitrary vector-valued functions, it is coherent to identify them as highly correlated signals with strong connections to the image formation process. \\
 Taking into account particular image editing application, where for example the goal is to take a foreground object from a scene and to put it into a different background.
@@ -273,16 +291,20 @@ Considering these local transforms, it is important to distinguish between linea
 Linear operators are the most generally used in terms of are-based operators. 
 They relate weighted combinations of pixels in a neighborhood in order to estimate the output pixel's value. 
 Basically, they can be described by the following function:
+
 \begin{equation}
  \label{eqn:local-linear-oper}
  g(i, j) = \sum_{k,l} f(i + k, j + l)h(k, l)
 \end{equation}
+
 where the entries in the weight kernel $h(k, l)$ are called \textit{filter coefficients}.
 More simply, the relation \ref{eqn:local-linear-oper} can be written as:
+
 \begin{equation}
 	\label{eqn:compact-loc-lin-op}
 	g = f \otimes h
 \end{equation}
+
 An important mention has to be done in relation to the separable filters.
 As a matter of fact, when filters are applied to a 2D image and convolution is taken into account, that requires $K^2$ operations per pixels, i.e. multiplication and summation, defining $K$ as the kernel size.
 In most cases, the filtering process can be accelerated carrying out a one-dimensional horizontal convolution and subsequently a vertical convolution. 
@@ -290,10 +312,12 @@ This procedure requires, in fact, only $2K$ operations per pixels.
 However, this cannot be always done, but it can be applied only to the convolution kernels that are said to be \textit{separable}. \\
 The proof of that property for a convolution kernel can be achieved by inspecting at its analytic form, as shown in \cite{Freeman1991}.
 More precisely that can also be checked handling the 2D kernel as a 2D matrix $\mathbf{K}$ and taking its singular value decomposition (SVD), as follows:
+
 \begin{equation}
 	\label{eqn:svd-check-separable}	
 	\mathbf{K} = \sum_{i} \sigma_i \mathbf{u}_i \mathbf{v}_i^\top
 \end{equation}
+
 Therefore, it is proved that if only the first singular value $\sigma_0$ is non-zero, the kernel is separable and $\sqrt{\sigma_0}u_0$ and $\sqrt{\sigma_0}v_0^\top$ give the vertical and horizontal kernels respectively \cite{Szeliski2011}.
 Among linear filters, there are some that are commonly used for pre and post processing operations over images, which were tested in this project too.\\
 The moving average or box filter is regarded as the simplest one. 
@@ -313,16 +337,19 @@ However, moderate computational cost and the fact that it modify the values pixe
 For this reason, a \textit{weighted} median filter can be implied, instead. 
 In this case, each pixel of the subregion is counted a different number of times depending on its distance from the center.
 Therefore, this can be equivalently formulated as the minimization of the weighted objective function:
+
 \begin{equation}
 	\label{eqn:weighted-median-filt}
 	\sum_{k, l} w(k,l) \vert f(i + k, j + l) - g(i, j) \vert^{p}
 \end{equation}
+
 where $g(i,j)$ is the requested output value and $p = 1$ for the weighted median. \\
 Besides its heavier computational cost, compared to the linear filtering, non-linear noise removing operators are usually preferred because of their more accurate \textit{edge preserving} capability. 
 Hence, when cleaning away noisy frequencies, they tend to soft less the edges.\\
+
 \begin{figure}[t]
 	\begin{center}
-		{\includegraphics[width=.8\textwidth]{images/filter-example-original-shot-noise.png}}
+		{\includegraphics[width=.8\textwidth, height= 5cm, keepaspectratio]{images/filter-example-original-shot-noise.png}}
 \caption{Original test image for filter comparison. Shot noise is added on top of the image. Credits \cite{Szeliski2011}}
 \label{fig:filter-example-original}
 	\end{center}
@@ -331,11 +358,11 @@ Hence, when cleaning away noisy frequencies, they tend to soft less the edges.\\
 \begin{figure}[t]
 	\centering
 	\subfigure[Gaussian filtered test image]{
- 		\includegraphics[width=0.4\textwidth]{images/filter-example-gaussian.png}
+ 		\includegraphics[width=0.4\textwidth, height= 5cm, keepaspectratio]{images/filter-example-gaussian.png}
  		\label{fig:gaussian-filt}
 }
 	\subfigure[Median filtered test image]{
- 		 \includegraphics[width=0.4\textwidth]{images/filter-example-median.png}
+ 		 \includegraphics[width=0.4\textwidth, height= 5cm, keepaspectratio]{images/filter-example-median.png}
  		 \label{fig:median-filt}
 }
 \caption{Test images example taken from \textit{Computer Vision: Algorithms and Applications} \cite{Szeliski2011}}
@@ -350,24 +377,31 @@ Bilateral filtering is another type of non-linear operator, which was tested dur
 Basically, during the image pre-processing implementation this specific kernel was one of the analysed options.
 In fact, it is one of the most common option for noise cancelling in computer vision algorithm.
 technically speaking, in the bilateral filter, the value of each transformed pixel is a weighted combination of its neighboring pixel values, as defined by the following equality:
+
 \begin{equation}
 	\label{eqn:bilateral-filter}
 	g(i, j) = \frac{\sum_{k,l} f(k,l)w(i,j,k,l)}{\sum_{k,l}w(i,j,k,l)}
 \end{equation}
+
 where the coefficient $w(i,j,k,l)$ is correlated to the multiplication between a +textit{domain kernel}, defined in equation \ref{eqn:domain-kernel}, and a data-based \textit{range kernel}, illustrate by equation \ref{eqn:range-kernel}.
+
 \begin{equation}
 	\label{eqn:domain-kernel}
 	d(i,j,k,l) = \exp \Big( - \frac{(i - k)^2 + (j - l)^2}{2 \sigma^2_d} \Big)
 \end{equation}
+
 \begin{equation}
 	\label{eqn:range-kernel}
 	r(i,j,k,l) = \exp \Big( - \frac{\Vert f(i,j) - f(k,l) \Vert^2}{2 \sigma^2_r} \Big)
 \end{equation}
+
 Therefore, the \textit{bilateral weight function} can be finally expressed as:
+
 \begin{equation}
 	\label{eqn:bilateral-weight-fnct}
 	w(i,j,k,l) = \exp \Big( - \frac{(i - k)^2 + (j - l)^2}{2 \sigma^2_d}  - \frac{\Vert f(i,j) - f(k,l) \Vert^2}{2 \sigma^2_r}\Big)
 \end{equation}
+
 An unavoidable drawback of the bilateral filter is closely correlated to its computational time, if compared to regular separable filter.
 For this reason, as outlined in \cite{Szeliski2011}, multiple acceleration methods have been developed during the last decade.
 Nonetheless, those algorithms are prone to a higher memory used w.r.t. the regular filtering, thus they should not be applied to full-color image filtering.\\
@@ -376,10 +410,12 @@ Regarding the designed algorithm, morphological operators have been actually imp
 From a theoretical point of view, \textit{morphological operations} are typically implemented over binary or thresholded images. 
 This kind of filtering techniques are executed by first convolving the input image with a binary structuring element, which could have different shapes, and after that the result value is defined basing on the outcome of the convolution.\\
 If a binary image $f$ is considered and $s$ is the morphological kernel, the convolution operation is defined as:
+
 \begin{equation}
 	\label{eqn:morph-convol}
 	c = f \otimes s
 \end{equation}
+
 where $c$ is the number of 1s inside each structuring element when shifting through the image.
 Therefore, designating $S$, the kernel size, the principal morphological operations, which has been tested in the post-processing phase of the algorithm pipeline, comprise:
 \begin{itemize}
@@ -406,20 +442,24 @@ However, segmenting an image basing on this information is usually complicated a
 Therefore, for pure edge detection, regions of fast intensity variation are taken into account.
 Specifically, edges are usually located in an image where there are steep slopes, in terms of intensity.
 Mathematically, these surface's characteristics can be defined through its gradient, i.e.:
+
 \begin{equation}
 	\label{eqn:gradient}
 	\mathbf{J}(\mathbf{x}) = \nabla I(\mathbf{x}) = \Big( \frac{\partial I}{\partial x} , \frac{\partial I}{\partial y} \Big) (\mathbf{x})
 \end{equation} 
+
 where the local gradient vector $\mathbf{J}$ symbolizes the direction of the steepest ascent in terms of intensity. 
 Because the percentage of noise is higher at high frequencies, and considering that derivatives enhance those frequencies, a low-pass filter, e.g. Gaussian, is usually applied before the gradient.\\
 Nevertheless, to make edge detection really efficient, it would be desired to refine that continuous gradient to the single pixel locations on the edge contours. 
 This can be achieved by finding the \textit{local maxima} in the gradient magnitude along its direction.
 Therefore, the maxima are calculated by taking the derivative of the gradient, that means apply a dot between a gradient operator and the previous result.
 This will lead to the so called \textit{Laplacian}:
+
 \begin{equation}
 	\label{eqn:laplacian}
 	S_{\sigma}(\mathbf{x}) = \nabla \cdot \mathbf{J}_{\sigma}(\mathbf{x}) = [\nabla^2 G_{\sigma}](\mathbf{x}) \ast I(\mathbf{x})
 \end{equation}
+
 where $\sigma$ symbolizes the Gaussian filter used for the initial image smoothing.
 This final result is usually called \textit{Laplacian of Gaussian}(LoG) kernel, which is a separable filter.
 However, commonly a slightly different kernel is employed, the \textit{Difference of Gaussian} (DoG), which gives a similar result.\\

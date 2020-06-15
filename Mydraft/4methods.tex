@@ -43,7 +43,7 @@ Therefore, basing on the work done in \cite{Hirschmuller2007}, \cite{Patil2013} 
 \label{subsection:census-transform}
 
 A crucial phase of the SGM algorithm stands in the matching cost computation.
-As briefly explained in the background \ref{chapter:background} chapter, this cost is evaluated by computing the difference in the value of intensity among corresponding pixels.
+As briefly explained in Chapter \ref{chapter:background}, this cost is evaluated by computing the difference in the value of intensity among corresponding pixels.
 Therefore, especially when dealing with unexpected luminance variation inside the analysed scene, it comes out that non-parametric local transforms are optimal as the support for that correlation \cite{Zabih1994}.
 As a matter of fact, these kind of measurements do not rely on the actual intensity values of the pixels, but on the relative local intensities instead.
 Therefore, using this kind of models, a considerable number of outliers can be tolerated and improved results are visible especially along object boundaries.\\
@@ -84,6 +84,49 @@ As aforementioned, the actual matching cost is then computed using the Hamming d
 
 \subsection{Rank Transform}
 \label{subsection:rank-transform}
+
+\begin{figure}[t]
+	\centering
+	\subfigure[Grayscale pixel intensity values]{
+ 		\includegraphics[width=0.3\textwidth, height= 5cm, keepaspectratio]{images/patch-rank-example.png}
+}
+	\subfigure[Rank transform ]{
+ 		 \includegraphics[width=0.3\textwidth, height= 5cm, keepaspectratio]{images/rank-signature.png}
+}
+\subfigure[Complete Rank transform]{
+ 		\includegraphics[width=0.3\textwidth, height= 5cm, keepaspectratio]{images/complete-rank-signature.png}
+}
+\caption{Example patch with grayscale pixel intensity values}
+\label{fig:rank-example}
+\end{figure}
+
+Another patch-based pixel descriptor is the Rank transform.
+As the Census, it is morphologically invariant.
+Therefore, it is not sensitive to any monotonically increasing of the grayscale intensity values. \\
+The definition of this measure is, actually, quite simple.
+The pixels in the specific patch considered are ordered basing on the ranking of all grayscale values in that area. 
+Then, the reference pixel \textit{rank encoding} is determined by counting the number of neighboring pixels with a gray value smaller than the considered pixel, that is, basically, its position in the intensity ranking of the patch.
+Figure \ref{fig:rank-example} shows a $3 \times 3$ example patch where the central pixel, i.e. the reference one, is map to its scalar rank encode. 
+This patch-based descriptor, as the Census transform, was introduced by Zabih and Woodfill \cite{Zabih1994} and, defining an image pixel with $P$ and its neighborhood with $N(P)$, it can be mathematically expressed by the following equality:
+
+\begin{equation}
+	\label{eqn:rank-transform}
+	R(P) = \Vert {P' \in N(P) \vert I(P') < I(P)} \Vert	
+\end{equation}
+
+Looking at the mathematics of the Census and the Rank transforms, it is evident that the former encodes more information. \\
+In addition to the two presented non-parametric local transforms, there is another area based descriptor that need to be mentioned.\\
+The Complete Rank transform can be thought as an improvement of the Rank transform.
+It was more recently presented by Demetz et al. \cite{Demetz2013}, with the goal of keep a higher amount of information with respect to its standard version.
+Actually, it works in the following manner.
+At first the normal Rank transform is applied to all the elements of the patch. 
+Then, these ranks are concatenated, as it is done for the Census, so that the complete rank descriptor is generated.  
+As visible in Figure~\ref{fig:rank-example}, pixels with the same intensity take the same rank value. 
+Therefore, the encoding for the patch displayed in the image is:
+\begin{equation}
+	\label{eqn:complete-rank-encoding}
+	\mathbf{enc}_{CRT} = (1, 3, 7, 1, 5, 8, 0, 4, 6)^\top
+\end{equation}
 
 \subsection{Conventional intensity based methods}
 \label{subsection:conventional-methods}
