@@ -126,6 +126,7 @@ Using that scheme the four derivatives estimated for each point will contain the
 In the implemented code, the introduced \textbf{\textit{full location components}} are in the order: the $x$ and $y$ components of the point projected in the principal image plane, therefore they are measured in pixels, the $X$, $Y$ and $Z$ space coordinates of the point, in meters, and finally, $d$ is the disparity value, in pixel, related to the depth of the point, which can be evaluated through equation~\ref{eqn:disparity-depth}.\\
 Therefore, let us now consider to estimate an unknown point inside a subregion of the whole grid, that was decided to be identified by 4 points, as Figure~\ref{fig:subpatch-estimation} displays.
 The final 3D coordinates of the new point will be, at first, defined by four different estimations, each one related to the four corners of the grid subwindow, as follows.
+
 \begin{subequations}
 \label{eqn:point-patch-estimation}
 	\begin{align}
@@ -135,6 +136,7 @@ The final 3D coordinates of the new point will be, at first, defined by four dif
 		est_{BR} = BR + (i-1) \cdot der_{from-right} + (j-1) \cdot der_{from-bottom}
 	\end{align}
 \end{subequations}
+
 where $TL$, $TR$, $BL$ and $BR$ respectively point to the estimation done with respect to the top-left corner of the grid sub-window, the top-right corner, bottom-left and bottom-right corner. 
 Then, $i$ and $j$ are the relative $x$ and $y$ coordinates of the estimated point, whose values range between 0 and 1.
 Finally, in the notation employed, $der_{dir}$ stands for the different derivative vectors related to each corner point and visualized by the arrows in Figure~\ref{fig:subpatch-estimation}. \\
@@ -168,27 +170,72 @@ In fact, because it is not efficiently possible to correctly estimate the positi
 Moreover, to identify the correct type of edge, the derivatives have been exploited and, specifically, the magnitude of the $Z$ component of the vector. 
 Basically, a general edge case, which is equivalent to the \textit{undefined} condition, is initially determined by computing the absolute difference between the $Z$ components of all the possible couples of corners, i.e. the $Z$ value of the local derivatives, and comparing that with a pre-determined threshold, which is related to the average depth value of the initial points of the grid. \\
 Therefore, during the algorithm pipeline, the possibility of having an edge feature inside the specific patch is initially checked.
-Then, if the depth values of the four corner are almost equivalent, this means that that are is actually planar.
+Then, if the depth values of the four corner are almost equivalent, this means that the area is actually planar.
 Thus, in this situation, a fast interpolation method is run, so that the overall computation can be even faster.\\
 On the contrary, if a vertical or an horizontal edge is found, the small and big penalties are used accordingly.
 For example, if the edge is vertical, the small penalty will be multiplied to the relative $y$-coordinate of the estimated point, instead the big penalty will weight the $x$-coordinate.\\
 Finally, for the undefined case, the penalty weight is equivalent in both directions, $x$ and $y$, and its magnitude ranges between the two previously defined penalties. \\
 Those three different edge cases are the one initially tested. 
-However, later appeared that a more meaningful strategy is based on the definition of two grater categories, which would comprise the cases described above.
+However, later appeared that a more meaningful strategy should be based on the definition of two grater categories, which would comprise the cases described above.
 These two bigger classes describe, thus, \textbf{soft} and \textbf{strong} edges. 
 In fact, results of tests done with dataset images show that employing a single threshold for the depth difference and focusing only over the edge direction was not entirely correct. 
 As a matter of fact, in a generic scene different types of objects exists. 
-Therefore, adapting the edge analysis to the object distances, for example between the whole foreground and the background and between the multiple objects in the foreground, would give, as the final outcome, a smoother and more accurate dense 3D point cloud.
-
+Therefore, adapting the edge analysis to the object distances, for example between the whole foreground and the background and between multiple objects of the foreground, that would give a smoother and more accurate dense 3D point cloud.
 
 \subsection{Derivative computation and sanity check}
 \label{subsection:derivative-computation}
 
-
-
+The core of the estimations are, actually, the local derivatives computed for each point of the grid. 
+Basically, each grid point contains four vectors, which are the local derivatives between the reference point and its four orthogonal neighbors. \\
+Initially the mere derivatives have been calculated as pointing towards the reference point, like Figure~\ref{fig:grid-subpatch} shows. \\
+However, it came out that this procedure was not enough accurate, to generate a proper dense 3D point cloud.
+Therefore, a \textit{sanity check} has been later defined inside the derivative calculation pipeline to achieve preciser computation of the local derivatives, especially for the grid sub-patches where edges are likely to be found.\\
+Moreover, a higher accuracy of the final result has been achieved when evaluating, for each grid point, two slightly different types of derivative vectors.
+Specifically, \textit{internal} and \textit{external} derivatives. 
+This distinction allowed to achieve faster and more accurate results, especially when dealing with edges in the grid sub-region. 
+Precisely, if the presence of an edge is verified for the considered patch, the external (with respect to the sub-window) derivatives were used.
+Otherwise, exploiting the internal derivatives the computation could be made faster, being them equal in couple among the corners of the patch. \\
+Referring to what introduced at the end of Section~\ref{subsection:edge-cases-and-penalties}, in the latest implementation designed, the estimation process is driven by the edges analysis. 
+As aforementioned, the test results demonstrate that a distinction based only upon the edge shape is not enough to reach a good degree of accuracy.
+Therefore, the analysis cases have later been defined basing on the strength of the edges between the objects in the scene.\\
+Hence two different thresholds have been so determined. 
+The first is used to identify occlusions that basically occur between foreground objects and the background. 
+These have been designated as \textbf{\textit{strong}} edges. 
+Differently, the other case is specified as the \textbf{\textit{soft}} edges case.
+This is related to occlusions happen between parts of the same object at different values of depth, as could be between the chin and the neck of a person.\\
+Moreover, on top of this first level of edge selection, the following cases have been then defined, which are correlated to the specific value of the penalty.
+Precisely, they are \textit{pure vertical} and \textit{pure horizontal} edges, for which it should happen that the depth values of the corners are equals in couple.
+Then, there are some particular cases, which have the scope of leading the disparity estimation of the new point in a more accurate way.
+They are: \textit{diagonal top left}, \textit{diagonal top right}, \textit{diagonal bottom left}, \textit{diagonal bottom right}.
+Furthermore, there is the undefined case, which is triggered when the potential edge found in the subregion has a strange shape.\\
+Taking now into account the actual estimation functions, these are slightly different for the aforementioned edge cases identified.
+Summing up the overall procedure, it can be said that, the main distinction, which guides the whole process is the first one, that is the one that distinguish among, strong, soft and no edges.
+Then, for all the subcases, the main difference stands on the values and order of the penalties. \\
+Hence, in the \textit{no edges} case, four temporary estimations are performed for each new grid point by carrying out a linear interpolation, which exploit the \textit{internal} derivative vectors.
+Then, for the other two main cases, the procedure is generally the same. 
+In fact, the fundamental function of distinguish between those types of occlusions is to make the final outcome smoother. \\
+Thus, when dealing with edges, at first the algorithm checks for each temporary estimation, that is for each subregion corner, if there could also be edges in the neighborhood outside of the region. 
+If this is false, a linear interpolation is computed employing the \textit{external} derivatives.
+Otherwise, the interpolation is done with the \textit{internal} derivatives and only for the $x$ and $y$ pixel positions. 
+Therefore, the depth value is matched with the one of the corresponding corner, thus to enhance the smoothness of the final result.
 
 \section{Semi-Global Matching based method implementation}
 \label{section:sgm-based}
+
+The other implemented method based on the initial grid of points follows more closely the standard stereo-matching structure.
+Moreover, it does not distinguish between \textbf{\textit{strong}} and \textbf{\textit{soft}} edges, but the different cases are identified only considering the shape of the potential edge present inside the subwindow. \\
+Therefore, this algorithm initially computes the \textit{matching cube cost} for the specific grid patch. 
+The difference between the standard SGM method stands on that cube, whose third direction does not generally contains continuous values of the disparity.
+On the contrary, those values are defined by the sub-window corners, whose disparity define the levels of the cost cube.\\
+Therefore, if no edge is found, only the matching cost part of the stereo matching algorithm is carried out.
+Otherwise, the aggregation cost phase is implemented.
+In this latter case, the cost is actually aggregated only on the direction orthogonal to the shape of identified edge.\\
+At the end of the pipeline simple post-processing operations are performed over the obtained data, as done for the other algorithm.
+Considering the overall method, it result to be give a denser point cloud compared to the previous method. 
+However, it computational time is extremely higher.
+This is clearly due to the fact that this algorithm estimates each single pixel inside the specific subregions.
+Contrarily, in the \textit{lightweight} strategy the number of samples that the user wants to estimate can be adjusted. 
+In this way the trade-off between accuracy and resources utilization can be externally defined. 
 
 \section{OpenCV built-in Semi-Global Box Matching algorithm}
 \label{section:opencv-sgm-method}
@@ -196,9 +243,27 @@ Therefore, adapting the edge analysis to the object distances, for example betwe
 \section{Pre-processing testing and analysis}
 \label{section:pre-processing-impl}
 
+The pre-processing phase can be ideally divided in multiple parts.
+First of all, general operations have been applied for both estimation methods in order to remove noisy components from the stereo pair and from the ground truth images, when exploiting the simulated grid for the estimations.
+Then, a section of the pre-processing phase can be considered the importing of all the necessary calibration data and the creation of a sort of look-up table, which was used together with the grid of points.\\
+On the contrary, when working with the real data coming from the LadiMo stereo device, some initial operations have been necessary to clean up \textit{bad} point values and for estimating some of the missing data, which would be determined without losing in accuracy. \\
+Regarding the image pre-processing, different noise removal filters have been tested over database images, in order to understand which would provide the best trade-off in most of the cases. 
+Median and bilateral filters appear to be, almost equivalently, the best choice for smoothing away the noise while loosing the smallest amount of information from the input images. \\
+Considering the others pre-processing operations implemented in the algorithm, they depend on the condition of working or not with the simulated grid.
+
 \subsection{Look-up table and point grid pre-processing}
 \label{subsection:grid-preprocessing}
 
+Therefore, for the initial testing phase of the algorithm designing, when multiple tests have been carried out using the images from the Middlebury dataset, a look-up table has been defined in order to ensure a fast data finding. 
+This structure has been easily built by progressively numbering the simulated gridpoints, so that their values correspond to the row index of the data matrix. \\
+Considering the real data, instead, the two main initial operations that have been defined in the pipeline regard data analysis. 
+As a matter of fact the laser grid data are not entirely perfect.
+Contrarily, for the of the points the 3D data are completely missing.
+This generally happen close to the edges and it is most likely due to occlusions and shadows.
+Moreover, the used device has some lack of performance when dealing with relatively small objects. 
+
+\subsection{Image undistortion and rectification}
+\label{subsection:img-undist-and-rectific}
 
 \section{Post-processing testing and analysis}
 \label{section:post-processing-impl}
