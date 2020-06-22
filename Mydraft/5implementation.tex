@@ -278,6 +278,29 @@ On the other hand, the application of a high expensive method, which would proba
 \subsection{Image undistortion and rectification}
 \label{subsection:img-undist-and-rectific}
 
+\begin{figure}[t]
+	\centering
+	\subfigure[Left distorted raw image]{
+ 		\includegraphics[width=0.4\textwidth, height= 5cm, keepaspectratio]{images/input-image-raw-left.png}
+ 		\label{fig:distort-raw-left}
+}
+	\subfigure[Right distorted raw image]{
+ 		 \includegraphics[width=0.4\textwidth, height= 5cm, keepaspectratio]{images/input-image-raw-right.png}
+ 		 \label{fig:distort-raw-right}
+}
+	\subfigure[Left rectified stereo image]{
+ 		\includegraphics[width=0.4\textwidth, height= 5cm, keepaspectratio]{images/output-image-rect-left.png}
+ 		\label{fig:stereo-rect-left}
+}
+	\subfigure[Right rectified stereo image]{
+ 		 \includegraphics[width=0.4\textwidth, height= 5cm, keepaspectratio]{images/output-image-rect-right.png}
+ 		 \label{fig:stereo-rect-right}
+}
+\caption{Distorted raw and stereo rectified images from the Ladimo device}
+\label{fig:stereo-undist-rect-4eye}
+\end{figure}
+
+
 Concerning the tests carried out with the real environment images taken from the Ladimo device, some pre-processing was necessary on the stereo pair too. 
 In fact, the hardware employed gives as an output a pair of distorted raw RGB images, which has to be first undistorted and then rectified, in order to be correctly used for the stereo matching. \\
 Specifically these operations have been completed using the OpenCV built-in functions \texttt{stereoRectify()}, \texttt{initUndistortRectifyMap()} and \texttt{remap()}, which employ the camera calibration data, already available for the used camera, and give as output the matrices that map an image from the distorted reference systems to the stereo rectified space.\\
@@ -290,11 +313,10 @@ Moreover, the camera projection matrices, which are fundamental in the stereo-ma
 After that, the function \texttt{initUndistortRectifyMap()} is exploited for both cameras in order to finalize the rectification process.
 As a matter of fact, it employs, on top of the initial camera matrices and the distortion coefficients, the rotation and projection matrices for each camera generated from the previous step.
 Therefore, with this operation the maps between the initial coordinate system, i.e. distorted, and the destination space, i.e. corrected and rectified, are computed, in order to be, then, fed into the \texttt{remap()} function, which will perform the last step of the rectification process, providing the corrected stereo pair. \\
-Figure \textbf{reference} and \textbf{reference} display the input and the output of the whole rectification procedure.
-In the rectified stereo pair in Figure \textbf{reference} the image scanlines, which in that coordinate system correspond to the epipolar line, are highlighted in order to provide a visualization of the correctness of the process.
+Figures from \ref{fig:distort-raw-left} to \ref{fig:stereo-rect-right} display the input and the output of the whole rectification procedure.
+In the rectified stereo pair in Figures \ref{fig:stereo-rect-left} and \ref{fig:stereo-rect-right} the image scanlines, which in that coordinate system correspond to the epipolar line, are highlighted in order to provide a visualization of the correctness of the process.
 However, if that output is accurately analysed, it is possible to notice some mismatches between the two rectified images.
 Those are certainly due to errors in the calibration procedure, which needs to be adjusted for further experiments.
-\textbf{REMEMBER TO INSERT THE RECTIFIED IMAGES WITH THE EPIPOLAR LINES OVERLAPPED AND THE INITIAL DISTORTED IMAGES}.
 
 \section{Post-processing testing and analysis}
 \label{section:post-processing-impl}
