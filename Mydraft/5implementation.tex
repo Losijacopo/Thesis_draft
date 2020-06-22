@@ -254,19 +254,73 @@ Considering the others pre-processing operations implemented in the algorithm, t
 \subsection{Look-up table and point grid pre-processing}
 \label{subsection:grid-preprocessing}
 
-Therefore, for the initial testing phase of the algorithm designing, when multiple tests have been carried out using the images from the Middlebury dataset, a look-up table has been defined in order to ensure a fast data finding. 
-This structure has been easily built by progressively numbering the simulated gridpoints, so that their values correspond to the row index of the data matrix. \\
-Considering the real data, instead, the two main initial operations that have been defined in the pipeline regard data analysis. 
-As a matter of fact the laser grid data are not entirely perfect.
-Contrarily, for the of the points the 3D data are completely missing.
-This generally happen close to the edges and it is most likely due to occlusions and shadows.
-Moreover, the used device has some lack of performance when dealing with relatively small objects. 
+Therefore, for the initial testing phase of the algorithm designing, when multiple tests have been carried out using the images from the Middlebury dataset, a look-up table has been defined in order to ensure a fast data identification. 
+This structure has been easily built by progressively numbering the simulated gridpoints, so that their values correspond to the row index of the data matrix. 
+Hence, exploiting that structure, the data necessary employed for the estimation procedure, would be easily retrieved from the initial data matrix, which contains the 3D position of the all grid points. \\
+Regarding the implementation run over the real data, instead, some pre-processing operations have been necessary to adjust the initial device data, which were not always perfect. 
+As a matter of fact, a low percentage of points of the laser grid, which ranges between 2.7 and 3.2 \% depending on the specific scene (\textbf{check the error percentage, not sure}), was missing. 
+It used to happen that the points were actually visible in the grid, as overlapped to the raw image, however, they presented all zero values in the data. 
+This behaviour usually happened for the points located close to edges, and thus above occlusions. 
+In those cases the the accuracy of the device drops locally and the provided results are, in fact, missing. 
+So that, the pre-processing procedures were necessary in order to reduce the percentage of initial errors, which usually diminishes between a 0.8 and a 1.2 \%, depending on the density of missing data in the occluded regions.
+However, even if in general the error dropping was not high, it did not impact on the overall performance of the algorithm. \\
+Specifically, two main operations have been performed over the initial raw data to reduce the errors.
+First of all, the grid points have been entirely analysed in order to identify the area where the percentage of missing data were low enough to allow a highly accurate reconstruction of the values of those point.
+As a matter of fact, a non exact estimation would carry errors over all the algorithm pipeline, which is a not desirable outcome. \\
+Hence, where enough raw data were present in the neighborhood of occlusions, the estimations have been performed by evaluating a fast yet accurate linear interpolation exploiting the four closest neighbors to the specific point. 
+Related to this, it was proved that performing a bilinear interpolation or using a weighted average to estimate missing values had the same grade of efficiency as the simple average, employing at least two orthogonal neighbours. \\
+After the data filling a minor percentage of missing values was generally still present. 
+Therefore, before running the algorithm those grid points was removed, being useless in the whole pipeline.
+In regard to this, it is worth to make notice that the \textit{bad} points were in most of the cases almost the 2.5 - 3 \% of the entire grid data. 
+Therefore, it can be concluded that the value would not affect strongly the overall accuracy of the final result and that a high density of point could be surely reached with the available amount of raw data.\\
+On the other hand, the application of a high expensive method, which would probably only provide an additional error reduction of the 0.5 \% would be worth noting and it would most likely affect the speed of the algorithm, without providing a reasonable improvement of the density of the final point cloud.\\
 
 \subsection{Image undistortion and rectification}
 \label{subsection:img-undist-and-rectific}
 
+Concerning the tests carried out with the real environment images taken from the Ladimo device, some pre-processing was necessary on the stereo pair too. 
+In fact, the hardware employed gives as an output a pair of distorted raw RGB images, which has to be first undistorted and then rectified, in order to be correctly used for the stereo matching. \\
+Specifically these operations have been completed using the OpenCV built-in functions \texttt{stereoRectify()}, \texttt{initUndistortRectifyMap()} and \texttt{remap()}, which employ the camera calibration data, already available for the used camera, and give as output the matrices that map an image from the distorted reference systems to the stereo rectified space.\\
+The chain of operations that is implemented with those functions is the following.
+Firstly the \texttt{stereoRectify()} function is fed with the original camera matrices and the distortion parameters of the two camera, which are available from the pre-computed calibration procedure.
+Moreover, as input to the function there is the transformation matrix from the coordinate system of the principal camera to the secondary camera.
+Actually, that is provided as the rotation matrix and the translation vector separately.
+Hence, the openCV function provides as its main outputs the two rectification transform matrices, that is the matrices that bring the 3D coordinates of a point from the unrectified system of reference to the rectified coordinate system.
+Moreover, the camera projection matrices, which are fundamental in the stereo-matching process, are supplied.\\
+After that, the function \texttt{initUndistortRectifyMap()} is exploited for both cameras in order to finalize the rectification process.
+As a matter of fact, it employs, on top of the initial camera matrices and the distortion coefficients, the rotation and projection matrices for each camera generated from the previous step.
+Therefore, with this operation the maps between the initial coordinate system, i.e. distorted, and the destination space, i.e. corrected and rectified, are computed, in order to be, then, fed into the \texttt{remap()} function, which will perform the last step of the rectification process, providing the corrected stereo pair. \\
+Figure \textbf{reference} and \textbf{reference} display the input and the output of the whole rectification procedure.
+In the rectified stereo pair in Figure \textbf{reference} the image scanlines, which in that coordinate system correspond to the epipolar line, are highlighted in order to provide a visualization of the correctness of the process.
+However, if that output is accurately analysed, it is possible to notice some mismatches between the two rectified images.
+Those are certainly due to errors in the calibration procedure, which needs to be adjusted for further experiments.
+\textbf{REMEMBER TO INSERT THE RECTIFIED IMAGES WITH THE EPIPOLAR LINES OVERLAPPED AND THE INITIAL DISTORTED IMAGES}.
+
 \section{Post-processing testing and analysis}
 \label{section:post-processing-impl}
 
+Two main typologies of filters have been applied to the 3D dense point cloud and the disparity image achieved as the output of the estimation algorithm.\\
+Specifically, the disparity images obtained during the initial phases of the methods designing have been processed with bilateral or median filter.
+The latter results to perform better in terms of overall accuracy, even being slightly more expensive from a computational point of view.
+The fundamental feature of that filter is the edge preserving, which make it as the preferable choice for a non-invasive noise removal procedure.\\
+Differently, the XYZ data, estimated for the creation of the dense point cloud, have been handled at the end with a cascade of morphological operations, such as erosion, dilation, opening and closing.
+These have been merged together in order to find the best combination, which would be able to simultaneously adjust the result and preserve the achieved output.
+Therefore, these operations help in cleaning the whole data from estimations that were clearly wrong and enhance the smoothness and the homogeneity of the final cloud. \\
+	
 \section{Preparation to future improvements}
 \label{section:intro-future-improv}
+
+Considering the two designed methods for the estimation of a 3D dense point cloud through a stereo photogrammetry procedure, and comparing the results from both perfect dataset images and the ones gathered from the Ladimo device some general conclusions about the work done and the further improvements that can be implemented in the algorithm can be drawn here, leaving a more interesting and complete discussion to the following chapters.\\
+First of all, an important notice that should be done is that, compared with the openCV built-in algorithm \texttt{stereoSBGM}, the lightweight developed algorithm is in general less precise.
+However, it is faster and the number of estimations that can be performed inside the specific subregion can be easily adjusted in order to modify its accuracy, obviously loosing performance in computation.\\
+Moreover, it has been proved that, if calibration mismatches are present in the stereo images, the openCV method tends to generate really noisy disparity images, especially in texture-less regions and near occlusions.
+Furthermore, the multiple parameters of that function must be wisely adjusted for every specific image to obtain a reasonable result.\\
+On the contrary, the lightweight method developed is able to recover to small errors present in the initial raw images. 
+This is due to the fact that this method does not completely rely on the stereo images but it exploits the data from the input cloud of sparse points.
+Therefore, thanks to this, small calibration errors do not affect drastically the final result of the algorithm, even if they are not desirable. \\
+A final comment has to be introduced regarding the possible improvements that could be added to the algorithm.
+For sure, a higher accuracy of the final point cloud could be desired, meaning that smoothness and continuity should be enhanced among the edges, thus to provide a better looking result, making easier the understanding of the object in the specific scene.
+Therefore, a first idea that has already been thought to achieve this, keeping potentially real time performance, is to design a hierarchical procedure, where the most accurate points are iteratively used for further estimations, considering that two or three would be sufficient.
+Concerning this, if the computational time has to remain low, the estimations in the subsequent runs of the procedure can be focused on the regions close to edges and small objects.
+
+

@@ -1,26 +1,158 @@
-\chapter{Evaluation}
+\chapter{Evaluation and Results comparison}
 \label{chapter:evaluation}
 
-You have done your work, but that's\footnote{By the way, do \emph{not} use
-shorthands like this in your text! It is not professional! Always write out all
-the words: ``that is''.} not enough. 
+In the previous chapters the description of the methods and of the key sections of the designed algorithms has been carried out.
+In Chapter~\ref{chapter:methods} a general outline of the implemented idea has been presented.
+Instead, Chapter~\ref{chapter:implementation} illustrates the key functions and the computations that build up the entire algorithm.\\
+\textbf{Probably in the previous chapter it would be good to put some pseudocode (for example for the main parts) in order to give not only a qualitative description of the algorithm but highlight the main functions}.\\
+Therefore, the functions exploited in the pre and post-processing phases have been previously outlined. 
+Moreover, the two novel strategies designed have been reported, underlining the procedure implemented for obtaining the estimations of the grid points, the matching cost methods tested and their efficiency throughout the algorithm and the correlation with previously created stereo-matching algorithms. 
+Chapter~\ref{chapter:methods} contains also a brief presentation of similar ideas developed in standard and in deep-learning based methods, which were exploited to obtain an initial proof of the potential performance of the algorithm.\\
+Thus, this chapter delineates the results obtained supporting the discussion with images of the point cloud and the disparity maps obtained.
+Moreover, some general comments related to the different result are going to be presented.
+In fact, a discussion focused on the considerations that can be carried out from the outcomes obtained will cover Chapter~\ref{chapter:discussion}.\\
+Here the interest is centred on the results achieved and in the comparison between the openCV method, defined as the baseline, and the algorithms designed.
+Moreover, in the first part of the following analysis the outcomes collected during the initial phase of the whole work are proposed.
+As previously introduced, their main function was to provide, at the beginning of the developed project, a proof of the feasibility of the thought strategy. 
+That was, in fact, extremely useful for having, from the very beginning, a qualitative guidance on the developing. \\
 
-You also need to evaluate how well your implementation works.  The
-nature of the evaluation depends on your problem, your method, and
-your implementation that are all described in the thesis before this
-chapter.  If you have created a program for exact-text matching, then
-you measure how long it takes for your implementation to search for
-different patterns, and compare it against the implementation that was
-used before.  If you have designed a process for managing software
-projects, you perhaps interview people working with a waterfall-style
-management process, have them adapt your management process, and
-interview them again after they have worked with your process for some
-time. See what's changed.
+\section{Researching phase results}
+\label{section:research-phase-results}
 
-The important thing is that you can evaluate your success somehow.
-Remember that you do not have to succeed in making something spectacular; a
-total implementation failure may still give grounds for a very good master's
-thesis---if you can analyze what went wrong and what should have been
-done. 
+\begin{figure}[t]
+	\centering
+	\subfigure[Left RGB test image]{
+ 		\includegraphics[width=0.4\textwidth, height= 5cm, keepaspectratio]{images/left-playtable-test.png}
+ 		\label{fig:test-matlab-left-02}
+}
+	\subfigure[Right RGB test image]{
+ 		 \includegraphics[width=0.4\textwidth, height= 5cm, keepaspectratio]{images/right-playtable-test.png}
+ 		 \label{fig:test-matlab-right-02}
+}
+	\subfigure[Disparity test image]{
+	\includegraphics[width=0.8\textwidth, height=5cm, keepaspectratio]{images/disparity-map-playtable-test.png}
+	\label{fig:disparity-test-02}
+}
+\caption{Test images from the Middlebury 2014 dataset with disparity image estimated with linear simple semi-global matching based method to test feasibility of thought strategy}
+\label{fig:test-matlab-02}
+\end{figure}
+
+Figure~\ref{fig:test-matlab-02} displays the result of the estimation of a disparity image exploiting a stereo pair from the Middlebury 2014 dataset.
+The disparity map shown in Figure~\ref{fig:disparity-test-02} has been achieved applying a rather simple and linear implementation of a semi-global based method, where information from an initial simulated sparse grid of point is employed.
+As a matter of fact, in that initial stage of the project designing, the overall performance was not taken into account.
+The main focus was the feasibility of the procedure compared to standard SGM-based algorithms. 
+In fact, the core of the algorithm computations stand in the matching cost phase, which is based on the center-symmetric Census transform and on the Hamming distance computation.
+Then, the aggregation cost step is carried out only over the 4 main orthogonal directions.
+Finally, a basic left-right consistency check procedure is applied, which generate the lost of information of the two image sides.
+Clearly, this behaviour is related to the disparity range employed in the algorithm.\\
+
+\section{Derivative method results}
+\label{section:der-method-results}
+
+\begin{figure}[t]
+	\centering
+	\subfigure[Derivative-based method]{
+ 		\includegraphics[width=0.4\textwidth, height= 5cm, keepaspectratio]{images/raw-disparity-playtable-test.png}
+ 		\label{fig:derivative-based-test-table}
+}
+	\subfigure[SGM-based method]{
+ 		 \includegraphics[width=0.4\textwidth, height= 5cm, keepaspectratio]{images/sgm-based-playtable-test.png}
+ 		 \label{fig:sgm-based-test-table}
+}
+	\subfigure[OpenCV stereoSGBM method]{
+	 \includegraphics[width=0.8\textwidth, height= 5cm, keepaspectratio]{images/opencv-baseline-test-playtable.png}
+ 		 \label{fig:opencv-baseline-test-table}
+}
+\caption{Results of disparity images obtained with the disparity-based lightweight method, the SGM-based method and the baseline result from the openCV built-in method}
+\label{fig:test-novel-methods-table-01}
+\end{figure}
+
+As Figure~\ref{fig:disparity-test-02} proved, it is possible to achieve reasonable results with the designed method.
+However, the interest thing is that, the initial tests performed show that, exploiting a sparse enough grid of points, which carry information on their 3D positions, the overall implementation can be made faster.\\
+Therefore, after the initial researching phase, the algorithm started to be implemented in C++, in order to have a faster execution with respect to MATLAB, employing functions from the OpenCV library.
+In this regard, Figure~\ref{fig:test-novel-methods-table-01} presents the grayscale disparity image achieved by applying the two designed methods, the derivative-based one and the SGM-based one, and then the outcome of the openCV built-in method is proposed as baseline for a visual comparison.\\
+Therefore, considering the results of the disparity image of the \textbf{Playtable} dataset, some thoughts can be formulated.
+First of all, as expected, in the baseline result in Figure~\ref{fig:opencv-baseline-test-table} the object are more detailed.
+This is, thus, highly visible where the object present small or thin features, as for the bag in the middle-left area of the image.
+Moreover, with the \texttt{stereoSGBM} algorithm there is an higher accuracy for the regions close to edges. \\
+However, it has to be pointed out that, even if the openCV method has a lower amount of \textit{local} noise, e.g. along the object edges, which are visibly clear, it is affected by higher amount of \textit{general} noise, especially in occluded or texture-less areas.
+Regarding this detail, both of the results obtained with the designed algorithms present a lower accuracy along edges, highlighted by the \textit{hairy} contours, however the surfaces are in general smoother.
+Let us consider the top of the table or of the chairs, or even the wall in the background, as an example.
+In the results of Figures~\ref{fig:derivative-based-test-table} and \ref{fig:sgm-based-test-table} the black spots are not generated.
+They are, most likely, due to the occlusions presents in the two stereo images, considering the table and the chairs, or they are generated in texture-less regions, as for the wall, for which it is known that they SGBM algorithm tends to fail.\\
+More interesting results can be then visualized when taking into account the outcomes of the different algorithms obtained using images taken from the company device.
+As a matter of fact, in this case, contrarily to the images from widely-used datasets, such as the Middlebury 2014, the KITTI 2012 and 2015, there could likely be calibration errors in the stereo pair.
+This leads to a mismatch between the epipolar lines of the two images, which should be overlapped to the image scanlines, when using a rectified stereo pair. 
+Therefore, this problem causes a complete failure of the normal Semi-Global Box Matching procedure, as Figure \textbf{reference bad sgm images} demonstrates.\\
+On the other hand, the designed method, thanks to the information coming from the points grid, is able to recover from small mismatching errors.
+This condition proves the suitability of such a method in various situations, making it appropriate for those situations in which errors, even if minimal, cannot be avoided. 
+It is, in fact, well known that in most of the real environment conditions it is generally difficult to have stable and controlled conditions, especially for lighting and for the physical stability of the hardware. 
+The latter requirement is then extremely important for the accuracy of the final result. 
+For this reason, in every industrial and commercial device employed in 3D estimation, as could be LiDAR or standard camera based hardware, a strong attention is provided to the system setup. 
+However, errors related to unpredictable events or to little software bugs can affect the further computations, which would exploit the device outcome. \\
+
+\subsection{Consistency check over derivative computation}
+\label{subsection:result-consistency-check}
+
+\begin{figure}[t]
+	\centering
+	\subfigure[Consistency check for derivative calculation]{
+ 		\includegraphics[width=0.4\textwidth, height= 5cm, keepaspectratio]{images/consistency-check-for-deriv-moto.png}
+ 		\label{fig:consistency-check-moto-01}
+}
+	\subfigure[No consistency check for derivative calculation]{
+ 		 \includegraphics[width=0.4\textwidth, height= 5cm, keepaspectratio]{images/no-consistency-check-for-deriv-moto.png}
+ 		 \label{fig:no-consistency-check-moto-01}
+}
+\caption{Comparison between applying and not a consistency check procedure over the same image}
+\label{fig:consistency-check-comparison-moto-01}
+\end{figure}
+
+During the algorithm designing a specific phase of the pipeline demonstrates to be extremely important. 
+Specifically, it consists on the \textit{consistency check} performed during the derivative computation when running the algorithm exploiting the simulated grid of points.
+Actually, this consistency check becomes relevant in proximity of the edges, where the magnitude of the $Z$ component of a derivative calculated between two points that belong to far objects, and thus cut by an occlusion, tends to explode.
+Therefore, this will affect the estimation procedure, which will most likely carry out wrong values for the computations performed in those areas. \\
+Figure~\ref{fig:consistency-check-comparison-moto-01} clearly demonstrate the different on the final result when the consistency check over the derivatives calculations is applied or not.
+When the magnitudes of the derivatives evaluated for a specific points are not correctly adjusted, if a set threshold on the $Z$ components of the derivative vector is exceeded, the final disparity image will show a huge amount of noise, which is obviously related to incorrect estimations.
+Figure~\ref{fig:no-consistency-check-moto-01} is the proof of that.
+Contrarily, in Figure~\ref{fig:consistency-check-moto-01} a better disparity map is visualized, which comes out when the consistency check operations are carried out.\\
+Therefore, since the tests performed over the dataset images and using a simulated point grid, the necessity of the derivative correction was proven to be a valuable, and yet fundamental, step to reach an accurate result.
+
+\subsection{Different thresholds for edge intensity result comparison}
+\label{subsection:soft-strong-edge-threshold}
+
+\begin{figure}[t]
+	\centering
+	\subfigure[Utilization of unique threshold over the whole input grid]{
+ 		\includegraphics[width=0.4\textwidth, height= 5cm, keepaspectratio]{images/micro-device-result-no-double-threshold-edges.png}
+ 		\label{fig:single-threshold-micro-01}
+}
+	\subfigure[Utilization of multiple threshold for distinguish edge strength]{
+ 		 \includegraphics[width=0.4\textwidth, height= 5cm, keepaspectratio]{images/micro-device-result-yes-double-threshold-edges.png}
+ 		 \label{fig:multiple-threshold-micro-01}
+}
+\caption{Comparison between utilization of different thresholds distinguish edge strength}
+\label{fig:threshold-soft-strong-edges-micro-01}
+\end{figure}
+
+Taking into account the results obtained employing the company device, some considerations can be performed in relation to useful improvements that have been implemented to the algorithm during its development. \\
+A modification to the initial pipeline of the algorithm, which shows to give interesting improvement in the accuracy of the final 3D point cloud estimated, stands in the utilization of multiple threshold for the edge analysis.
+Specifically, as visible in Figure~\ref{fig:single-threshold-micro-01}, utilizing a unique threshold for edge checking over the whole input cloud wrong estimations are generated.
+These are depicted in Figure~\ref{fig:single-threshold-micro-01} by the outlier points and are particularly visible where there is not a strong difference in depth among neighbouring point, as it happens between the face of the statue and calibration board on the foreground.\\
+On the contrary, when different cases have been implemented in relation to different types of edges, strong and soft, those outliers have gone away, as Figure~\ref{fig:multiple-threshold-micro-01} shows.
+
+
+
+
+\section{Stereo-matching based method results}
+\label{section:stereo-match-results}
+
+
+
+\section{OpenCV method baseline results}
+\label{section:opencv-baseline-results}
+
+\section{Overall comparison of the outcomes}
+\label{section:method-comparison}
 
  
