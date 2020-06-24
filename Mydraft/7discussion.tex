@@ -3,18 +3,45 @@
 
 The predetermined main objective of this project was to estimate a 3D dense point cloud starting from an initial sparse set of points and a pair of stereo undistorted images.
 Moreover, this overall algorithm should have been executed in real time, in order to be following embedded in a stereo device which has to be suitable for autonomous driving, automotive and object detection related purposes.
-Therefore, tests for guarantee a potentiality for this type of usability have to be carried out. \\
+Therefore, tests for guaranteeing a potentiality for this type of usability have to be carried out. \\
 Overall, this can be evaluated as a challenging work, also considering the different algorithms developed since the early nineties in this field, which is considered as one of the most researched areas in computer vision, especially nowadays.\\
 Moreover, since the initial stages of the project, there was the need of studying and understanding the company device and, thus, find the optimal way to embed it in the algorithm pipeline.
 Additionally a novel strategy has to be thought, making it suitable for the requirements of the uses cases identified and competitive with the current methods.
 Furthermore, since the beginning there was the decision to focus on a standard approach, differently from most of the latest algorithms, which are based on deep learning techniques.  
+This decision was made in order to do not encounter the problem of the domain shifting, that is the drop in accuracy that most of the CNN-based algorithms face when dealing with new type of environment, especially real ones, on which the network has not been trained~\cite{Poggi2019}.
+Moreover, another factor that pushed for basing the algorithm on a more standard stereo matching strategy stands on the requirement of being able to embed the algorithm on a relatively small device.
+As a matter of fact, one of the company goals is to join the market of single-user devices, designing a product that should be extremely compact.
+Therefore, there would be quite infeasible to execute in it algorithms that requires a high computational cost, such as ones based on neural network structure.
+As a matter of fact, in this latter case, pre-training should be developed over an expensive machine, facing again the problem of the environment shifting. \\
+Thereby, in order to guarantee a generally accurate result in every possible situation, and for the task of embedding the algorithm on compact devices, the decision was to design a standard based and lightweight method, which would be able to ensure, at lest theoretically, a real-time execution.
+Considering the whole work done, those tasks were overall achieved.
+Surely, further improvements are needed for guaranteeing an extremely fast execution, while keeping a high level of accuracy.
+Besides that, if the initial requirements and the different challenges faced during the project development are taken into account, the final result achieved can be considered as a reliable proof of the accomplishment of the initial objective defined.
 
 \section{Overall discussion over the project developed}
 \label{section:overall-discussion}
 
+Considering the overall project designed and especially comparing the outcomes achieved with the results of the OpenCV based Semi-Global Box Matching (SGBM) algorithm, which has been used as the baseline, the work done certainly showed that the strategy adopted is actually feasible for the predetermined goals.\\
+However, a certain lack in accuracy is visible.
+Moreover, the initial pre-processing section of the algorithm should be slightly improved, first of all the calibration of the stereo device, which is still not perfect. 
+
+
 
 \section{Drawbacks of the designed algorithm}
 \label{section:algorithm-drawbacks}
+
+The main advantage of the algorithm developed is that it is sensibly fast.
+However, it also hold some side drawbacks, which do not affect its main execution, although they limit the possibility of getting perfect results.\\
+As a matter of fact, the algorithm relies a lot on the initial set of points provided through the device, which is surely highly accurate, however it has a certain lack of performance in the detection of small objects.
+As specified since the initial chapters, the input point cloud is sparse, thus to ensure the maximum coverage of the scene. 
+However, this cannot simultaneously guarantee high performance in terms of accuracy for all the objects in the scene.
+Therefore, a more related stereo-matching strategy could be employed for those areas, thus to reduce the amount of errors and enhance the overall smoothness and continuity of the final dense cloud.\\
+Taking that into account, some approaches have been thought in order to improve the algorithm on that side.
+An example would stand on an initial segmentation of the scene.
+This will identify the different areas of the analysed environment, and for those regions on which the number of points is too low, a more pure SGM based strategy would be applied. 
+In fact, the fundamental downside of the classical SGM method is that it is highly expensive, computationally speaking, especially when the disparity range and the image density increase.
+Therefore, if the number of disparity levels cannot be reduced drastically, the other feature that can be tackled is the dimension of the analysed area.
+Hence, if it is applied to small regions, i.e. the segmented areas of small objects, a final potentially real-time execution could be ensured.
 
 
 \section{Further improvements and future work}
