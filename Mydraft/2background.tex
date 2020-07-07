@@ -1,198 +1,121 @@
 \chapter{Theoretical Background and Related Work}
 \label{chapter:background} 
 
-In chapter \ref{chapter:intro} a brief general analysis of stereo geometry and methods has been provided. 
-In this chapter a more precise revision of the theoretical tools that stereo matching methods exploit is presented.
-Epipolar geometry, camera calibration and disparity estimation algorithms are specifically described. 
-Starting from the necessary mathematical basis, the discussion moves on the disparity estimation algorithms. 
+In Chapter~\ref{chapter:intro} a general overview of the project has been proposed and the main purposes of the developed work have been outlined.\\
+In this chapter an exhaustive revision of the theoretical basis of most of the stereo-matching methods is presented. 
+Then, epipolar geometry, camera calibration and disparity estimation algorithms are specifically described. 
+Starting from the necessary mathematical fundamentals, the discussion moves on the disparity estimation algorithms. 
 Then, the chapter focus on the main benefits and drawbacks of standard and novel approaches in depths computation.
-Comparison between stereo-geometry based and deep learning based algorithms is proposed, to provide a clear explanation of the decisions implemented. 
-
-
-Considering the multiple algorithm for stereo correspondence, they can be conventionally classified into two general categories, local and global approaches~\cite{Scharstein2001}.
-Specifically, the local-based methods tend to estimate the disparity image trough a comparison of the matching cost from left and right views of the scene. 
+Comparison between photogrammetry based and deep learning based algorithms is proposed, to provide a clear explanation of the decisions implemented.\\
+Taking into account the standard algorithms for stereo correspondence, which are mainly based on photogrammetry related operations that fully exploit the mathematical principles of stereo geometry.
+They can be conventionally classified into two general categories, local and global approaches~\cite{Scharstein2001}.
+Specifically, the local-based methods tend to estimate the disparity image through the analysis of the corresponding pixels between the left and right views of the scene, concerning a particular area. 
+Then, the matching cost related to all the potential matches defined for that area is evaluated and employed in the exact disparity estimation.
 In order to recover from low accuracy proper of the previous strategy, global-based methods try to calculate the disparity values by minimizing an energy function.
 In this context, Semi-Global Matching (SGM) combines strong factors of global and local approaches allowing to obtain a good trade-off between computational cost and accuracy. \\
-Technically speaking, SGM applies a pixelwise, Mutual Information (MI) based matching cost for analysing pixel intensity value differences of input images \citep{Hirschmuller2008}.
+Technically speaking, SGM applies a pixelwise, Mutual Information (MI) based matching cost for analysing pixel intensity value differences of input images \cite{Hirschmuller2008}.
 Moreover, pixelwise matching is enhanced with a smoothness constraint, which leads to a global cost function. 
 Then, post-processing techniques are applied to remove outliers and filter the image.\\
-Referring to the analysis performed by Scharstein and Szeliski \citep{Scharstein2001}, SGM carries out four main steps, as well as most of the stereo matching algorithms. 
-These are defined as: matching cost computation, cost aggregation, disparity computation and disparity refinement. \\
-Considering the former, it is usually based on absolute, squared or sampling insensitive difference between pixel intensities \citep{Hirschmuller2008}. Although those methods allow to reach a reliable accuracy, they are sensitive to radiometric difference. 
-Thus, cost based on image gradients or window-based methods, such as rank and census transform \citep{Ko2017}, became an optimal choice. 
+Referring to the analysis performed by Scharstein and Szeliski \cite{Scharstein2001}, SGM carries out four main steps, as well as most of the stereo matching algorithms. 
+These are defined as: \textit{matching cost computation}, \textit{cost aggregation}, \textit{disparity computation} and \textit{disparity refinement}. \\
+Considering the former, it is usually based on absolute, squared or sampling insensitive difference between pixel intensities \cite{Hirschmuller2008}. 
+Although those methods allow to reach a reliable accuracy, they are sensitive to radiometric difference. 
+Thus, cost based on image gradients or window-based methods, such as Rank and Census transform \cite{Ko2017}, became an optimal choice. 
 Furthermore, Mutual Information results as a good trade-off for dealing with complex radiometric relationships between images.\\
-In the second phase, cost aggregation collects the matching costs considering multiple directions and the disparity levels. 
-Following, disparity evaluation is defined for each pixel, as the one with the lowest cost. This is the approach typically used for local methods. 
-Global algorithms, rather, used to get rid of the aggregation step and define a global energy function. 
-Over that function, pixel similarity and disparity smoothness are enforced with different strategies. In this latter case, the best disparity is identified finding the minimum of the cost function. This is achieved with multiple techniques such as: Dynamic Programming (DP) \citep{Birchfield1999}, Belief Propagation \citep{Klaus2006} or Graph Cuts \citep{Kolmogorov2001}.\\
-Disparity refinement tends to differ more among the different methods. Usually, post-processing techniques such as filtering, outlier removal and consistency check are in general applied.\\
-As anticipated above, among the top-ranked stereo matching algorithms, SGM results to be the best performing in terms of computational time and accuracy. 
-Its benefits stand in the hierarchical computation of the matching cost, which exploit Mutual Information. 
-Cost aggregation is achieved taking into account a global energy function and a pathwise pixel optimization. 
+In the second phase, cost aggregation accumulate the matching costs coming from multiple directions and along the considered disparity levels. 
+Subsequently, disparity evaluation is defined for each pixel, as the one with the lowest cost.
+This is the approach typically used for local methods. 
+Global algorithms, contrarily, used to get rid of the aggregation step and define a global energy function. 
+Over that function, pixel similarity and disparity smoothness are enforced with different strategies. 
+In this latter case, the best disparity is identified finding the minimum of the cost function. 
+This is achieved with multiple techniques such as: Dynamic Programming (DP) \cite{Birchfield1999}, Belief Propagation \cite{Klaus2006} or Graph Cuts \cite{Kolmogorov2001}.\\
+Disparity refinement tends to differ more among the different methods. 
+Usually, post-processing techniques such as filtering, outlier removal and consistency check are applied in general.\\
+As aforementioned, among the top-ranked stereo matching algorithms, SGM results to be the best performing in terms of computational time and accuracy. 
+Its benefits stand in the hierarchical computation of the matching cost, which mainly exploits Mutual Information. 
+Cost aggregation is achieved considering a global energy function and a pathwise pixel optimization. 
 The final disparity is chosen with a winner takes all strategy. 
 Disparity refinement is completed by consistency check between left and right disparity images. \\
-Besides the challenge of building up the optimal algorithm for recovering a disparity image from a stereo image pair, it is necessary to develop an analysis of the basis of stereo correspondence and its importance for multiple applications such as: autonomous driving, robotics, object detection and 3D reconstruction. \\
+Therefore, this brief introduction presents the general concepts of most of the standard stereo matching algorithms.
+However, an analysis of the basis of stereo correspondence is equally important in this context, thus to highlight its relevance for multiple applications such as: autonomous driving, robotics, object detection and 3D reconstruction. \\
+
+\section{Stereo matching and pixel correspondence}
+\label{section:stereo-match-and-corr}
+
 First of all, stereo matching is defined as the process of estimating a 3D model of a scene, starting from two or more images. 
-Therefore, the matching pixel between the images are found and their 2D positions are converted into 3D depths. 
-Thus, how this operation of building a dense depth map, assigning relatives depth to the input image pixels, is achieved. 
-This is based on the disparity, defined as the amount of horizontal motion between two properly configured images of a stereo pair. 
-This one is then inversely proportional to the distance from the observer, i.e. the camera. 
-Although this concepts are relatively simple to understand, the challenging task within this process stands in establishing dense and accurate inter-image correspondences\citep{Szeliski2011}.
-As already underlined, stereo matching is one of the most widely studied topic in computer vision from years and it continues to be one of the most active research in that field. 
-In fact, modelling of human visual systems, robotic navigation and manipulation and autonomous driving \citep{Poggi2019} and 3D model building are some of the possible applications.\\
-The explanations of the fundamental principles of stereo matching, such as epipolar geometry, rectification and disparity map, follows.\\
+Therefore, the matching pixels between the images are found and their 2D positions are converted into 3D depths. 
+This procedure and the definition of a dense depth map, generally obtained by assigning the relative depth to the input pixels, is going to be properly described in the following sections.\\
+Nonetheless, essential is the concept of disparity, defined as the amount of horizontal motion between two properly configured images of a stereo pair. 
+It is inversely proportional to the distance from the observer, i.e. the camera. 
+Although these ideas are relatively simple to understand, the challenging task within this process stands in establishing dense and accurate inter-image correspondences \cite{Szeliski2011}.\\
+As already underlined, stereo matching is one of the most widely studied topic in computer vision since years and it continues to be one of the most active research in that field. 
+In fact, modelling of human visual systems, robotic navigation and manipulation, autonomous driving \cite{Poggi2019} and 3D model building are only some of the possible applications.\\
+Therefore, it worth to explain the fundamental principles of stereo matching, such as epipolar geometry, rectification and disparity map, in order to provide a comprehensive outline of the techniques and the algorithms handled in this project.\\
 
-%\subsection{Stereo geometry}
-%\label{subsection:stereogeom}
-%\begin{figure}[t]
-%	\begin{center}
-%		{\includegraphics[width=.8\textwidth, height=7cm, keepaspectratio]{images/epipolar-geometry}}
-%\caption{Epipolar geometry}
-%\label{fig:epipolargeom}
-%	\end{center}
-%\end{figure}
-%Main goal of epipolar geometry is the computation of pixels correspondences among the input images. 
-%Neighbouring pixels information, cameras positions and their calibration data are fundamental to achieve that.
-%Figure \ref{fig:epipolargeom} demonstrate a pixel in one image $\mathbf{p}_1$ projected to its correspondent epipolar line segment in the other image, which is lower bounded by the projection of the first camera center into the second camera plane, i.e. the epipole $\mathbf{e}_2$. 
-%Projecting the epipolar line in the second image back to the first, another line would be obtained, bounded by the correspondent epipole $\mathbf{e}_1$. 
-%The extensions to infinity of these two segment are identified as the epipolar lines, which are defined by the intersection of the two image planes with the epipolar plane.
-%A fundamental property is that the epipolar plane passes through both camera centers $\mathbf{C}_1$ and $\mathbf{C}_2$, as well as point $\mathbf{P}$. 
-%Therefore, they lie in the same plane. \\
-%
-%\subsection{Rectification}
-%\label{subsection:rectification}
-%\begin{figure}[t]
-%	\begin{center}
-%		{\includegraphics[width=.8\textwidth, height=7cm, keepaspectratio]{images/rectification}}
-%\caption{Image rectification -- Source: L. Lebeznik}
-%\label{fig:rectification}
-%	\end{center}
-%\end{figure}
-%
-%Epipolar geometry for a pair of cameras is relative to pose and calibration of the camera and can be computed using the fundamental matrix, which can be obtained applying the eight point algorithm \citep{hartley2004multiple}.
-%Computing this geometry allows, then, to find the correspondent pixels between the two images using the constraint of the epipolar lines.
-%This is possible, because, as explained in \ref{subsection:stereogeom}, considered a pixel in one image, the correspondent one lies on the relative epipolar line.\\
-%Beside that, pixels correlations can be more efficiently performed by rectifying the input images \citep{hartley2004multiple}.
-%In Figure \ref{fig:rectification} is clearly visible the outcome of this process and its advantages.
-%As shown, corresponding horizontal scanlines are epipolar lines. 
-%The essential importance of this standard rectified geometry is clearly explained by the following equation,
-%\begin{equation} \label{eqn:disparity-depth}
-%	d = f \frac{B}{Z}
-%\end{equation}
-%
-%that leads to a linear relationship between 3D depth $Z$ and disparity $d$, where $f$ is the focal length (in pixel) and $B$ the baseline.
-%Moreover, the relationship between the corresponding pixels in the left and right images can be defined as follows:
-%\begin{equation} \label{eqn:corresponding-pixel}
-%	x' = x + d(x, y), \; y' = y
-%\end{equation}
-%
-%Thus, the main step for recovering a depth image of a scene is the estimation of the disparity map $d(x,y)$.\\
-%As introduced at the beginning, the best disparity map is estimated after the rectification process. 
-%This is performed by comparing the similarity of corresponding pixels, as defined in equation \ref{eqn:corresponding-pixel}, and storing them in a disparity space image $C(x,y,d)$, which is then processed with multiple algorithms. 
+\subsection{Concepts of stereo geometry}
+\label{subsection:stereo-geometry-basics}
 
-\subsection{Stereo methods and dense correspondence}
-\label{stereomethods}
-In this section a brief delineation of the general pipeline implemented in most of the stereo matching method is presented. 
-Moreover, as a theoretical completion of what introduced above, some generic algorithm are further explained.\\
-Stereo algorithm follows in general a subspace of the following methods: matching cost computation, cost aggregation, disparity computation and optimization and disparity refinement \citep{Scharstein2001}.\\
-A preliminary distinction, based on those phases, separates stereo methods between local or window-base global methods.\\
-In local methods, the disparity computation in a certain region depends on the pixel intensities within a limited window.\\
-On the contrary, global algorithms, are based on an energy function.
-In this one smoothness assumptions are defined and then a global optimization problem is solved. 
-These algorithm are mainly distinguished considering the minimization strategy, such that, simulated annealing, graph cuts or belief propagation.\\
-Between these two classes there are iterative and hierarchical algorithms. 
-The latter aim to constraint gradually the disparity estimation from the coarser to the finer levels \citep{Hirschmuller2008}.\\
-Considering the first general step of stereo matching algorithms, the matching cost, there are multiple measures to define it.
-Among the most prevalent pixel-based algorithm can be included square intensity differences, absolute intensity differences, mean-squared error and mean absolute difference.\\
-Other common matching cost comprehend normalized cross-correlation, which is similar to sum-of-squared-difference (SSD), and binary methods. 
-However, the latter tend to not be used any longer. \\
-On the other hand, lately, more robust algorithms are used for their insensitivity to non-stationary exposure and illumination changes. 
-Entropy measures and non-parametric functions such as, rank and census transform \citep{Zabih1994}, sampling insensitive difference\citep{Birchfield1999} and hierarchical mutual information \citep{Hirschmuller2008}, are some examples.
-In particular, they allow to obtain accurate performance when considerable exposure or appearance variations are present. \\
-Drawing up some conclusion regarding the local methods, the core steps are the matching cost calculation and the aggregation phase. 
-Disparity estimation, then, becomes trivial. Each pixel takes the disparity levels whose cost value is the minimum. 
-This approach is said to be a local \textit{winner-take-all} optimization. 
-A drawback of this approach is that the matches are imposed for the reference image. 
-While points is the support image might have multiple correct matches. 
-For this reason, cross-checking and post-processing become more relevant here.\\
-Summarizing the general pipeline of global stereo matching methods, they often get rid of the aggregation step. 
-They usually perform sort of optimization steps after disparity estimation, exploiting the smoothness constraints as aggregation part. \\
-Goal of this approach is to find the solution to a global energy function, i.e. the disparity $d$ that minimizes the energy,
-\begin{equation}\label{eqn:energyfct}
-	E(d) = E_d(d) + \lambda E_s(d)
-\end{equation}
-where $E_d(d)$ is the data term and $E_s(d)$ the smoothness term.
-Adopting the aforementioned disparity space image (DSI) matching cost, the data energy is calculated as:
-\begin{equation}\label{dataterm}
-	E_d(d) = \sum_{(x,y)} C(x, y, d(x, y))
-\end{equation}
-where $C$ is the DSI.
-Then, the smoothness term is usually defined as:
-\begin{equation}\label{smoothterm}
-	E_s(d) = \sum_{(x,y)} \rho (d(x,y) - d(x + 1, y)) + \rho (d(x,y) - d(x, y + 1))
-\end{equation}
-where $\rho$ is some monotonically increasing function of disparity difference. 
-For some implementations, the smoothness energy term can also be based on intensity differences,
-\begin{equation}\label{smoothtermintensity}
-	\rho_d(d(x,y) - d(x + 1, y)) \cdot \rho_I(\Vert I(x,y) - I(x + 1,y) \Vert)
-\end{equation}
-where $\rho_I$ is a monotonically decreasing function, which depends on the intensity differences and makes the smoothness costs lower at high-intensity gradients.\\
-After the energy function has been clearly identified, different categories of algorithms can be exploited to recover a (local) minimum.
-Graph cut, belief propagation and Markov random field (MRF) based methods have been proved to give the most accurate results. \\
-Mentioning some hybrid methods, there are cooperative algorithms and others based on coarse to fine incremental steps.
-Cooperative algorithms were some of the earliest proposed for disparity estimation. They are influenced by human stereo vision processing models. 
-They operate by iteratively improve disparity evaluations using non-linear calculations, leading to a result similar to the one of the global methods.
-Iterative algorithms are, instead among the current best algorithms.
-The main idea is to successively choose the best disparity among all of the possible ones. 
-A coarse-to-fine framework is usually used to speed up the computations.\\
-Dealing with global optimization methods, it is worth to mention dynamic programming (DP) technique.
-Unlike solutions based on equation \ref{eqn:energyfct}, dynamic programming allows to reach global minimum exploiting independent scanlines.
-This approach works over a slice of the DSI, i.e. the matching cost cube, finding the path associated to the minimum cost.
-The generic implementation of DP along a scanline $y$ and for each input state in a 2D cost matrix $D(m, n)$ leads to combine its DSI value with its previous cost values as follows,
-\begin{equation}\label{eqn:dynamicprog}
-	C'(m,n) = C(m + n, m - n, y)
-\end{equation}
-Correct cost selection in presence of occluded pixels and difficulties with scanline consistency are some of the weakness of DP.
-Multiple algorithms have been proposed to recover from these problems. 
-Scharstein and Szeliski \citep{Scharstein2001} proposed an alternative to standard DP, improving recursively independent scanlines in the global energy function,
-\begin{equation}\label{eqn:DPoptimization}
-	D(x,y,d) = C(x,y,d) + \min_{d'}\{ D(x - 1, y, d') + \rho_{d} (d - d') \}
-\end{equation}
-An upgrade of this scanline optimization is the aggregation cost approach used in semi-global matching \citep{Hirschmuller2008}.
-In this case, a cumulative cost function is evaluated from at least eight directions.
-Intuitively, this approach accesses accurate results and it is highly efficient. \\
-Considering more recent improvements to stereo matching, segmentation-based techniques hold a prominent position.
-In this case, an initial segmentation of the reference image is performed.
-Then, disparities are estimated pixelwise using local methods.
-Citing couple of recent approaches, Klaus, Sormann and Karner \citep{Klaus2006} segment the image with mean shift, to get initial disparity estimations. 
-Then they apply re-fitting with global planes, and perform final MRF with loopy belief propagation. \\
-Wang and Zheng \citep{Wang2008} built a similar top ranked algorithm.
-They segment the image with local plane fits. 
-Then run cooperative optimization of neighbouring plane fit parameters. 
-Others developed similar approaches exploiting color correlation and left-right consistency check for occlusion detection \citep{yang2008stereo} or focusing on alpha mattes fractional pixel extraction \citep{bleyer2009stereo}.\\
-As explained in section \ref{sec:problemstat} the area of stereo matching and disparity estimation is one of the most extensively researched topic in computer vision.
-Nowadays approaches based on convolutional neural networks and deep learning are going to be the highly ranked in the standard database.
-Although, their performance in accuracy tends to decrease a lot when moving from dataset images to real ones.\\
-Therefore, novel strategies based on standard stereo geometry algorithms could reach consistent accuracy even in real time \citep{Hernandez-Juarez2016}.
-Thus, as described above, after the structure of the cost volume or DSI has been delineated, the actual pixelwise photoconsistency measures are computed.
-Multiple methods to achieve this has been proposed during years and already explained in the previous paragraphs.
-Then, depth computation is obtained with different form of optimizations. 
-These ranges among local, global or hybrid frameworks. \\
-Consequently, starting from classical stereo-based methods and building up a novel pipeline, accurate real time depth map estimations can be achieved.
+\begin{figure}[t]
+	\begin{center}
+		{\includegraphics[width=.8\textwidth, height=5cm, keepaspectratio]{images/epipolar-geometry}}
+\caption{Epipolar geometry}
+\label{fig:epipolargeom}
+	\end{center}
+\end{figure}
 
+Main goal of epipolar geometry is the computation of pixels correspondences among the input images. 
+Neighboring pixels information, cameras positions and their calibration data are fundamental to achieve that.
+Figure \ref{fig:epipolargeom} displays a pixel in one image $\mathbf{p}_1$ projected to its correspondent epipolar line segment in the other image, which is lower bounded by the projection of the first camera center into the second camera plane, i.e. the epipole $\mathbf{e}_2$. 
+Projecting the epipolar line in the second image back to the first, another line is obtained, bounded by the correspondent epipole $\mathbf{e}_1$. 
+The extensions to infinity of these two segment are identified as the epipolar lines, which are defined by the intersection of the two image planes with the epipolar plane.
+A fundamental property is that the epipolar plane passes through both camera centers $\mathbf{C}_1$ and $\mathbf{C}_2$, as well as point $\mathbf{P}$. 
+Therefore, they lie in the same plane. \\
 
+\subsection{Concepts of rectification}
+\label{subsection:rectification-basics}
 
+\begin{figure}[t]
+	\begin{center}
+		{\includegraphics[width=.8\textwidth, height=5cm, keepaspectratio]{images/rectification}}
+\caption{Image rectification -- Source: L. Lebeznik}
+\label{fig:rectification}
+	\end{center}
+\end{figure}
 
-\section{Epipolar geometry and Rectifiation}
+Epipolar geometry for a pair of cameras is relative to pose and calibration of the camera and can be computed using the fundamental matrix, which can be obtained applying the eight point algorithm \cite{hartley2004multiple}.
+This geometry allows, then, to find the correspondent pixels between the two images using the constraint of the epipolar lines.
+This is possible, because, as explained in \ref{subsection:stereo-geometry}, considered a pixel in one image, the correspondent one lies on the relative epipolar line.\\
+Beside that, pixels correlations can be more efficiently performed by rectifying the input images \cite{hartley2004multiple}.
+In Figure \ref{fig:rectification} is clearly visible the outcome of this process and its advantages.
+As shown, corresponding horizontal scanlines are epipolar lines. 
+The essential importance of this standard rectified geometry is clearly explained by the following equation,
+
+\begin{equation} 
+\label{eqn:disparity-depth}
+	d = f \frac{B}{Z}
+\end{equation}
+
+that leads to a linear relationship between 3D depth $Z$ and disparity $d$, where $f$ is the focal length (in pixel) and $B$ the baseline.
+Moreover, the relationship between the corresponding pixels in the left and right images can be defined as follows:
+\begin{equation} 
+\label{eqn:corresponding-pixel}
+	x' = x + d(x, y), \; y' = y
+\end{equation}
+
+Thus, the main step for recovering a depth image of a scene is the estimation of the disparity map $d(x,y)$.\\
+As introduced at the beginning, the best disparity map is estimated after the rectification process. 
+This is performed by comparing the similarity of corresponding pixels, as defined in equation~\ref{eqn:corresponding-pixel}, and storing them in a disparity space image $C(x,y,d)$, which is then processed with multiple algorithms. 
+
+\section{Epipolar geometry and Rectification}
 \label{sec:eipolarandrect}
 
 Fundamental problem of stereo vision is the estimation of 3D locations of points from at least two corresponding input images.
 This process, which comprises concurrent computation of both 3D geometry and camera pose, is generally known as structure from motion \cite{Szeliski2011}.\\
 In the explanation of these topics it is necessary to start discussing about the triangulation.
-Then, the concept of epipolar geometry is outlined and after that the notions of camera calibration and rectification. 
+Then, the concept of epipolar geometry is outlined and after that the notion of camera calibration and rectification. 
 
 \subsection{Triangulation}
-\label{subsec:triangulation}
+\label{subsection:triangulation}
 
 \begin{figure}[t]
 	\begin{center}
@@ -202,10 +125,10 @@ Then, the concept of epipolar geometry is outlined and after that the notions of
 	\end{center}
 \end{figure}
 
-Triangulation is the problem of detecting 3D points positions from a collection of corresponding 2D image locations, assuming that camera positions are known.
-Figure \ref{fig:triangulation} shows one of the easiest methods to tackle this problem. 
+Triangulation is the problem of detecting 3D point positions from a collection of corresponding 2D image locations, assuming that camera poses are known.
+Figure~\ref{fig:triangulation} shows one of the easiest methods to tackle this problem. 
 Objective is to evaluate the 3D position of $P'$ that have the smallest error to all of the 3D optical rays coming from the camera centers, which identify the 2D point locations in the image plane, i.e. $P_r$ and $P_l$.
-As shown in Figure \ref{fig:triangulation}, the rays starts from the camera centers, $O_j$ and go in direction of $r$ and $l$, which can be defined using the camera matrix $ \{ P_j = K_j [ R_j | t_j ] \} $.
+As shown in Figure~\ref{fig:triangulation}, the rays starts from the camera centers, $O_j$ and go in direction of $r$ and $l$, which can be defined using the camera matrix $ \{ P_j = K_j [ R_j | t_j ] \} $.
 The closest point to $P$ on this ray minimizes the distance,
 
 \begin{equation}
@@ -226,7 +149,7 @@ Hence, the optimal value for $P$, obtained solving a least square problem, becom
 \end{equation}
 
 \subsection{Epipolar geometry}
-\label{subsec:epipolargeom}
+\label{subsection:epipolar-geometry}
 
 \begin{figure}[t]
 	\begin{center}
@@ -247,7 +170,7 @@ The epipolar plane is defined by the baseline and the ray that comes from $m_l$.
 Hence, knowing that $m_r$ lies on the same plane, that point belongs to $l_r$, i.e. the intersection between the epipolar and the second image plane. 
 Therefore, exploiting this property, the searching of corresponding points is constrained to only one line inside the image.\\
 Mathematical definition of the epipolar geometry is the fundamental matrix $F$.
-As already demonstrated through Figure \ref{fig:epipolargeom-2}, for each point $p_L$ in one image, the corresponding epipolar line $e_R$ to that point belongs to the other image plane. 
+As already demonstrated through Figure~\ref{fig:epipolargeom-2}, for each point $p_L$ in one image, the corresponding epipolar line $e_R$ to that point belongs to the other image plane. 
 Moreover, any point $p_R$ in the second image, which is related to point $p_L$, lies on $e_R$.
 Hence, the epipolar line is described as the projection in the second image of the ray that comes from the point in the first image, passing through its camera center.
 This defines a map, $p_L \rightarrow e_R$, which relates the points in one image with the corresponding epipolar lines in the second image.
@@ -267,16 +190,15 @@ Thus, the mathematical correlation is,
 \end{equation}
 
 Reciprocally, if image points comply the relation \ref{eqn:fundmatprop}, then the rays identified by these points are coplanar. 
-For point corresponding this is a necessary condition.
+For corresponding points this is a necessary condition.
 Equation \ref{eqn:fundmatprop} is extremely important because it allows to characterize the fundamental matrix without reference to the camera matrices \cite{hartley2004multiple}.
 Thus, using at least 7 correspondences, it is possible to recover the fundamental matrix $F$. 
 This estimation is known as \textit{weak calibration}.\\
-\textbf{Maybe add 8-point algorithm description}
 
 \subsection{Rectification}
-\label{subsec:rectification}
+\label{subsection:rectification}
 
-Image rectification is defined as the process of obtaining a pair of \textit{matched epipolar projections} from a pair of stereo images, which are taken from generally differing viewpoints.
+As introduced in section~\ref{subsection:rectification-basics}, image rectification is defined as the process of obtaining a pair of \textit{matched epipolar projections} from a pair of stereo images, which are taken from generally differing viewpoints.
 In the rectified projections the epipolar lines become parallel with respect to the x-axis. 
 Thus, they match between the stereo pair and so the disparities are in the x-direction only.\\
 In order to obtain a rectified stereo pair, 2D projective transformations are employed to the images, so that the epipolar lines can match.
@@ -299,7 +221,8 @@ Satisfying the condition above, a matched pair of transformations is recovered.\
 Specifically, at first $H'$ is chosen, so that it can map the epipole $e_R$ to infinity. 
 Then the matching transformation $H$ is defined minimizing the sum-of-square distances,
 
-\begin{equation}\label{eqn:matchtransfconstr}
+\begin{equation}
+\label{eqn:match-transf-constr}
 	\sum_i d(H p_{L_i}, H'p_{R_i})^2
 \end{equation}
 
@@ -312,70 +235,177 @@ After that, there is the selection of the projective transformation $H'$, that m
 The corresponding transformation $H$ is found solving the least-square problem.
 Finally both of the input images are resampled according to $H$ and $H'$.
 
-\section{Stereo methods and dense correspondence}
-\label{sec:stereometh}
+\section{Standard stereo methods and dense correspondence}
+\label{section:stereo-methods}
 
-\textbf{Take the part already written in the introduction}\\
-\textbf{Refactoring needed between the 2 chapters}
+In this section a brief delineation of the general pipeline implemented in most of the stereo matching method is presented. 
+Moreover, as a theoretical completion of what introduced above, some generic algorithms are further explained.
 
-\subsection{Stereo geometry based methods}
+\subsection{Standard stereo matching algorithms}
+\label{subsection:standard-methods}
+
+Standard stereo matching algorithm follows in general a subspace of the following methods: matching cost computation, cost aggregation, disparity computation and optimization and disparity refinement \cite{Scharstein2001}.\\
+A preliminary distinction, based on those phases, separates stereo methods between local or window-base and global methods.\\
+In local methods, the disparity computation depends on the pixel intensities within a limited window, considering a specific region of the image.\\
+On the contrary, global algorithms, are based on an energy function.
+In the latter smoothness assumptions are defined and then a global optimization problem is solved. 
+These algorithm are mainly distinguished considering the minimization strategy, such that, simulated annealing, graph cuts or belief propagation.\\
+Between these two classes there are iterative and hierarchical algorithms. 
+The latter aim to constraint gradually the disparity estimation from the coarser to the finer levels \cite{Hirschmuller2008}.\\
+Considering the first general step of stereo matching algorithms, the matching cost, there are multiple measures to define it.
+Among the most prevalent pixel-based algorithm can be included square intensity differences, absolute intensity differences, mean-squared error and mean absolute difference.\\
+Other common matching cost comprehend normalized cross-correlation, which is similar to sum-of-squared-difference (SSD), and binary methods, which, however, tend to not be used any longer. \\
+On the other hand, more robust algorithms are generally used for their insensitivity to non-stationary exposure and illumination changes. 
+Entropy measures and non-parametric functions such as, rank and census transform \cite{Zabih1994}, sampling insensitive difference\cite{Birchfield1999} and hierarchical mutual information \cite{Hirschmuller2008}, are some examples.
+In particular, they allow to obtain accurate performance when considerable exposure or appearance variations are present. \\
+Drawing up some conclusion regarding the local methods, the core steps are the matching cost calculation and the aggregation phase. 
+Disparity estimation, then, becomes trivial. 
+Each pixel takes the disparity level whose cost value is the minimum. 
+This approach is said to be a local \textit{winner-take-all} optimization. 
+A drawback of this approach is that the matches are imposed for the reference image. 
+While points is the support image might have multiple correct matches. 
+For this reason, cross-checking and post-processing become more relevant here.\\
+Summarizing the general pipeline of global stereo matching methods, they often get rid of the aggregation step. 
+They usually perform some sort of optimization steps after disparity estimation, exploiting the smoothness constraints as aggregation part. \\
+Goal of this approach is to find the solution to a global energy function, i.e. the disparity $d$ that minimizes the energy,
+
+\begin{equation}
+\label{eqn:energyfct}
+	E(d) = E_d(d) + \lambda E_s(d)
+\end{equation}
+
+where $E_d(d)$ is the data term and $E_s(d)$ the smoothness term.
+Adopting the aforementioned disparity space image (DSI) matching cost, the data energy is calculated as:
+
+\begin{equation}
+\label{eqn:dataterm}
+	E_d(d) = \sum_{(x,y)} C(x, y, d(x, y))
+\end{equation}
+
+where $C$ is the DSI.
+Then, the smoothness term is usually defined as:
+
+\begin{equation}
+\label{eqn:smoothterm}
+	E_s(d) = \sum_{(x,y)} \rho (d(x,y) - d(x + 1, y)) + \rho (d(x,y) - d(x, y + 1))
+\end{equation}
+
+where $\rho$ is some monotonically increasing function of disparity difference. 
+For some implementations, the smoothness energy term can also be based on intensity differences,
+
+\begin{equation}
+\label{eqn:smoothtermintensity}
+	\rho_d(d(x,y) - d(x + 1, y)) \cdot \rho_I(\Vert I(x,y) - I(x + 1,y) \Vert)
+\end{equation}
+
+where $\rho_I$ is a monotonically decreasing function, which depends on the intensity differences and makes the smoothness costs lower at high-intensity gradients.\\
+After the energy function has been clearly identified, different categories of algorithms can be exploited to recover a (local) minimum.
+Graph cut, belief propagation and Markov random field (MRF) based methods have been proved to give the most accurate results. \\
+Mentioning some hybrid methods, there are cooperative algorithms and others based on coarse to fine incremental steps.
+Cooperative algorithms were some of the earliest proposed for disparity estimation. 
+They are influenced by human stereo vision processing models. 
+They operate by iteratively improve disparity evaluations using non-linear calculations, leading to a result similar to the one of the global methods.
+Iterative algorithms are among the current best algorithms.
+The main idea is to successively choose the best disparity among all of the possible ones. 
+A coarse-to-fine framework is usually used to speed up the computations.\\
+Dealing with global optimization methods, it is worth to mention dynamic programming (DP) technique.
+Unlike solutions based on equation~\ref{eqn:energyfct}, dynamic programming allows to reach global minimum exploiting independent scanlines.
+This approach works over a slice of the DSI, i.e. the matching cost cube, finding the path associated to the minimum cost.
+The generic implementation of DP along a scanline $y$ and for each input state in a 2D cost matrix $D(m, n)$ leads to combine its DSI value with its previous cost values as follows,
+
+\begin{equation}
+\label{eqn:dynamicprog}
+	C'(m,n) = C(m + n, m - n, y)
+\end{equation}
+
+Correct cost selection in presence of occluded pixels and difficulties with scanline consistency are some of the weakness of DP.
+Multiple algorithms have been proposed to recover from these problems. 
+Scharstein and Szeliski~\cite{Scharstein2001} proposed an alternative to standard DP, improving recursively independent scanlines in the global energy function,
+
+\begin{equation}
+\label{eqn:DPoptimization}
+	D(x,y,d) = C(x,y,d) + \min_{d'}\{ D(x - 1, y, d') + \rho_{d} (d - d') \}
+\end{equation}
+
+An upgrade of this scanline optimization is actually the aggregation cost approach used in SGM method \cite{Hirschmuller2008}.
+In this case, a cumulative cost function is evaluated from at least eight directions.
+Intuitively, this approach accesses accurate results and it is highly efficient. \\
+Considering more recent improvements to stereo matching, segmentation-based techniques hold a prominent position.
+In this case, an initial segmentation of the reference image is performed.
+Then, disparities are estimated pixelwise using local methods.
+Citing couple of recent approaches, Klaus, Sormann and Karner \cite{Klaus2006} segment the image with mean shift, to get initial disparity estimations. 
+Then they apply re-fitting with global planes, and perform final MRF with loopy belief propagation. \\
+Wang and Zheng \cite{Wang2008} built a similar top ranked algorithm.
+They segment the image with local plane fits. 
+Then run cooperative optimization of neighbouring plane fit parameters. 
+Others developed similar approaches exploiting color correlation and left-right consistency check for occlusion detection \cite{yang2008stereo} or focusing on alpha mattes fractional pixel extraction \cite{bleyer2009stereo}.\\
+As explained in section \ref{section:stereo-match-and-corr} the area of interest for stereo matching and disparity estimation is one of the most extensively researched topic in computer vision.
+Nowadays approaches based on convolutional neural networks (CNNs) and deep learning are going to be the highly ranked in the standard database.
+Although, their performance in accuracy tends to decrease a lot when moving from dataset images to real ones.\\
+Therefore, novel strategies based on standard stereo geometry algorithms could reach consistent accuracy even in real time \cite{Hernandez-Juarez2016}.
+Thus, as described above, after the structure of the cost volume or DSI has been delineated, the actual pixelwise photoconsistency measures are computed.
+Multiple methods to achieve this has been proposed during years and already explained in the previous paragraphs.
+Then, depth computation is obtained with different form of optimizations. 
+These ranges among local, global or hybrid frameworks. \\
+Consequently, starting from classical stereo-based methods and building up a novel pipeline, accurate real time depth map estimations can be achieved.
 
 \subsection{Deep learning based methods}
-\label{subsec:deeplearnmeth}
+\label{subsection:deep-learn-meth}
 
 Considering that disparity estimation from a rectified stereo pair is still one of the most important tasks in computer vision, the latest years have seen an important development of deep learning based methods. \\
 Usually these approaches comprises a main pipeline, based on a standard local or global method, whose parameters are finely tuned exploiting Convolutional Neural Networks (CNNs). 
-Therefore, in most of the cases, Semi Global Matching (SGM) is used as regularization method, because of its accuracy and low computational time. 
+Therefore, in most of the cases, Semi Global Matching (SGM) is used as regularization method, because of its accuracy and relatively low computational time. 
 Then, deep learning based methods are used for tuning the penalty parameters, which are related to smoothness and discontinuity of the disparity map. 
 As described above, those penalties are empirically adjusted in the standard methods. 
 Therefore, the CNNs based approach aims at learn the penalties, in correlation with the 3D structure of the objects in the scene, to achieve an improvement in the disparity map. \\
-As aforementioned, several of these deep learning approaches has been proposed in the latest years, and some of them has been able to reach state of the art level of accuracy on the KITTI datasets.\\
+As aforementioned, several of these deep learning approaches has been proposed in the latest years, and some of them has been able to reach state of the art level of accuracy on the KITTI datasets~\cite{menze2015object}.\\
 Even though these method suffer drop in accuracy when shifting from synthetic to real images, it is worth to describe some of them, which are ranked among the state of the art methods in the KITTI benchmark. \\
-Seki and Pollefeys proposed SGM-Nets\cite{Seki2017}, a CNNs based method for penalty estimation, which exploit SGM as regularization technique in the main pipeline. 
+Seki and Pollefeys proposed \textbf{SGM-Nets}~\cite{Seki2017}, a CNNs based method for penalty estimation, which exploit SGM as regularization technique in the main pipeline. 
 They used small image patches and their locations as inputs to the network to predict penalties for the 3D object structures. 
-Actually, they developed a novel loss function for training the networks, which inputs are small image patches and their position. 
+Actually, they developed a novel loss function for training the network, whose inputs are small image patches and their related positions. 
 Moreover, they managed to separate positive and negative disparity changes, thus to get object structures more discriminatively.\\
-More in detail, SGM-Net produces $P_1$ and $P_2$ for each pixel. 
+More in detail, SGM-Net produces $P_1$ and $P_2$, which are the specific penalty values generally used in the aggregation cost phase of the standard SGM pipeline, for each pixel. 
 This is achieved though a training and a testing phase. 
 In the former, the network is iteratively trained by minimizing a \textit{Path cost} and a \textit{Neighbor Cost}. 
 In testing, the standard SGM pipeline is run using the penalties estimated by the network. 
-Actually, the \textit{Path Cost} is how the authors of the paper called the loss function that they developed, which they minimized using forward and back propagation. 
-Moreover, they introduced the \textit{Neighbor cost} function for removing the ambiguous disparities traversed along along the path, which can lead to wrong penalties.\\
-Another approach similar to the one just described is the method developed by Kuzmin et al. \cite{Kuzmin2017}. 
+Actually, the \textit{Path Cost} is how the authors of the paper called the loss function that they developed, which they minimized using forward and back propagation.
+Moreover, they introduced the \textit{Neighbor cost} function for removing the ambiguous disparities traversed along each path, which can lead to wrong penalties.\\
+Another approach similar to the one just described is the method developed by Kuzmin et al.~\cite{Kuzmin2017}. 
 The core of their method is the prediction of the local parameters of cost volume aggregation process, which they perform exploiting a deep convolutional network. 
 Thus, as in \cite{Seki2017}, they avoid to apply deep learning of pixel appearance descriptors, using classical matching scores instead. 
 Thus, they refuse learning high dimensional descriptors and matching them, as it used to happen in most of the first deep learning based algorithm.
 On the contrary, they focus the learning on the cost-aggregation step. 
-Thus, they defined the overall matching cost using a combination of census transform and sum-of-absolute-differences. 
-Then, they carry out the cost-aggregation phase, which is peculiar for smoothing the general matching cost and correct the wrong matches, applying the domain transform \cite{Gastal2011},\cite{Pham2013}.
-Basically, they develop a deep convolutional neural network to estimate on a pixel basis the cost-aggregation parameters and make them spatially varying. 
+Thus, they defined the overall matching cost using a combination of Census transform and sum-of-absolute-differences (SAD). 
+Then, they carry out the cost-aggregation phase, which is peculiar for smoothing the general matching cost and correct the wrong matches, applying the domain transform (\cite{Gastal2011},\cite{Pham2013}).
+Basically, they develop a deep CNN to estimate on a pixel basis the cost-aggregation parameters and make them spatially varying. 
 In this way, they were able to have smoother disparities on the same object and avoid smoothing across object boundaries. 
 Therefore, combining standard methods for the matching cost and applying end-to-end deep learning process to the cost-aggregation step, they obtain state-of-the-art accuracy in the KITTI 2015 dataset. 
 Differently from \cite{Zbontar2016}, \cite{Zbontar2015} and similarly to \cite{Mayer2016}, they build up an end-to-end learning method that comprises all the part of depth map computation in it. 
 Furthermore, unlike \cite{Mayer2016}, their approach exploits classical stereo matching techniques as modules within a more complex neural network structure. 
 Their process encompasses the definition of a general cost volume, the cost-aggregation step over that volume and the final winner-takes-all label selection. 
 Then, left-right consistency and filling of occluded pixels are performed as post-processing.\\
-A different approach with respect to the previous one stands in the implementation developed by \^{Z}bontar and LeCun \cite{Zbontar2016}.
+A different approach with respect to the previous one stands in the implementation developed by \^{Z}bontar and LeCun~\cite{Zbontar2016}.
 They focus their attention on the matching cost computation, which is usually the first step of a stereo matching algorithm. 
-They developed their method using a convolutional neural network to learn similarity measures on small image patches. 
+They developed their method using a CNN to learn similarity measures on small image patches. 
 Specifically, they structure the training in a supervised manner building up a binary classification data set with examples of similar and dissimilar pairs of patches. 
 Moreover, they carry out two different architectures, one adjusted for speed, and another one for accuracy. 
 Thus, the output of the network handles the initialization of the stereo matching cost. 
 After that, post processing steps are applied: cross-based cost aggregation, semi-global matching and finally disparity refinement techniques such as, left-right consistency check, subpixel enhancement, median and bilateral filters.\\
-Technically speaking, they present a convolutional neural network that is trained on pairs of small image patches, for which the disparity value is known. 
+Technically speaking, they present a network that is trained on pairs of small image patches, for which the disparity value is known. 
 Then, they initialize the matching cost using the output of the network.
 After that, they propose a series of common post-processing steps, which are though crucial to obtain accurate results.
-Cross-based cost aggregation is exploited for combining matching cost between neighbouring pixels with similar intensities. Then, constraints are enforced for smoothness and left-right consistency check applied for detect and eliminate errors in occluded regions. 
+Cross-based cost aggregation is exploited for combining matching cost between neighbouring pixels with similar intensities. 
+Then, constraints are enforced for smoothness and left-right consistency check applied for detect and eliminate errors in occluded regions. 
 The final disparity map is then obtained applying median and bilateral filters, useful for subpixel enhancement. \\
-Related problems to \cite{Zbontar2016} are the works by Haeusler et al. \cite{Haeusler2013} and by Spyropoulos et al. \cite{Spyropoulos2014}. 
+Related problems to \cite{Zbontar2016} are the works by Haeusler et al.~\cite{Haeusler2013} and by Spyropoulos et al.~\cite{Spyropoulos2014}. 
 Using a similar approach, they concentrate their attention on predicting the confidence of the calculated matching cost. 
-Specifically, in the first cited approach \cite{Haeusler2013}, the aim was using a random forest classifier to connect multiple confidence measures. 
+Specifically, in \cite{Haeusler2013}, the aim was using a random forest classifier to connect multiple confidence measures. 
 Similarly, the authors of \cite{Spyropoulos2014} focused in estimating the confidence of the matching cost by training a random forest classifier. 
 Then, they employed the predictions as mild constraints in a Markov Random Field (MRF) aiming at reducing the errors of the stereo method.\\
 Focusing on confidence prediction intended at the estimation of dense disparity map, it is worth to cite the work of \cite{Seki2016}.
-They adopted two channels disparity patches as inputs of a Convolutional Neural Network (CNN), predicting the correctness of stereo correspondences, that is the confidence. 
+They adopted two channels disparity patches as inputs of a CNN, predicting the correctness of stereo correspondences, that is the confidence. 
 Using these specific patches, they managed to simultaneously train features and classifiers.
-Furthermore, they incorporate the predicted confidence into Semi-Global Matching (SGM), adjusting its parameters directly. \\
+Furthermore, they incorporate the predicted confidence into SGM, adjusting its parameters directly. \\
 Unlike methods based on hand crafted features, which lead to limited accuracy, authors of \cite{Seki2016} leverage CNNs to overcome that problem. 
 In fact, CNNs support high performance from low level processing, such as patch based matching, to high level, like scene classification and object detection. \\
 Therefore, as previously introduced, they conceive a two channels disparity patch, based on the concept of standard confidence features.
@@ -385,13 +415,13 @@ Finally, the confidence was combined into SGM, so that dense disparity map could
 
 \subsubsection{Confidence measures}
 
-Considering some of the deep learning based methods described in \ref{subsec:deeplearnmeth}, becomes necessary to define the main typology of features proposed during the years to estimate the confidence of stereo correspondences. \\
+Considering some of the deep learning based methods described in section \ref{subsection:deep-learn-meth}, becomes necessary to define the main typology of features proposed during the years to estimate the confidence of stereo correspondences. \\
 Because of many features were introduced by different works in computer vision field, Hu and Mordohai \cite{Hu2012} developed a broad evaluation of them, leading to the definition of five groups, used for categorize those features. \\
 The first group is correlated to the matching cost. 
 This means that correct correspondence are unlike to be connected to large matching costs. 
 The second group focuses on local properties of the cost curve. 
 That is, confidence measure becomes the curvature around the minimum matching cost. 
-For example, flat curves, which have smaller values, and describe texture-less areas express higher ambiguity.
+For example, flat curves, which have smaller values, and describe texture-less areas, express higher ambiguity.
 Features related to local minima of the cost curve form the third group. 
 As an example, the so called \textit{Peak Ratio (PKR)}, is calculated as the minimum matching cost divided by the second local minima.
 Then, a probability mass function over disparity defined using the entire cost curve describes the fourth group.
@@ -415,7 +445,6 @@ Performing that exhaustive analysis, the authors carried out the results that le
 Especially, using disparity maps as input cue more accurate results are achieved in terms of correct matches, adaptation to new data and stereo accuracy improvement. 
 Beside that, training remains an issue for those methods though. 
 As a matter of fact, for deep learning based approaches the general amount of training data is still limited and in most case they struggle when dealing with new real data.\\
-
 
 \section{Image processing techniques}
 \label{section:image-proc-technique}
