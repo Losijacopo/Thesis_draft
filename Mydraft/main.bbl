@@ -6,6 +6,12 @@ A.~Seki, M.~Pollefeys, T.~Corporation, E.~T. Z{\"{u}}rich, and Microsoft,
   30th IEEE Conference on Computer Vision and Pattern Recognition, CVPR 2017},
   vol.~2017-Janua, no.~1, pp.~6640--6649, 2017.
 
+\bibitem{Scharstein2001}
+D.~Scharstein, R.~Szeliski, and R.~Zabih, ``{A taxonomy and evaluation of dense
+  two-frame stereo correspondence algorithms},'' {\em Proceedings - IEEE
+  Workshop on Stereo and Multi-Baseline Vision, SMBV 2001}, no.~December,
+  pp.~131--140, 2001.
+
 \bibitem{Poggi2019}
 M.~Poggi, D.~Pallotti, F.~Tosi, and S.~Mattoccia, ``{Guided Stereo Matching},''
   2019.
@@ -18,12 +24,6 @@ A.~Tonioni, F.~Tosi, M.~Poggi, S.~Mattoccia, and L.~D. Stefano, ``{Real-Time
 H.~Hirschm{\"{u}}ller, ``{Stereo processing by semiglobal matching and mutual
   information},'' {\em IEEE Transactions on Pattern Analysis and Machine
   Intelligence}, vol.~30, no.~2, pp.~328--341, 2008.
-
-\bibitem{Scharstein2001}
-D.~Scharstein, R.~Szeliski, and R.~Zabih, ``{A taxonomy and evaluation of dense
-  two-frame stereo correspondence algorithms},'' {\em Proceedings - IEEE
-  Workshop on Stereo and Multi-Baseline Vision, SMBV 2001}, no.~December,
-  pp.~131--140, 2001.
 
 \bibitem{Ko2017}
 J.~Ko and Y.~S. Ho, ``{Stereo matching using census transform of adaptive
@@ -51,10 +51,6 @@ V.~Kolmogorov and R.~Zabih, ``{Computing visual correspondence with occlusions
 R.~Szeliski, ``{Computer vision: algorithms and applications},'' {\em Choice
   Reviews Online}, vol.~48, no.~09, pp.~48--5140--48--5140, 2011.
 
-\bibitem{hartley2004multiple}
-R.~Hartley and A.~Zisserman, ``Multiple view geometry in computer vision.
-  cambridge university press, isbn: 0521540518,'' 2004.
-
 \bibitem{Zabih1994}
 R.~Zabih and J.~Woodfill, ``{Non-parametric local transforms for computing
   visual correspondence},'' {\em Lecture Notes in Computer Science (including
@@ -81,6 +77,10 @@ M.~Bleyer, M.~Gelautz, C.~Rother, and C.~Rhemann, ``A stereo approach that
 D.~Hernandez-Juarez, A.~Chacon, A.~Espinosa, D.~Vazquez, J.~C. Moure, and A.~M.
   Lopez, ``{Embedded real-time stereo estimation via Semi-Global Matching on
   the GPU},'' {\em Procedia Computer Science}, vol.~80, pp.~143--153, 2016.
+
+\bibitem{hartley2004multiple}
+R.~Hartley and A.~Zisserman, ``Multiple view geometry in computer vision.
+  cambridge university press, isbn: 0521540518,'' 2004.
 
 \bibitem{Kuzmin2017}
 A.~Kuzmin, D.~Mikushin, and V.~Lempitsky, ``{End-to-End learning of cost-volume

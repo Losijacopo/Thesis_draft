@@ -34,19 +34,37 @@ Moreover, the initial pre-processing section of the algorithm should be slightly
 The main advantage of the algorithm developed is that it is sensibly fast.
 However, it also hold some side drawbacks, which do not affect its main execution, although they limit the possibility of getting perfect results.\\
 As a matter of fact, the algorithm relies a lot on the initial set of points provided through the device, which is surely highly accurate, however it has a certain lack of performance in the detection of small objects.
-As specified since the initial chapters, the input point cloud is sparse, thus to ensure the maximum coverage of the scene. 
+As specified since the initial chapters, the input points cloud is sparse, thus to ensure the maximum coverage of the scene. 
 However, this cannot simultaneously guarantee high performance in terms of accuracy for all the objects in the scene.
 Therefore, a more related stereo-matching strategy could be employed for those areas, thus to reduce the amount of errors and enhance the overall smoothness and continuity of the final dense cloud.\\
 Taking that into account, some approaches have been thought in order to improve the algorithm on that side.
 An example would stand on an initial segmentation of the scene.
-This will identify the different areas of the analysed environment, and for those regions on which the number of points is too low, a more pure SGM based strategy would be applied. 
+This will identify the different areas of the analysed environment, and for those regions on which the number of points is below a specific threshold, a more pure SGM based strategy would be applied. 
 In fact, the fundamental downside of the classical SGM method is that it is highly expensive, computationally speaking, especially when the disparity range and the image density increase.
 Therefore, if the number of disparity levels cannot be reduced drastically, the other feature that can be tackled is the dimension of the analysed area.
-Hence, if it is applied to small regions, i.e. the segmented areas of small objects, a final potentially real-time execution could be ensured.
+Moreover, exploiting the depth information coming from the few points located in the area of interest, the disparity range can be reduced as well.
+Hence, if it is applied to small regions, i.e. the segmented areas of small objects, a final potentially real-time execution could be ensured.\\
+Another imperfection present in the current version developed is related to the overall smoothness of the estimated 3D cloud.
+As a matter of fact, at this stage the estimated point cloud does not present smooth edges and some contours of the objects appears to be a bit rough.
+This problem can be effortlessly overcome by running multiple times (most likely two or three times should be enough) the algorithm and using the most accurate points from the previous stage, thus to enhance the density of the final cloud. 
+Clearly this hierarchical method will slightly reduce the whole performance, considering that the multiple runs cannot be launched in parallel because the first estimation is needed for the following improvement.
+However, in the stages after the first one, not all the computations are produced again, therefore they can be considering as post-processing steps, from a computational point of view, meaning that they will not affect strongly the chance of produce an accurate results in real-time.\\
 
 
 \section{Further improvements and future work}
 \label{section:further-improvements}
 
-
+Therefore, some further work will be needed in this project in order to make it reach a level of accuracy that can compete, in terms of accuracy and computational time, with most of the current algorithm designed for depth estimation.
+The developed work and the analysis done show a strong potential for the though technique.
+Moreover, they prove that the implemented strategy is reasonable for the predetermined scope and the employment of the initial cloud taken from the company device helps in keeping the computation fast and it ensure, at the same time, accurate results.\\
+Summing up the development produced, the analysis carried out and the results achieved the following considerations can be outlined.
+First of all, the outcomes produced highlight that the strategy thought is reasonable and it allows to obtain generally accurate results in a reasonable time, which could be brought to a real time performance by implementing the code in the GPU. \\
+Secondly, considering the possible further improvements that could be implemented in the code, they mainly concern the smoothness of the final outcome and the point cloud density, which could be highly enhanced by carrying out the algorithm pipeline in a hierarchical manner, exploiting at each stage the increasing number of certainly accurate points. \\
+Moreover, the idea of including some segmentation on the input rectified images, in the pre-processing stage in order to identify the regions that contain a low amount of initial point, would be analysed.
+The main scope of that would be improving the densification, i.e. the object reconstruction, in those areas where the laser points are limited, so that the estimation errors could easily increase. 
+Additionally, in the real environment images taken with the company device, areas with clusters of missing date have been observed close to edges, i.e. occluded regions. 
+In the current implementation a initial pre-estimation of the 3D position of those points is realized by exploiting the data from the neighboring points. \\
+However, in some region, because of the relatively high amount of missing data, an accurate generation of data was not possible, therefore, in those cases, it has been preferred to discard those points, thus to not affect the following estimations with wrong initial data.
+Anyway, the amount of those missing data do not influence strongly the whole procedure, considering that those points are only among 2.5 and the 5\% with respect to the entire initial cloud. 
+Therefore, that amount of initial can be accepted, being a reasonable percentage when dealing with real world data. 
 
