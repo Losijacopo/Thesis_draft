@@ -6,19 +6,20 @@ In this chapter an exhaustive revision of the theoretical basis of most of the s
 Then, epipolar geometry, camera calibration and disparity estimation algorithms are specifically described. 
 Starting from the necessary mathematical fundamentals, the discussion moves on the disparity estimation algorithms. 
 Then, the chapter focus on the main benefits and drawbacks of standard and novel approaches in depths computation.
-Comparison between photogrammetry based and deep learning based algorithms is proposed, to provide a clear explanation of the decisions implemented.\\
+Comparison between photogrammetry based and deep learning based algorithms is proposed, to provide a clear explanation of the decisions implemented.
+At the end a relevant discussion about the main image processing techniques is carried out, thus to analyse some of the algorithms that have been used in the pre and post processing phase of the algorithm. \\
 Taking into account the standard algorithms for stereo correspondence, which are mainly based on photogrammetry related operations that fully exploit the mathematical principles of stereo geometry.
 They can be conventionally classified into two general categories, local and global approaches~\cite{Scharstein2001}.
 Specifically, the local-based methods tend to estimate the disparity image through the analysis of the corresponding pixels between the left and right views of the scene, concerning a particular area. 
 Then, the matching cost related to all the potential matches defined for that area is evaluated and employed in the exact disparity estimation.
-In order to recover from low accuracy proper of the previous strategy, global-based methods try to calculate the disparity values by minimizing an energy function.
+In order to recover from low accuracy proper of the previous strategies, global-based methods try to calculate the disparity values by minimizing an energy function.
 In this context, Semi-Global Matching (SGM) combines strong factors of global and local approaches allowing to obtain a good trade-off between computational cost and accuracy. \\
 Technically speaking, SGM applies a pixelwise, Mutual Information (MI) based matching cost for analysing pixel intensity value differences of input images \cite{Hirschmuller2008}.
 Moreover, pixelwise matching is enhanced with a smoothness constraint, which leads to a global cost function. 
 Then, post-processing techniques are applied to remove outliers and filter the image.\\
 Referring to the analysis performed by Scharstein and Szeliski \cite{Scharstein2001}, SGM carries out four main steps, as well as most of the stereo matching algorithms. 
 These are defined as: \textit{matching cost computation}, \textit{cost aggregation}, \textit{disparity computation} and \textit{disparity refinement}. \\
-Considering the former, it is usually based on absolute, squared or sampling insensitive difference between pixel intensities \cite{Hirschmuller2008}. 
+Considering the former, it is usually based an absolute, squared or sampling insensitive difference between pixel intensities \cite{Hirschmuller2008}. 
 Although those methods allow to reach a reliable accuracy, they are sensitive to radiometric difference. 
 Thus, cost based on image gradients or window-based methods, such as Rank and Census transform \cite{Ko2017}, became an optimal choice. 
 Furthermore, Mutual Information results as a good trade-off for dealing with complex radiometric relationships between images.\\
@@ -30,14 +31,14 @@ Over that function, pixel similarity and disparity smoothness are enforced with 
 In this latter case, the best disparity is identified finding the minimum of the cost function. 
 This is achieved with multiple techniques such as: Dynamic Programming (DP) \cite{Birchfield1999}, Belief Propagation \cite{Klaus2006} or Graph Cuts \cite{Kolmogorov2001}.\\
 Disparity refinement tends to differ more among the different methods. 
-Usually, post-processing techniques such as filtering, outlier removal and consistency check are applied in general.\\
+Post-processing techniques such as filtering, outlier removal and consistency check are applied in general.\\
 As aforementioned, among the top-ranked stereo matching algorithms, SGM results to be the best performing in terms of computational time and accuracy. 
 Its benefits stand in the hierarchical computation of the matching cost, which mainly exploits Mutual Information. 
 Cost aggregation is achieved considering a global energy function and a pathwise pixel optimization. 
 The final disparity is chosen with a winner takes all strategy. 
 Disparity refinement is completed by consistency check between left and right disparity images. \\
 Therefore, this brief introduction presents the general concepts of most of the standard stereo matching algorithms.
-However, an analysis of the basis of stereo correspondence is equally important in this context, thus to highlight its relevance for multiple applications such as: autonomous driving, robotics, object detection and 3D reconstruction. \\
+However, an analysis of the basis of stereo correspondence is equally important in this context, thus to highlight its relevance for multiple applications such as: autonomous driving, robotics, object detection and 3D reconstruction.
 
 \section{Stereo matching and pixel correspondence}
 \label{section:stereo-match-and-corr}
@@ -49,8 +50,8 @@ Nonetheless, essential is the concept of disparity, defined as the amount of hor
 It is inversely proportional to the distance from the observer, i.e. the camera. 
 Although these ideas are relatively simple to understand, the challenging task within this process stands in establishing dense and accurate inter-image correspondences \cite{Szeliski2011}.\\
 As already underlined, stereo matching is one of the most widely studied topic in computer vision since years and it continues to be one of the most active research in that field. 
-In fact, modelling of human visual systems, robotic navigation and manipulation, autonomous driving \cite{Poggi2019} and 3D model building are only some of the possible applications.\\
-Therefore, it worth to explain the fundamental principles of stereo matching, such as epipolar geometry, rectification and disparity map, in order to provide a comprehensive outline of the techniques and the algorithms handled in this project.\\
+In fact, modelling of human visual systems, robotic navigation and manipulation, autonomous driving~\cite{Poggi2019} and 3D model building are only some of the possible applications.\\
+Therefore, it worth to explain the fundamental principles of stereo matching, such as epipolar geometry, rectification and disparity map, in order to provide a comprehensive outline of the techniques and the algorithms handled in this project.
 
 \subsection{Concepts of stereo geometry}
 \label{subsection:stereo-geometry-basics}
@@ -63,13 +64,15 @@ Therefore, it worth to explain the fundamental principles of stereo matching, su
 	\end{center}
 \end{figure}
 
+In this section, a generic introduction to the main concepts of stereo geometry is proposed. 
+This will be, then, further extended in the following sections, where the different aspects of epipolar geometry and pixel correspondence will be specifically explained.\\
 Main goal of epipolar geometry is the computation of pixels correspondences among the input images. 
 Neighboring pixels information, cameras positions and their calibration data are fundamental to achieve that.
-Figure \ref{fig:epipolargeom} displays a pixel in one image $\mathbf{p}_1$ projected to its correspondent epipolar line segment in the other image, which is lower bounded by the projection of the first camera center into the second camera plane, i.e. the epipole $\mathbf{e}_2$. 
+Figure \ref{fig:epipolargeom} displays a pixel in one image $\mathbf{p}_1$ projected to its correspondent epipolar line segment in the other image, $\mathbf{l}_2$, which is lower bounded by the projection of the first camera center into the second camera plane, i.e. the epipole $\mathbf{e}_2$. 
 Projecting the epipolar line in the second image back to the first, another line is obtained, bounded by the correspondent epipole $\mathbf{e}_1$. 
 The extensions to infinity of these two segment are identified as the epipolar lines, which are defined by the intersection of the two image planes with the epipolar plane.
 A fundamental property is that the epipolar plane passes through both camera centers $\mathbf{C}_1$ and $\mathbf{C}_2$, as well as point $\mathbf{P}$. 
-Therefore, they lie in the same plane. \\
+Therefore, they all lie in the same plane.
 
 \subsection{Concepts of rectification}
 \label{subsection:rectification-basics}
@@ -77,17 +80,17 @@ Therefore, they lie in the same plane. \\
 \begin{figure}[t]
 	\begin{center}
 		{\includegraphics[width=.8\textwidth, height=5cm, keepaspectratio]{images/rectification}}
-\caption{Image rectification -- Source: L. Lebeznik}
+\caption{Image rectification}
 \label{fig:rectification}
 	\end{center}
 \end{figure}
 
 Epipolar geometry for a pair of cameras is relative to pose and calibration of the camera and can be computed using the fundamental matrix, which can be obtained applying the eight point algorithm \cite{hartley2004multiple}.
 This geometry allows, then, to find the correspondent pixels between the two images using the constraint of the epipolar lines.
-This is possible, because, as explained in \ref{subsection:stereo-geometry}, considered a pixel in one image, the correspondent one lies on the relative epipolar line.\\
+This is possible, because, as explained in \ref{subsection:stereo-geometry-basics}, considered a pixel in one image, the correspondent one lies on the relative epipolar line, in the other image plane.\\
 Beside that, pixels correlations can be more efficiently performed by rectifying the input images \cite{hartley2004multiple}.
 In Figure \ref{fig:rectification} is clearly visible the outcome of this process and its advantages.
-As shown, corresponding horizontal scanlines are epipolar lines. 
+In fact, it is not difficult to notice that corresponding horizontal scanlines are epipolar lines. 
 The essential importance of this standard rectified geometry is clearly explained by the following equation,
 
 \begin{equation} 
@@ -97,6 +100,7 @@ The essential importance of this standard rectified geometry is clearly explaine
 
 that leads to a linear relationship between 3D depth $Z$ and disparity $d$, where $f$ is the focal length (in pixel) and $B$ the baseline.
 Moreover, the relationship between the corresponding pixels in the left and right images can be defined as follows:
+
 \begin{equation} 
 \label{eqn:corresponding-pixel}
 	x' = x + d(x, y), \; y' = y
@@ -104,15 +108,19 @@ Moreover, the relationship between the corresponding pixels in the left and righ
 
 Thus, the main step for recovering a depth image of a scene is the estimation of the disparity map $d(x,y)$.\\
 As introduced at the beginning, the best disparity map is estimated after the rectification process. 
-This is performed by comparing the similarity of corresponding pixels, as defined in equation~\ref{eqn:corresponding-pixel}, and storing them in a disparity space image $C(x,y,d)$, which is then processed with multiple algorithms. 
+This is performed by comparing the similarity of corresponding pixels, as defined in equation~\ref{eqn:corresponding-pixel}, and storing them in a disparity space image (DSI)~\cite{yang1993local}, in general labelled with $C(x,y,d)$, which is then processed with multiple algorithms. 
+Specifically, the concept of DSI can be described as any image or function established over a continuous or discretized representation of a disparity space $(x, y, d)$.
+Basically, it denotes the cost, as log likelihood or confidence measure, of a specific match related to $d(x, y)$.
+Therefore, the main task of any stereo matching algorithm is to determine the specific surface included in the DSI that has some optimal property, as can be lowest cost and finest smoothness.
+This procedure can be more simply described as the finding of the univalued function, contained in $d(x, y)$, that best approximate the structure of the surfaces in the scene.
 
 \section{Epipolar geometry and Rectification}
 \label{sec:eipolarandrect}
 
 Fundamental problem of stereo vision is the estimation of 3D locations of points from at least two corresponding input images.
-This process, which comprises concurrent computation of both 3D geometry and camera pose, is generally known as structure from motion \cite{Szeliski2011}.\\
+This process, which comprises concurrent computation of both 3D geometry and camera pose, is generally known as structure from motion~\cite{Szeliski2011}.\\
 In the explanation of these topics it is necessary to start discussing about the triangulation.
-Then, the concept of epipolar geometry is outlined and after that the notion of camera calibration and rectification. 
+Then, the concept of epipolar geometry is outlined and after that the notions of camera calibration and rectification. 
 
 \subsection{Triangulation}
 \label{subsection:triangulation}
@@ -128,7 +136,7 @@ Then, the concept of epipolar geometry is outlined and after that the notion of 
 Triangulation is the problem of detecting 3D point positions from a collection of corresponding 2D image locations, assuming that camera poses are known.
 Figure~\ref{fig:triangulation} shows one of the easiest methods to tackle this problem. 
 Objective is to evaluate the 3D position of $P'$ that have the smallest error to all of the 3D optical rays coming from the camera centers, which identify the 2D point locations in the image plane, i.e. $P_r$ and $P_l$.
-As shown in Figure~\ref{fig:triangulation}, the rays starts from the camera centers, $O_j$ and go in direction of $r$ and $l$, which can be defined using the camera matrix $ \{ P_j = K_j [ R_j | t_j ] \} $.
+As shown in Figure~\ref{fig:triangulation}, the rays starts from the camera centers, $O_l$ and $O_r$, and go in direction of $l$ and $r$, which can be defined using the camera matrix, usually identified with $ P_j = K_j [ R_j | t_j ] $.
 The closest point to $P$ on this ray minimizes the distance,
 
 \begin{equation}
@@ -154,7 +162,7 @@ Hence, the optimal value for $P$, obtained solving a least square problem, becom
 \begin{figure}[t]
 	\begin{center}
 		{\includegraphics[width=.8\textwidth, height=5cm, keepaspectratio]{images/epipolar-geometry-2}}
-\caption{Epipolar geometry. Image point $m$ back-projects to a ray in a 3D space defined by $C$ and $m$. This ray becomes a line $l'$ in the second view. The image of $X$ must lie on $l'$}
+\caption{Epipolar geometry. Image point $p_L$ back-projects to a ray in a 3D space defined by $C$ and $p_L$. This ray becomes a line, the epipolar line to $p_L$, in the second view. The image of $P$, i.e. $p_R$, must lie on this line}
 \label{fig:epipolargeom-2}
 	\end{center}
 \end{figure}
@@ -165,28 +173,28 @@ The $3 \times 3$ rank 2 matrix that defines this geometry is the fundamental mat
 The epipolar geometry is the basis for finding corresponding points in stereo matching. 
 It is basically defined by the intersection between image planes and the one on which the cameras baseline lies.\\
 A fundamental property, that makes this geometry extremely useful, is that image points, space point and camera centers are coplanar. 
-Assuming that only $m_l$ is known, that geometry allows to constraint the corresponding point $m_r$. 
-The epipolar plane is defined by the baseline and the ray that comes from $m_l$. 
-Hence, knowing that $m_r$ lies on the same plane, that point belongs to $l_r$, i.e. the intersection between the epipolar and the second image plane. 
+Considering Figure~\ref{fig:epipolargeom-2} and assuming that only $p_L$ is known, that geometry allows to constraint the corresponding point $p_R$. 
+The epipolar plane is defined by the baseline and the ray that comes from $p_L$. 
+Hence, knowing that $p_R$ lies on the same plane, that point belongs to $l_R$, i.e. the intersection between the epipolar plane and the second image plane, knows as the epipolar line to $p_L$.
 Therefore, exploiting this property, the searching of corresponding points is constrained to only one line inside the image.\\
 Mathematical definition of the epipolar geometry is the fundamental matrix $F$.
-As already demonstrated through Figure~\ref{fig:epipolargeom-2}, for each point $p_L$ in one image, the corresponding epipolar line $e_R$ to that point belongs to the other image plane. 
-Moreover, any point $p_R$ in the second image, which is related to point $p_L$, lies on $e_R$.
+As already demonstrated through Figure~\ref{fig:epipolargeom-2}, for each point $p_L$ in one image, the corresponding epipolar line $l_R$ to that point belongs to the other image plane. 
+Moreover, any point $p_R$ in the second image, which is related to point $p_L$, lies on $l_R$.
 Hence, the epipolar line is described as the projection in the second image of the ray that comes from the point in the first image, passing through its camera center.
-This defines a map, $p_L \rightarrow e_R$, which relates the points in one image with the corresponding epipolar lines in the second image.
+This defines a map, $p_L \rightarrow l_R$, which relates the points in one image with the corresponding epipolar lines in the second image.
 This correlation, between points and lines, is represented by the fundamental matrix $F$.\\
-Considering the aforementioned map $p_L \rightarrow e_R$ described by $F$, an important property of the fundamental matrix is defined,
+Considering the aforementioned map $p_L \rightarrow l_R$ described by $F$, an important property of the fundamental matrix is defined,
 
 \begin{equation}
 \label{eqn:fundmatprop}
 	p_R^\top F p_L = 0
 \end{equation}
 
-Therefore, assuming two corresponding points $P_L$ and $p_R$, it is known that $p_R$ lies on the epipolar line $l_R = F p_L$. 
+Therefore, assuming two corresponding points $p_L$ and $p_R$, it is known that $p_R$ lies on the epipolar line $l_R = F p_L$. 
 Thus, the mathematical correlation is,
 
 \begin{equation}
-	0 = p_R^\top e_R = p_R^\top F p_L
+	0 = p_R^\top l_R = p_R^\top F p_L
 \end{equation}
 
 Reciprocally, if image points comply the relation \ref{eqn:fundmatprop}, then the rays identified by these points are coplanar. 
@@ -208,13 +216,13 @@ However, working on rectified images, the matching problem is highly simplified,
 Core problem of this section is to find the appropriate projective transformation $H$. 
 Indeed, to get epipolar lines parallel with x-axis, the epipole should be mapped to an infinite point. 
 This, has to be done correctly, otherwise intensive projective distortion of the image can happen.
-For this reason, constraints are put on the definition of $H$.\\
-First of all, restricting $H$ to be a rigid transformation in the neighbourhood of a given point\footnote{this means that to first-order, the neighbourhood of the point may be subjected to rotation and translation only}, the errors are reduced.\\
+For this reason, constraints are set on the definition of $H$.\\
+First of all, restricting $H$ to be a rigid transformation in the neighborhood of a given point\footnote{this means that to first-order, the neighbourhood of the point may be subjected to rotation and translation only}, the errors are reduced.\\
 Once the epipole has been mapped to infinity, it is then necessary define a map to match the corresponding epipolar lines.
-This resampling is build up in such a way that, being $e_L$ and $e_R$ any pair of epipolar lines, then,
+This resampling is build up in such a way that, being $l_L$ and $l_R$ any pair of epipolar lines, then,
 
 \begin{equation}
-	H^{-\top} e_L = H'^{-\top} e_R
+	H^{-\top} l_L = H'^{-\top} l_R
 \end{equation}
 
 Satisfying the condition above, a matched pair of transformations is recovered.\\
@@ -251,7 +259,7 @@ On the contrary, global algorithms, are based on an energy function.
 In the latter smoothness assumptions are defined and then a global optimization problem is solved. 
 These algorithm are mainly distinguished considering the minimization strategy, such that, simulated annealing, graph cuts or belief propagation.\\
 Between these two classes there are iterative and hierarchical algorithms. 
-The latter aim to constraint gradually the disparity estimation from the coarser to the finer levels \cite{Hirschmuller2008}.\\
+The latter aim to constraint gradually the disparity estimation from the coarser to the finer level \cite{Hirschmuller2008}.\\
 Considering the first general step of stereo matching algorithms, the matching cost, there are multiple measures to define it.
 Among the most prevalent pixel-based algorithm can be included square intensity differences, absolute intensity differences, mean-squared error and mean absolute difference.\\
 Other common matching cost comprehend normalized cross-correlation, which is similar to sum-of-squared-difference (SSD), and binary methods, which, however, tend to not be used any longer. \\
@@ -263,7 +271,7 @@ Disparity estimation, then, becomes trivial.
 Each pixel takes the disparity level whose cost value is the minimum. 
 This approach is said to be a local \textit{winner-take-all} optimization. 
 A drawback of this approach is that the matches are imposed for the reference image. 
-While points is the support image might have multiple correct matches. 
+While points in the support image might have multiple correct matches. 
 For this reason, cross-checking and post-processing become more relevant here.\\
 Summarizing the general pipeline of global stereo matching methods, they often get rid of the aggregation step. 
 They usually perform some sort of optimization steps after disparity estimation, exploiting the smoothness constraints as aggregation part. \\
@@ -275,7 +283,7 @@ Goal of this approach is to find the solution to a global energy function, i.e. 
 \end{equation}
 
 where $E_d(d)$ is the data term and $E_s(d)$ the smoothness term.
-Adopting the aforementioned disparity space image (DSI) matching cost, the data energy is calculated as:
+Adopting the definition of disparity space image (DSI) matching cost, introduced in Section~\ref{subsection:rectification-basics}, the data energy is calculated as:
 
 \begin{equation}
 \label{eqn:dataterm}
@@ -337,14 +345,14 @@ Citing couple of recent approaches, Klaus, Sormann and Karner \cite{Klaus2006} s
 Then they apply re-fitting with global planes, and perform final MRF with loopy belief propagation. \\
 Wang and Zheng \cite{Wang2008} built a similar top ranked algorithm.
 They segment the image with local plane fits. 
-Then run cooperative optimization of neighbouring plane fit parameters. 
+Then run cooperative optimization of neighboring plane fit parameters. 
 Others developed similar approaches exploiting color correlation and left-right consistency check for occlusion detection \cite{yang2008stereo} or focusing on alpha mattes fractional pixel extraction \cite{bleyer2009stereo}.\\
 As explained in section \ref{section:stereo-match-and-corr} the area of interest for stereo matching and disparity estimation is one of the most extensively researched topic in computer vision.
-Nowadays approaches based on convolutional neural networks (CNNs) and deep learning are going to be the highly ranked in the standard database.
+Nowadays approaches based on Convolutional Neural Networks (CNNs) and deep learning are going to be the highest ranked in the standard database.
 Although, their performance in accuracy tends to decrease a lot when moving from dataset images to real ones.\\
 Therefore, novel strategies based on standard stereo geometry algorithms could reach consistent accuracy even in real time \cite{Hernandez-Juarez2016}.
 Thus, as described above, after the structure of the cost volume or DSI has been delineated, the actual pixelwise photoconsistency measures are computed.
-Multiple methods to achieve this has been proposed during years and already explained in the previous paragraphs.
+Multiple methods to achieve this has been proposed during years and already explained in the previous sections.
 Then, depth computation is obtained with different form of optimizations. 
 These ranges among local, global or hybrid frameworks. \\
 Consequently, starting from classical stereo-based methods and building up a novel pipeline, accurate real time depth map estimations can be achieved.
@@ -358,12 +366,12 @@ Therefore, in most of the cases, Semi Global Matching (SGM) is used as regulariz
 Then, deep learning based methods are used for tuning the penalty parameters, which are related to smoothness and discontinuity of the disparity map. 
 As described above, those penalties are empirically adjusted in the standard methods. 
 Therefore, the CNNs based approach aims at learn the penalties, in correlation with the 3D structure of the objects in the scene, to achieve an improvement in the disparity map. \\
-As aforementioned, several of these deep learning approaches has been proposed in the latest years, and some of them has been able to reach state of the art level of accuracy on the KITTI datasets~\cite{menze2015object}.\\
+As aforementioned, several of these deep learning approaches has been proposed in the latest years, and some of them has been able to reach state-of-the-art level of accuracy on the KITTI datasets~\cite{menze2015object}.\\
 Even though these method suffer drop in accuracy when shifting from synthetic to real images, it is worth to describe some of them, which are ranked among the state of the art methods in the KITTI benchmark. \\
 Seki and Pollefeys proposed \textbf{SGM-Nets}~\cite{Seki2017}, a CNNs based method for penalty estimation, which exploit SGM as regularization technique in the main pipeline. 
 They used small image patches and their locations as inputs to the network to predict penalties for the 3D object structures. 
 Actually, they developed a novel loss function for training the network, whose inputs are small image patches and their related positions. 
-Moreover, they managed to separate positive and negative disparity changes, thus to get object structures more discriminatively.\\
+Moreover, they managed to separate positive and negative disparity changes, thus to retrieve object structures more discriminatively.\\
 More in detail, SGM-Net produces $P_1$ and $P_2$, which are the specific penalty values generally used in the aggregation cost phase of the standard SGM pipeline, for each pixel. 
 This is achieved though a training and a testing phase. 
 In the former, the network is iteratively trained by minimizing a \textit{Path cost} and a \textit{Neighbor Cost}. 
@@ -373,7 +381,7 @@ Moreover, they introduced the \textit{Neighbor cost} function for removing the a
 Another approach similar to the one just described is the method developed by Kuzmin et al.~\cite{Kuzmin2017}. 
 The core of their method is the prediction of the local parameters of cost volume aggregation process, which they perform exploiting a deep convolutional network. 
 Thus, as in \cite{Seki2017}, they avoid to apply deep learning of pixel appearance descriptors, using classical matching scores instead. 
-Thus, they refuse learning high dimensional descriptors and matching them, as it used to happen in most of the first deep learning based algorithm.
+Thus, they refuse learning high dimensional descriptors and matching them, as it used to happen in most of the first deep learning based algorithms.
 On the contrary, they focus the learning on the cost-aggregation step. 
 Thus, they defined the overall matching cost using a combination of Census transform and sum-of-absolute-differences (SAD). 
 Then, they carry out the cost-aggregation phase, which is peculiar for smoothing the general matching cost and correct the wrong matches, applying the domain transform (\cite{Gastal2011},\cite{Pham2013}).
@@ -408,15 +416,16 @@ Using these specific patches, they managed to simultaneously train features and 
 Furthermore, they incorporate the predicted confidence into SGM, adjusting its parameters directly. \\
 Unlike methods based on hand crafted features, which lead to limited accuracy, authors of \cite{Seki2016} leverage CNNs to overcome that problem. 
 In fact, CNNs support high performance from low level processing, such as patch based matching, to high level, like scene classification and object detection. \\
-Therefore, as previously introduced, they conceive a two channels disparity patch, based on the concept of standard confidence features.
+Therefore, as previously stated, they conceive a two channels disparity patch, based on the concept of standard confidence features.
 Then they apply those patches as input to the network, obtaining a simultaneous training of discriminative features and classifiers.
 Moreover, they also developed three different types of network structures to manage the trade-off between computational time and accuracy. 
-Finally, the confidence was combined into SGM, so that dense disparity map could be obtained. \\
+Finally, the confidence was combined into SGM, so that dense disparity map can be obtained.
 
 \subsubsection{Confidence measures}
+\label{subsection:conf-measure}
 
-Considering some of the deep learning based methods described in section \ref{subsection:deep-learn-meth}, becomes necessary to define the main typology of features proposed during the years to estimate the confidence of stereo correspondences. \\
-Because of many features were introduced by different works in computer vision field, Hu and Mordohai \cite{Hu2012} developed a broad evaluation of them, leading to the definition of five groups, used for categorize those features. \\
+Considering some of the deep learning based methods described in Section~\ref{subsection:deep-learn-meth}, becomes necessary to define the main typology of elements proposed during the years to estimate the confidence of stereo correspondences. \\
+Because of many features were introduced by different works in computer vision field, Hu and Mordohai~\cite{Hu2012} developed a broad evaluation of them, leading to the definition of five groups, used for categorize those characteristics. \\
 The first group is correlated to the matching cost. 
 This means that correct correspondence are unlike to be connected to large matching costs. 
 The second group focuses on local properties of the cost curve. 
@@ -426,25 +435,29 @@ Features related to local minima of the cost curve form the third group.
 As an example, the so called \textit{Peak Ratio (PKR)}, is calculated as the minimum matching cost divided by the second local minima.
 Then, a probability mass function over disparity defined using the entire cost curve describes the fourth group.
 The last group includes features that highlight the consistency between left and right disparity map, i.e. correct matches indicate more consistent disparity.\\
-A similar but more recent work is the one carried out in \cite{Poggi2017} driven by the deep breakthrough lately happened in computer vision field. 
-In fact, changing such as, availability of bigger and more challenging datasets, novel and more accurate stereo algorithms and confidence measures, leverage techniques based on deep learning.
+A similar but more recent work is the one carried out in \cite{Poggi2017} driven by the deep learning breakthrough lately happened in the computer vision area. 
+In fact, changes such as, availability of bigger and more challenging datasets, novel and more accurate stereo algorithms and confidence measures, leverage techniques based on deep learning.
 Therefore, the authors of \cite{Poggi2017} focus on implement a complete and updated quantitative analysis of the state-of-the-art confidence measures.\\
-As a matter of fact, after the analysis performed in \cite{Hu2012}, major improvements have happened in computer vision field.
+As a matter of fact, after the analysis performed in \cite{Hu2012}, major improvements have happened in the computer vision field.
 Among those the most relevant can be summarized as follows:
 \begin{itemize}
 	\item enhanced confidence prediction algorithms based on deep learning \cite{poggi2016learning} and on random-forests \cite{Spyropoulos2014}, \cite{Park2015};
 	\item larger dataset providing challenging indoor and outdoor scenes \cite{Mayer2016};
 	\item more accurate stereo algorithms and novel implementation of the SGM pipeline \cite{Seki2016}, \cite{Zbontar2016}
 \end{itemize}
-Therefore, in \cite{Poggi2017}, the authors extend and update the taxonomy previously performed in \cite{Hu2012}, especially focusing on machine learning techniques.
+Therefore, in~\cite{Poggi2017}, the authors extend and update the taxonomy previously performed in~\cite{Hu2012}, especially focusing on machine learning techniques.
 Then they aim at evaluating the algorithms' performance over the novel and larger datasets, concentrating on the correlation between the availability of training data and the correctness of confidence measure prediction. 
 Moreover, they estimate the accuracy of the methods when handling new data and calculate the effectiveness of the predictions when included in state-of-the-art pipelines.\\
-Considering that among the multiple confidence measures proposed, all of them deal with the cost curve and the relationship between left and right image or disparity map, basing on \cite{Hu2012}, Poggi et al. \cite{Poggi2017} grouped confidence measures according to their input cues. 
-Specifically, they considered 76 confidence measures, which were then grouped into 8 categories and evaluate them employing three state-of-the-art stereo algorithms and three ground truth datasets: Middlebury 2014 \cite{Scharstein2014}, KITTI 2012 \cite{geiger2013vision} and KITTI 2015 \cite{menze2015object}.
+Considering that, among the multiple confidence measures proposed, all of them deal with the cost curve and the relationship between left and right image or disparity map, basing on \cite{Hu2012}, Poggi et al. \cite{Poggi2017} grouped confidence measures according to their input cues. 
+Specifically, they considered 76 confidence measures, which were then grouped into 8 categories and evaluate them employing three state-of-the-art stereo algorithms and three ground truth datasets: Middlebury 2014~\cite{Scharstein2014}, KITTI 2012~\cite{geiger2013vision} and KITTI 2015~\cite{menze2015object}.
 Performing that exhaustive analysis, the authors carried out the results that learning based approaches seem to be more efficient than conventional ones. 
-Especially, using disparity maps as input cue more accurate results are achieved in terms of correct matches, adaptation to new data and stereo accuracy improvement. 
-Beside that, training remains an issue for those methods though. 
-As a matter of fact, for deep learning based approaches the general amount of training data is still limited and in most case they struggle when dealing with new real data.\\
+Especially, using disparity maps as input cues more accurate results are achieved in terms of correct matches, adaptation to new data and stereo accuracy improvement. 
+Beside that, training remains an issue for those methods, though. 
+As a matter of fact, for deep learning based approaches the general amount of training data is still limited and in most cases they struggle when dealing with new real data.\\
+At this point a broad analysis over the mathematical fundamentals of stereo geometry and rectification has been proposed.
+Moreover, the main features of both the standard stereo matching algorithms and the newest deep learning based techniques have been widely analysed and explained. \\
+Therefore, in the following sections of this chapter a general introduction about image processing operations is carried out.
+Then, this extensive analysis on the theoretical basis of this project is concluded with Section~\ref{section:edge-detect-and-segment}, where edge detection and segmentation techniques are proposed, considering their relevance for the further improvements of the designed algorithm.
 
 \section{Image processing techniques}
 \label{section:image-proc-technique}
@@ -455,31 +468,31 @@ Different types of processing operations are usually applied, depending on the t
 For example commonly applied procedures includes exposure correction, color balancing, noise reduction, smoothness enhancement, sharpness increasing or feature detection.\\
 In relation to this Master's thesis project, it is worth to focus on some of those operations, which result to be most relevant for the designed algorithm. 
 Especially, point operators, area-based and global image transform techniques will be analysed. 
-Particularly, neighborhood (area based) operators will receive specific attention, being the ones specifically employed in the developed algorithm. \\
+Particularly, neighborhood (area based) operators will receive specific attention, being the ones specifically employed in the developed methods. \\
 
 \subsection{Point operators}
 \label{subsection:point-operators}
 
-Point operators are defined as the simplest type of image processing transforms \cite{Szeliski2011}.
+Point operators are defined as the simplest type of image processing transforms~\cite{Szeliski2011}.
 For these operators the output pixel value is entirely related to the corresponding input pixel value.
 Brightness and contrast adjustment, or color correction and transformation represents some of those techniques.\\
 Basically, an image processing operator is identified, in the continuous domain, by the following function that takes one or more input images and generates a corresponding output:
 
 \begin{equation}
  \label{eqn:img-operator}
- g(x) = h(f(x)) \quad 	\mbox{or} \quad g(x) = h(f_0(x), ..., f_n(x))
+ g(x) = w(f(x)) \quad 	\mbox{or} \quad g(x) = w(f_0(x), ..., f_n(x))
 \end{equation}
 
 where $x$ is in the D-dimensional domain of the functions and $f$ and $g$ operate over some range.
 Specifically, for discrete images, the domain comprises a finite number of pixel locations, i.e. $x = (i, j)$, so that:
 
 \begin{equation}
-	g(i, j) = h(f(i,j))
+	g(i, j) = w(f(i,j))
 \end{equation}
 
 Among these pixel-based operators it is sufficient to cite color transforms, image matting and histogram equalization. 
 Therefore, considering color images as arbitrary vector-valued functions, it is coherent to identify them as highly correlated signals with strong connections to the image formation process. \\
-Taking into account particular image editing application, where for example the goal is to take a foreground object from a scene and to put it into a different background.
+Taking into account particular image editing application, where for example, the goal is to take a foreground object from a scene and to put it into a different background.
 The first step of this processing is called matting, that is cut of a specific object from scene. 
 Whereas, the second part, the positioning over a different background is defined compositing.\\
 Histogram equalization is, rather, a more widely exploited technique. 
@@ -492,29 +505,29 @@ Thus, using information about minimum, maximum and average intensity values of t
 Differently from the previous type of operators, in this case the output pixel value is evaluated on the basis of its neighboring pixel values.
 This category of operators is usually applied for local tone adjustment, but more specifically for multiple kinds of image filtering, such as blurring, sharpening, feature detection or noise removal.
 Considering these local transforms, it is important to distinguish between linear and non-linear filtering operators.\\
-Linear operators are the most generally used in terms of are-based operators. 
+Linear operators are the most generally used in terms of area-based operators. 
 They relate weighted combinations of pixels in a neighborhood in order to estimate the output pixel's value. 
 Basically, they can be described by the following function:
 
 \begin{equation}
  \label{eqn:local-linear-oper}
- g(i, j) = \sum_{k,l} f(i + k, j + l)h(k, l)
+ g(i, j) = \sum_{k,l} f(i + k, j + l)w(k, l)
 \end{equation}
 
-where the entries in the weight kernel $h(k, l)$ are called \textit{filter coefficients}.
+where the entries in the weight kernel $w(k, l)$ are called \textit{filter coefficients}.
 More simply, the relation \ref{eqn:local-linear-oper} can be written as:
 
 \begin{equation}
 	\label{eqn:compact-loc-lin-op}
-	g = f \otimes h
+	g = f \otimes w
 \end{equation}
 
 An important mention has to be done in relation to the separable filters.
-As a matter of fact, when filters are applied to a 2D image and convolution is taken into account, that requires $K^2$ operations per pixels, i.e. multiplication and summation, defining $K$ as the kernel size.
+As a matter of fact, when filters are applied to a 2D image and convolution is taken into account, that requires $L^2$ operations per pixels, i.e. multiplication and summation, defining $L$ as the kernel size.
 In most cases, the filtering process can be accelerated carrying out a one-dimensional horizontal convolution and subsequently a vertical convolution. 
-This procedure requires, in fact, only $2K$ operations per pixels.
-However, this cannot be always done, but it can be applied only to the convolution kernels that are said to be \textit{separable}. \\
-The proof of that property for a convolution kernel can be achieved by inspecting at its analytic form, as shown in \cite{Freeman1991}.
+This procedure requires, in fact, only $2L$ operations per pixels.
+However, this cannot be always done, but it can be applied only to the convolution kernels that are said to be \textbf{\textit{separable}}. \\
+The proof of that property for a convolution kernel can be achieved by inspecting at its analytic form, as shown in~\cite{Freeman1991}.
 More precisely that can also be checked handling the 2D kernel as a 2D matrix $\mathbf{K}$ and taking its singular value decomposition (SVD), as follows:
 
 \begin{equation}
@@ -529,9 +542,9 @@ It basically performs a convolution over the image with a kernel of all ones and
 The bilinear kernel is, instead, a specific version of the \textit{Bartlett} filter. 
 Actually, the bilinear filter is the outer product of two linear splines.\\
 Useful kernel for accurate noise removal are the \textit{Gaussian} kernels.
-As the operators introduced previously, they are example of low-pass kernels, whose effect is softening higher frequencies, which are correlated with the noise components of the signals\footnote{In the Fourier frequency-space the noise appears to be a high frequency signals}. \\
-Taking into account the non-linear filters, they are usually exploited when dealing with the need of achieve more accurate results with respect to the outcome given by linear operators.
-Moreover, on top of that, there are the morphological operators, which are neighborhood kernels working with binary images.\\
+As the operators introduced previously, they are example of low-pass kernels, whose effect is softening higher frequencies, which are correlated with the noise components of the signals\footnote{In the Fourier frequency-space the noise appears to be a high frequency signal}. \\
+Taking into account the non-linear filters, they are usually exploited when dealing with the need of achieving more accurate results with respect to the outcome given by linear operators.
+Moreover, on top of that, there are the morphological operators, which are neighborhood kernels working with binary images or thresholded sections of normal images.\\
 Focusing on the non-linear operators, some of them has been employed in the designed of this project, in particular in the image pre-processing step of the main pipeline and in the post-processing phase.
 Among all the available non-linear area-based kernels, it worth to mention the applied ones.\\
 The median filter is one of these. 
@@ -554,7 +567,7 @@ Hence, when cleaning away noisy frequencies, they tend to soft less the edges.\\
 \begin{figure}[t]
 	\begin{center}
 		{\includegraphics[width=.8\textwidth, height= 5cm, keepaspectratio]{images/filter-example-original-shot-noise.png}}
-\caption{Original test image for filter comparison. Shot noise is added on top of the image. Credits \cite{Szeliski2011}}
+\caption{Original test image for filter comparison. Shot noise is added on top of the image. Credits \textit{Computer Vision: Algorithms and Applications}~\cite{Szeliski2011}}
 \label{fig:filter-example-original}
 	\end{center}
 \end{figure}
@@ -574,20 +587,21 @@ Hence, when cleaning away noisy frequencies, they tend to soft less the edges.\\
 \end{figure}
 
 Figure \ref{fig:filter-example-original} shows a test image where shot noise is added.
-Thus, as visible in Figure \ref{fig:filter-image-example}, the Gaussian filter, trying to cancel most of the noise, tends to flatten high-frequency details, which are localized close to strong edges.
-Contrarily to the result in Figure \ref{fig:gaussian-filt}, the median filter, shown in Figure \ref{fig:median-filt}, is more edge preserving.\\
+Thus, as visible in Figure~\ref{fig:gaussian-filt}, the Gaussian filter, trying to cancel most of the noise, tends to flatten high-frequency details, which are localized close to strong edges.
+Contrarily, the median filter, shown in Figure \ref{fig:median-filt}, is more edge preserving.\\
 Hence, the median filter was chosen in the initial part of the pipeline of this project for the image pre-processing phase, especially for its capability of preserving the edges, without, then, smoothing away the discontinuities.\\
 Bilateral filtering is another type of non-linear operator, which was tested during the development of the designed algorithm.
 Basically, during the image pre-processing implementation this specific kernel was one of the analysed options.
-In fact, it is one of the most common option for noise cancelling in computer vision algorithm.
-technically speaking, in the bilateral filter, the value of each transformed pixel is a weighted combination of its neighboring pixel values, as defined by the following equality:
+As a matter of fact, it is an edge preserving filter as the median kernel.
+For this reason, it is one of the most common option for noise cancelling in computer vision algorithm.
+Technically speaking, in the bilateral filter, the value of each transformed pixel is a weighted combination of its neighboring pixel values, as defined by the following equality:
 
 \begin{equation}
 	\label{eqn:bilateral-filter}
 	g(i, j) = \frac{\sum_{k,l} f(k,l)w(i,j,k,l)}{\sum_{k,l}w(i,j,k,l)}
 \end{equation}
 
-where the coefficient $w(i,j,k,l)$ is correlated to the multiplication between a +textit{domain kernel}, defined in equation \ref{eqn:domain-kernel}, and a data-based \textit{range kernel}, illustrate by equation \ref{eqn:range-kernel}.
+where the coefficient $w(i,j,k,l)$ is correlated to the multiplication between a \textit{domain kernel}, defined in equation~\ref{eqn:domain-kernel}, and a data-based \textit{range kernel}, illustrate by equation~\ref{eqn:range-kernel}.
 
 \begin{equation}
 	\label{eqn:domain-kernel}
@@ -606,31 +620,31 @@ Therefore, the \textit{bilateral weight function} can be finally expressed as:
 	w(i,j,k,l) = \exp \Big( - \frac{(i - k)^2 + (j - l)^2}{2 \sigma^2_d}  - \frac{\Vert f(i,j) - f(k,l) \Vert^2}{2 \sigma^2_r}\Big)
 \end{equation}
 
-An unavoidable drawback of the bilateral filter is closely correlated to its computational time, if compared to regular separable filter.
+However, an unavoidable drawback of the bilateral filter is closely correlated to its computational time, if compared to regular separable filter.
 For this reason, as outlined in \cite{Szeliski2011}, multiple acceleration methods have been developed during the last decade.
 Nonetheless, those algorithms are prone to a higher memory used w.r.t. the regular filtering, thus they should not be applied to full-color image filtering.\\
-A last family of non-linear operators that should be introduce in this chapter consists of morphological filters.
+A last family of non-linear operators that should be introduce in this section consists of morphological filters.
 Regarding the designed algorithm, morphological operators have been actually implemented in the post-processing phase in order to remove small estimation error in the 3D point cloud, enhancing the final dense depth 3D reconstruction of the scene.\\
 From a theoretical point of view, \textit{morphological operations} are typically implemented over binary or thresholded images. 
 This kind of filtering techniques are executed by first convolving the input image with a binary structuring element, which could have different shapes, and after that the result value is defined basing on the outcome of the convolution.\\
-If a binary image $f$ is considered and $s$ is the morphological kernel, the convolution operation is defined as:
+If a binary image $f$ is considered and $m$ is the morphological kernel, the convolution operation is defined as:
 
 \begin{equation}
 	\label{eqn:morph-convol}
-	c = f \otimes s
+	s = f \otimes m
 \end{equation}
 
-where $c$ is the number of 1s inside each structuring element when shifting through the image.
-Therefore, designating $S$, the kernel size, the principal morphological operations, which has been tested in the post-processing phase of the algorithm pipeline, comprise:
+where $s$ is the number of 1s inside each structuring element when shifting through the image.
+Therefore, designating $L$, the kernel size, the principal morphological operations, which has been tested in the post-processing phase of the algorithm pipeline, comprise:
 \begin{itemize}
-	\item \textbf{dilation: } $\mathit{dilate}(f,s) = \theta(c, 0)$
-	\item \textbf{erosion: } $\mathit{erode}(f,s) = \theta(c, S)$
-	\item \textbf{opening: } $\mathit{open}(f,s) = \mathit{dilate}(\mathit{erode}(f, s), s)$
-	\item \textbf{closing: } $\mathit{close}(f,s) = \mathit{erode}(\mathit{dilate}(f, s), s)$
+	\item \textbf{dilation: } $\mathit{dilate}(f,m) = \theta(s, 0)$
+	\item \textbf{erosion: } $\mathit{erode}(f,m) = \theta(s, L)$
+	\item \textbf{opening: } $\mathit{open}(f,m) = \mathit{dilate}(\mathit{erode}(f, m), m)$
+	\item \textbf{closing: } $\mathit{close}(f,sm) = \mathit{erode}(\mathit{dilate}(f, m), m)$
 \end{itemize}
 
 \section{Edge detection and segmentation algorithms}
-\label{section:edge-detect}
+\label{section:edge-detect-and-segment}
 
 Strictly correlated to the latter family of non-linear operation analysed and to the overall performance of the designed algorithm there is the concept of edge detection.\\
 Techniques for finding object boundaries in an image are extremely relevant in computer vision and especially when dealing with stereo matching and disparity estimation. 
@@ -638,9 +652,9 @@ As a matter of fact, object borders coincide with occlusion points in 3D, where 
 Moreover, segmentation methods are strongly related to this topic and remarkably useful in the preparatory phase of an accurate stereo matching algorithm.\\
 Specifically to this work, segmentation techniques have not been completely developed.
 This was due to the fact that the initial data provided by the laser points grid gives already a good amount of information for obtaining an accurate 3D dense disparity map.
-Beside that, after the evaluation of the first reasonable results, further improvements of the algorithm has been considered to be an enhancement for smoothness and continuity among the estimations.
+Beside that, after the evaluation of the first reasonable results, further improvements of the algorithm has been considered for enhancing smoothness and continuity among the estimations.
 Thus, edge detection and segmentation methods appear to be effective initial operations for multiple reasons, such as, reducing the computational time of the entire pipeline and increasing accuracy and density of the final estimations.\\
-Therefore, it is worth to present a brief but sufficient theoretical outline of the most common edge detection algorithms designed in the computer vision area, considering that they will be part of the future improvements, which will be applied to work developed so far. \\
+Therefore, it is worth to present a brief but exhaustive theoretical outline of the most common edge detection algorithms designed in the computer vision area, considering that they will be part of the future improvements, which will be applied to the work developed so far. \\
 From a qualitative point of view edges are usually located in areas where there are changing in color or texture.
 However, segmenting an image basing on this information is usually complicated and specific methods has been developed for that.\\
 Therefore, for pure edge detection, regions of fast intensity variation are taken into account.
@@ -661,13 +675,13 @@ This will lead to the so called \textit{Laplacian}:
 
 \begin{equation}
 	\label{eqn:laplacian}
-	S_{\sigma}(\mathbf{x}) = \nabla \cdot \mathbf{J}_{\sigma}(\mathbf{x}) = [\nabla^2 G_{\sigma}](\mathbf{x}) \ast I(\mathbf{x})
+	L_{\sigma}(\mathbf{x}) = \nabla \cdot \mathbf{J}_{\sigma}(\mathbf{x}) = [\nabla^2 G_{\sigma}](\mathbf{x}) \ast I(\mathbf{x})
 \end{equation}
 
 where $\sigma$ symbolizes the Gaussian filter used for the initial image smoothing.
 This final result is usually called \textit{Laplacian of Gaussian}(LoG) kernel, which is a separable filter.
 However, commonly a slightly different kernel is employed, the \textit{Difference of Gaussian} (DoG), which gives a similar result.\\
-Hence, once the function $S(\mathbf{x})$ has been defined, its \textit{zero crossing} is computed and so the edge elements can be estimated. \\
+Hence, once the function $L(\mathbf{x})$ has been defined, its \textit{zero crossing} is computed and so the edge elements can be estimated. \\
 Obviously, if high accuracy is needed, higher-order steerable filters can be exploited.\\
 Furthermore, taking into account the standard DoG kernel, the fundamental parameter is $\sigma$, i.e. the filter spatial scale parameters.
 In fact, it influences the amount of noise on the image and thus the edges scale. \\
@@ -678,16 +692,16 @@ As a matter of fact, adjacent edges have the same endpoints.
 Then, multiple methods exist to encode the edges together forming the contours.\\
 Strongly related to edge detections, there is the topic of segmentation, i.e. group together pixels that share the same characteristic.
 In computer vision segmentation algorithms are among the first studied and designed topics (\cite{ohlander1978picture}, \cite{Brice1970}, \cite{haralick1985image}) and they are still nowadays a widely analysed problem (\cite{comaniciu2002mean}, \cite{cremers2007review}). 
-Some basic segmentation techniques related to the morphological filters has already been presented in the subsection \ref{subsection:neighbor-operator}. 
+Some basic segmentation techniques related to the morphological filters has already been presented in the Section~\ref{subsection:neighbor-operator}. 
 In this section, the analysis of some commonly used algorithm is carried out.
 Since in this field the researches have been numerous simple explanations of some of them, such as \textit{active contours}, \textit{region splitting and merging}, \textit{mean shift}, \textit{normalized cuts} and \textit{binary Markov random fields} are presented. \\
+Since the merely theoretical purpose of this analysis and considering that these specific methods have not been widely tested in this project, it is not necessary to describe in detail all of these algorithms.
+Therefore, if there would be interest in the mathematical background of the aforementioned techniques, we remind to the manual by Szeliski \cite{Szeliski2011}.\\
 
 \paragraph*{Active Contours}
 
 Active contours \cite{balke1998active} method groups together different techniques, such as \textit{snakes} \cite{kass1988snakes}, \textit{intelligent scissors} \cite{mortensen1995intelligent} and \textit{level set} algorithms.
-These methods reach the final solution iteratively thanks to the combination of image and arbitrary user-guidance.\\
-Since the merely theoretical purpose of this analysis and considering that these specific methods have not been widely tested in this project, it is not necessary to describe in detail all of these algorithms.
-Therefore, if there would be interest in the mathematical background of the aforementioned techniques, we remind to the manual by Szeliski \cite{Szeliski2011}.\\
+These methods reach the final solution iteratively thanks to the combination of image and arbitrary user-guidance.
 
 \paragraph*{Region splitting and merging}
 
@@ -698,7 +712,7 @@ The core of this algorithm stands on dividing the whole image into different \te
 In order to make the algorithm suitable also for color images, it is usually applied to the gradient magnitude of the figure. \\
 Moreover, an interesting algorithm, which appeared to be useful as a pre-processing phase of more complex algorithms such as stereo matching, optic flow and object recognition, is centred in region merging.
 Actually, areas of the image close among each other are combined together considering their average color difference. 
-Therefore, if it is below a certain threshold the adjacent portions of the image are merged into a so-called \textit{superpixel} \cite{mori2004recovering}.  \\
+Therefore, if it is below a certain threshold the adjacent portions of the image are merged into a so-called \textit{superpixel} \cite{mori2004recovering}.
 
 \paragraph*{Mean shift}
 
@@ -706,10 +720,10 @@ Mean-shift algorithms, as well as mode finding, k-means and mixture of Gaussian,
 
 \paragraph*{Normalized Cuts}
 
-The idea of the Shi and Maki algorithm \cite{shi2000normalized} is to divide the image into groups distinguished by weak affinities, i.e. similarities. 
+The idea of the Shi and Maki algorithm~\cite{shi2000normalized} is to divide the image into groups distinguished by weak affinities, i.e. similarities. 
 Therefore, in this methods pixels that show strong similarities will belong to the same group. 
 The different groups are, then, separated taking into account the sum of the weights of all the cuts among pixels of different regions.
-Because, this could lead to unreasonable clusters, the normalized cut measure is used.\\
+Because, this could lead to unreasonable clusters, the normalized cut measure is used.
 
 
 \paragraph*{Markov Random Field}
@@ -719,8 +733,8 @@ These energy minimization problems based on MRF are usually solved employing gra
 
 
 
-\section{Data and estimations error types}
-\label{section:error-types}
+%\section{Data and estimations error types}
+%\label{section:error-types}
 
 
 
