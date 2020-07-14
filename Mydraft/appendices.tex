@@ -1,7 +1,81 @@
-\chapter{Pseudocode}
+\chapter{Pseudocode of relevant algorithms}
 \label{chapter:pseudocode}
 
-Here some relevant pseudocode snippets about the main section of the work developed will be proposed.
+Some relevant algorithms, which can be useful for a complete understanding of the project, are proposed here in form of pseudocode.
+Specifically, it is worth to provide the indicative pipeline of the instructions implemented for the \textit{lightweight} methods, which result to be the best performing in terms of accuracy and computational time.\\
+Moreover, significant in relation to the developed work is the derivative calculation procedure used in the \textit{simulated grid} method.
+Specifically, the \textbf{consistency check} function added to the evaluation of the local derivatives is following presented, hence it allows to achieve important improvement during the designing of the algorithm.
+
+%\begin{algorithm}
+%	\caption{Point cloud densification lightweight method}
+%	\begin{algorithmic}[1]
+%		
+%	\end{algorithmic} 
+%\end{algorithm} 
+%
+\begin{algorithm}
+	\label{alg:local-deriv-cal}
+	\caption{Local derivatives calculation (only one case highlighted)}
+	\begin{algorithmic}[1]
+		\For {$i = 0, 1, 2, \ldots, lookup\_table.rows$}
+			\For {$j = 0, 1, 2, \ldots, lookup\_table.cols$}
+				\State Run the basic case, i.e. for the internal grid points
+				\If {$i>0 \land j>0 \land i<lookup\_table.rows-1 \land j<lookup\_table.cols-1$}
+					\State Get lookup\_table value at position $(i, j)$
+					\State It reminds to the row of the data matrix corresponding to the searched point
+					\State Define point data
+					\State Define top neighbor data
+					\State Define bottom neighbor data
+					\State Define left neighbor data	
+					\State Define right neighbor data
+					\State Calculate the four local derivatives
+					\State Apply $consistency check$ between left and right derivatives	
+					\State Apply $consistency check$ between top and bottom derivatives
+				\EndIf
+			\EndFor
+		\EndFor
+	\end{algorithmic} 
+\end{algorithm} 
+
+Regarding the pipeline presented in Algorithm~\ref{alg:local-deriv-cal}, the other cases are omitted in order to not make the comprehension of the algorithm convoluted, being the procedure for the other conditions similar to the scheme outlined.\\
+As a matter of fact, the steps applied are the same for all the grid points.
+Basically, each point of the initial grid is represented by a \textit{lookup table}, whose value points to the corresponding row of the matrix, which stores the data related to the initial points.\\
+Precisely, in the procedure some particular cases have to be mentioned.
+These are related to the points that belong to the borders of the grid, and thus of the table too.
+In those situations, there are no all the four neighbors for the considered point.
+Therefore, the actual derivatives are evaluated with the available data, the others are defined with the values equal to the opposite derivative but changed in sign. 
+Let us consider, as an example, the point on the top-left corner of the grid. 
+It has only two neighbors, the right and the bottom ones. 
+Hence, the right and bottom local derivatives are exactly estimated computing the differences among the complete data. 
+The left and top derivatives are, then, set equal to the ones previously evaluated, where the values are changed in sign.\\
+Regarding the \textit{consistency check}, it is worth to present the pseudocode related to its implementation.
+As a matter of fact, it represents an important step of the designed algorithm, allowing to reach interesting result when dealing with the simulated grid, as already explained in Section~\ref{subsection:result-consistency-check}.
+
+\begin{algorithm}
+	\label{alg:consistency-check}
+	\caption{Consistency check procedure between left and right derivatives to a points}
+	\begin{algorithmic}[1]
+		\If {$abs(der_{left}.Z) > depth\_threshold$}
+			\If {$abs(der_{right}.Z) < depth\_threshold$}
+				\State $der_{left} = -der_{right}$
+			\Else
+				\State Estimate new correct value for the $X_{mt}$ datum of the left derivative
+				\State Estimate new correct value for the $x_{px}$ datum of the left derivative
+				\State Substitute the values to the initial ones
+			\EndIf		
+		\EndIf
+		\If {$abs(der_{right}.Z) > depth\_threshold$}
+			\If {$abs(der_{left}.Z) < depth\_threshold$}
+				\State $der_{right} = -der_{left}$
+			\Else
+				\State Estimate new correct value for the $X_{mt}$ datum of the right derivative
+				\State Estimate new correct value for the $x_{px}$ datum of the right derivative
+				\State Substitute the values to the initial ones
+			\EndIf
+		\EndIf
+	\end{algorithmic} 
+\end{algorithm} 
+
 
 \begin{figure}[b]
 	\begin{center}

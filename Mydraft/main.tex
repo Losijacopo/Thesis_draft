@@ -59,6 +59,8 @@
 %\usepackage{systeme}
 \usepackage{verbatim}
 \usepackage[ELEC]{aaltologo}
+\usepackage{algorithm} 
+\usepackage{algpseudocode} 
 
 % The TikZ package allows you to create professional technical figures.
 % The learning curve is quite steep, but it is definitely worth it if 
@@ -72,7 +74,7 @@
 \usetikzlibrary{shapes}
 \usetikzlibrary{patterns}
 
-\usepackage[mydraft,twosupervisors,doublenumbering]{aalto-thesis}
+\usepackage[twosupervisors,doublenumbering]{aalto-thesis}
 
 % Hyperref
 % ------------------------------------------------------------------
@@ -236,39 +238,24 @@
 % Abstract in English
 % ------------------------------------------------------------------
 \thesisabstract{english}{
-%The abstract provides goal, motivation, background, and conclusions of
-%the work. It has to fit to one page together with the bibliographical
-%information. 
-%
-%If the thesis is in English and the language of school
-%education is Finnish or Swedish, the abstract is written in English
-%and in Finnish or in Swedish. If the language of school education is
-%other than Finnish or Swedish, the abstract is written in English only.
-%
-%The thesis example file (\texttt{thesis-example.tex}), all the chapter content
-%files (\texttt{1introduction.tex} and so on), and the Aalto style file
-%(\texttt{aalto-thesis.sty}) are commented with explanations on how the Aalto
-%thesis works. The files also contain some examples on how to customize various
-%details of the thesis layout, and of course the example text works as an
-%example in itself. Please read the comments and the example text; that should
-%get you well on your way!
-%
-%In the thesis template, you can find the text of the abstract in the
-%abstract in the \texttt{thesis-example.tex}
-%file, together with the bibliographical information of the abstract tables.
-%\fixme{This is an example how to use fixme: add your abstract here.} 
-%Fixme is a command that helps you identify parts of your thesis that still
-%require some work. When compiled in the custom \texttt{mydraft} mode, text
-%parts tagged with fixmes are shown in bold and with fixme tags around them. When
-%compiled in normal mode, the fixme-tagged text is shown normally (without
-%special formatting). The draft mode also causes the ``Draft'' text to appear on
-%the front page, alongside with the document compilation date. The custom
-%\texttt{mydraft} mode is selected by the \texttt{mydraft} option given for the
-%package \texttt{aalto-thesis}, near the top of the \texttt{thesis-example.tex}
-%file.
+In this Master's thesis project a novel implementation of a stereo matching based method is proposed.
+Moreover, an exhaustive analysis of the state-of-the-art algorithms in that field is outlined.
+Specifically, both standard and deep learning based methods have been extensively investigated, thus to provide useful insights for the designed implementation.
+Regarding the developed work, it is basically structured in the following manner.\\
+At first a research phase has been carried out, hence to simply and rapidly test the thought strategy.
+Subsequently, a first implementation of the algorithm has been designed and tested using data available from the Middlebury 2014 dataset, which is one of the most exploited dataset in the computer vision area.
+At this stage, numerous tests have been completed and consequently various changes to the algorithm pipeline have been made, in order to improve the final result.\\
+Finally, after that exhaustive researching phase the actual method has been designed and tested using real environment images obtained from the stereo device developed by the company, in which this work has been produced.\\
+Fundamental element of the project is indeed that stereo device.
+As a matter of fact, the designed algorithm in based on the data produced by the cameras that constitute it.
+Specifically, the main function of the system designed by LaDiMo is to make the built stereo matching based procedure simultaneously faster and accurate.
+As a matter of fact, one of the main prerogative of the project was to create an algorithm that has to prove potential real time results.\\
+This has been, in fact, achieved by applying one of the two methods created.
+Specifically, it is a lightweight implementation, which strongly exploits the information coming from the LaDiMo device, thus to provide accurate results, keeping the computational time small.\\
+At the end of this Master's thesis images showing the main outcomes obtained are proposed.
+Moreover, a discussion regarding the further improvements that are going to be add to the project is carried out.
+In fact, the method implemented, being not optimized only demonstrate a potential real time implementation, which can be actually achieved through an efficient refactoring of the main pipeline.
 }
-
-
 
 % Acknowledgements
 % ------------------------------------------------------------------
@@ -283,10 +270,11 @@
 % show up in the TOC
 \chapter*{Acknowledgements}
 
-I wish to thank all students who use \LaTeX\ for formatting their theses,
-because theses formatted with \LaTeX\ are just so nice.
+I wish to thank in primis LaDiMo oy., which allows me to use its resources for the developing of this Master's thesis project.
+Moreover, an important thanks goes to the supervisors, who accurately follow and revised this work, professor Juho Kannala, professor Daniele Fontanelli and professor Nicola Conci.
+I thank, then, the company advisor Phd. Sami Ruuskanen, whose help and support allow me to accurately complete this project.\\
+An important thanks goes, then, to my family, which always supports on both private and academic life.
 
-Thank you, and keep up the good work!
 \vskip 10mm
 
 \noindent Espoo, \DATE

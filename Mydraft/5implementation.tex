@@ -263,8 +263,13 @@ This is clearly due to the fact that this algorithm estimates each single pixel 
 Contrarily, in the \textit{lightweight} strategy the number of samples that the user wants to estimate can be adjusted. 
 In this way the trade-off between accuracy and resources utilization can be externally defined. 
 
-\section{OpenCV built-in Semi-Global Box Matching algorithm}
+\section{OpenCV built-in Semi-Global Block Matching algorithm}
 \label{section:opencv-sgm-method}
+
+In comparison to the designed algorithms, it was decided to generate some results exploiting the Semi-Global Block Matching method available in the OpenCV library.
+This was mainly done to set a baseline outcome, extremely useful for comparing the disparity images obtained.
+As a matter of fact, the performance and the accuracy of the OpenCV built-in algorithm were essentially related to the outcomes carried out applying the simulated grid procedure.\\
+Therefore, a clear measure in terms of both computational time and absolute accuracy has been available during project development, thus to have a transparent benchmark over the potential of the designed strategy.
 
 \section{Pre-processing testing and analysis}
 \label{section:pre-processing-impl}

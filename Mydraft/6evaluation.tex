@@ -4,7 +4,6 @@
 In the previous chapters the description of the methods and of the key sections of the designed algorithms has been carried out.
 In Chapter~\ref{chapter:methods} a general outline of the implemented idea has been presented.
 Instead, Chapter~\ref{chapter:implementation} illustrates the key functions and the computations that build up the entire algorithm.\\
-\textbf{Probably in the previous chapter it would be good to put some pseudocode (for example for the main parts) in order to give not only a qualitative description of the algorithm but highlight the main functions}.\\
 Therefore, the functions exploited in the pre and post-processing phases have been previously outlined. 
 Moreover, the two novel strategies designed have been reported, underlining the procedure implemented for obtaining the estimations of the grid points, the matching cost methods tested and their efficiency throughout the algorithm and the correlation with previously created stereo matching algorithms. 
 Chapter~\ref{chapter:methods} contains also a brief presentation of similar ideas developed in standard and in deep learning based methods, which were exploited to obtain an initial proof of the potential performance of the algorithm.\\
@@ -70,11 +69,11 @@ Clearly, this behaviour is related to the disparity range employed in the algori
 \begin{figure}[t]
 	\centering
 	\subfigure[Input left raw image ]{
- 		\includegraphics[width=0.4\textwidth, height= 5cm, keepaspectratio]{images/input-image-raw-left.png}
+ 		\includegraphics[width=0.4\textwidth, height= 5cm, keepaspectratio]{images/stereo-rectified-left-16bit.png}
  		\label{fig:raw-image-4eye-der-method-left}
 }
 	\subfigure[Input right raw image]{
- 		 \includegraphics[width=0.4\textwidth, height= 5cm, keepaspectratio]{images/input-image-raw-right.png}
+ 		 \includegraphics[width=0.4\textwidth, height= 5cm, keepaspectratio]{images/stereo-rectified-right-16bit.png}
  		 \label{fig:raw-image-4eye-der-method-right}
 }
 	\subfigure[Input point cloud]{
@@ -82,7 +81,7 @@ Clearly, this behaviour is related to the disparity range employed in the algori
  		\label{fig:input-point-cloud-4eye-der-method}
 }
 	\subfigure[Output dense point cloud]{
-	 	\includegraphics[width=0.4\textwidth, height= 5cm, keepaspectratio]{images/point-cloud-4eye-post-proc-median.png}
+	 	\includegraphics[width=0.4\textwidth, height= 5cm, keepaspectratio]{images/estimated-and-initial-points.png}
  		\label{fig:output-point-cloud-4eye-der-method}
 }
 \caption{Pair of raw images from the LaDiMo device, initial grid of point and final point cloud estimated with derivative-based method}
