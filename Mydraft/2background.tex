@@ -7,31 +7,31 @@ Then, epipolar geometry, camera calibration and disparity estimation algorithms 
 Starting from the necessary mathematical fundamentals, the discussion moves on the disparity estimation algorithms. 
 Then, the chapter focus on the main benefits and drawbacks of standard and novel approaches in depths computation.
 Comparison between photogrammetry based and deep learning based algorithms is proposed, to provide a clear explanation of the decisions implemented.
-At the end a relevant discussion about the main image processing techniques is carried out, thus to analyse some of the algorithms that have been used in the pre and post processing phase of the algorithm. \\
-Taking into account the standard algorithms for stereo correspondence, which are mainly based on photogrammetry related operations that fully exploit the mathematical principles of stereo geometry.
+At the end a relevant discussion about the main image processing techniques is carried out, thus to analyse some of the algorithms that have been used in the pre and post-processing phases of the project. \\
+Taking into account the standard algorithms for stereo correspondence, they are mainly based on photogrammetry related operations that fully exploit the mathematical principles of stereo geometry.
 They can be conventionally classified into two general categories, local and global approaches~\cite{Scharstein2001}.
 Specifically, the local-based methods tend to estimate the disparity image through the analysis of the corresponding pixels between the left and right views of the scene, concerning a particular area. 
 Then, the matching cost related to all the potential matches defined for that area is evaluated and employed in the exact disparity estimation.
 In order to recover from low accuracy proper of the previous strategies, global-based methods try to calculate the disparity values by minimizing an energy function.
 In this context, Semi-Global Matching (SGM) combines strong factors of global and local approaches allowing to obtain a good trade-off between computational cost and accuracy. \\
-Technically speaking, SGM applies a pixelwise, Mutual Information (MI) based matching cost for analysing pixel intensity value differences of input images \cite{Hirschmuller2008}.
+Technically speaking, SGM applies a pixelwise, Mutual Information (MI) based matching cost for analysing pixel intensity value differences in the input images \cite{Hirschmuller2008}.
 Moreover, pixelwise matching is enhanced with a smoothness constraint, which leads to a global cost function. 
 Then, post-processing techniques are applied to remove outliers and filter the image.\\
 Referring to the analysis performed by Scharstein and Szeliski \cite{Scharstein2001}, SGM carries out four main steps, as well as most of the stereo matching algorithms. 
 These are defined as: \textit{matching cost computation}, \textit{cost aggregation}, \textit{disparity computation} and \textit{disparity refinement}. \\
-Considering the former, it is usually based an absolute, squared or sampling insensitive difference between pixel intensities \cite{Hirschmuller2008}. 
+Considering the former, it is usually based on absolute, squared or sampling insensitive difference between pixel intensities \cite{Hirschmuller2008}. 
 Although those methods allow to reach a reliable accuracy, they are sensitive to radiometric difference. 
 Thus, cost based on image gradients or window-based methods, such as Rank and Census transform \cite{Ko2017}, became an optimal choice. 
 Furthermore, Mutual Information results as a good trade-off for dealing with complex radiometric relationships between images.\\
-In the second phase, cost aggregation accumulate the matching costs coming from multiple directions and along the considered disparity levels. 
+In the second phase, cost aggregation accumulates the matching costs coming from multiple directions and along the considered disparity levels. 
 Subsequently, disparity evaluation is defined for each pixel, as the one with the lowest cost.
-This is the approach typically used for local methods. 
+This is the approach typically used in local methods. 
 Global algorithms, contrarily, used to get rid of the aggregation step and define a global energy function. 
 Over that function, pixel similarity and disparity smoothness are enforced with different strategies. 
 In this latter case, the best disparity is identified finding the minimum of the cost function. 
 This is achieved with multiple techniques such as: Dynamic Programming (DP) \cite{Birchfield1999}, Belief Propagation \cite{Klaus2006} or Graph Cuts \cite{Kolmogorov2001}.\\
 Disparity refinement tends to differ more among the different methods. 
-Post-processing techniques such as filtering, outlier removal and consistency check are applied in general.\\
+Post-processing techniques such as filtering, outlier removal and left-right consistency check are applied in general.\\
 As aforementioned, among the top-ranked stereo matching algorithms, SGM results to be the best performing in terms of computational time and accuracy. 
 Its benefits stand in the hierarchical computation of the matching cost, which mainly exploits Mutual Information. 
 Cost aggregation is achieved considering a global energy function and a pathwise pixel optimization. 
@@ -59,7 +59,7 @@ Therefore, it worth to explain the fundamental principles of stereo matching, su
 \begin{figure}[t]
 	\begin{center}
 		{\includegraphics[width=.8\textwidth, height=5cm, keepaspectratio]{images/epipolar-geometry}}
-\caption{Epipolar geometry}
+\caption{Epipolar geometry - Credits to \href{https://commons.wikimedia.org/wiki/File:Epipolar_Geometry1.svg}{ZooFari}}
 \label{fig:epipolargeom}
 	\end{center}
 \end{figure}
@@ -68,10 +68,10 @@ In this section, a generic introduction to the main concepts of stereo geometry 
 This will be, then, further extended in the following sections, where the different aspects of epipolar geometry and pixel correspondence will be specifically explained.\\
 Main goal of epipolar geometry is the computation of pixels correspondences among the input images. 
 Neighboring pixels information, cameras positions and their calibration data are fundamental to achieve that.
-Figure \ref{fig:epipolargeom} displays a pixel in one image $\mathbf{p}_1$ projected to its correspondent epipolar line segment in the other image, $\mathbf{l}_2$, which is lower bounded by the projection of the first camera center into the second camera plane, i.e. the epipole $\mathbf{e}_2$. 
-Projecting the epipolar line in the second image back to the first, another line is obtained, bounded by the correspondent epipole $\mathbf{e}_1$. 
+Figure \ref{fig:epipolargeom} displays a pixel in one image $\mathbf{p_L}$ projected to its correspondent epipolar line segment in the other image, the dashed line $\mathbf{l_R}$, which is lower bounded by the projection of the first camera center into the second camera plane, i.e. the epipole $\mathbf{E_R}$. 
+Projecting the epipolar line in the second image back to the first, another line is obtained, bounded by the correspondent epipole $\mathbf{E_L}$. 
 The extensions to infinity of these two segment are identified as the epipolar lines, which are defined by the intersection of the two image planes with the epipolar plane.
-A fundamental property is that the epipolar plane passes through both camera centers $\mathbf{C}_1$ and $\mathbf{C}_2$, as well as point $\mathbf{P}$. 
+A fundamental property is that the epipolar plane passes through both camera centers $\mathbf{O_L}$ and $\mathbf{O_R}$, as well as point $\mathbf{P}$. 
 Therefore, they all lie in the same plane.
 
 \subsection{Concepts of rectification}
@@ -79,15 +79,15 @@ Therefore, they all lie in the same plane.
 
 \begin{figure}[t]
 	\begin{center}
-		{\includegraphics[width=.8\textwidth, height=5cm, keepaspectratio]{images/rectification}}
-\caption{Image rectification}
+		{\includegraphics[width=.8\textwidth, height=5cm, keepaspectratio]{images/rectification.jpg}}
+\caption{Image rectification - Credits to \href{https://commons.wikimedia.org/wiki/File:Lecture_1027_stereo_01.jpg}{Silvio Savarese}}
 \label{fig:rectification}
 	\end{center}
 \end{figure}
 
-Epipolar geometry for a pair of cameras is relative to pose and calibration of the camera and can be computed using the fundamental matrix, which can be obtained applying the eight point algorithm \cite{hartley2004multiple}.
+Epipolar geometry for a pair of cameras is relative to pose and calibration of the device and can be computed using the fundamental matrix, which can be obtained applying the eight point algorithm \cite{hartley2004multiple}.
 This geometry allows, then, to find the correspondent pixels between the two images using the constraint of the epipolar lines.
-This is possible, because, as explained in \ref{subsection:stereo-geometry-basics}, considered a pixel in one image, the correspondent one lies on the relative epipolar line, in the other image plane.\\
+This is possible, because, as explained in \ref{subsection:stereo-geometry-basics}, considered a pixel in one image, the corresponding one lies on the relative epipolar line, in the other image plane.\\
 Beside that, pixels correlations can be more efficiently performed by rectifying the input images \cite{hartley2004multiple}.
 In Figure \ref{fig:rectification} is clearly visible the outcome of this process and its advantages.
 In fact, it is not difficult to notice that corresponding horizontal scanlines are epipolar lines. 
@@ -112,7 +112,7 @@ This is performed by comparing the similarity of corresponding pixels, as define
 Specifically, the concept of DSI can be described as any image or function established over a continuous or discretized representation of a disparity space $(x, y, d)$.
 Basically, it denotes the cost, as log likelihood or confidence measure, of a specific match related to $d(x, y)$.
 Therefore, the main task of any stereo matching algorithm is to determine the specific surface included in the DSI that has some optimal property, as can be lowest cost and finest smoothness.
-This procedure can be more simply described as the finding of the univalued function, contained in $d(x, y)$, that best approximate the structure of the surfaces in the scene.
+This procedure can be more simply described as the finding of the univalued function, contained in $d(x, y)$, which best approximate the structure of the surfaces in the scene.
 
 \section{Epipolar geometry and Rectification}
 \label{sec:eipolarandrect}
@@ -156,13 +156,15 @@ Hence, the optimal value for $P$, obtained solving a least square problem, becom
 	P = \Big[ \sum_j (I - \hat{v}_j \hat{v}_j^\top ) \Big]^{-1} = \Big[ \sum_j (I - \hat{v}_j \hat{v}_j^\top )O_j \Big]
 \end{equation}
 
+where in all of the previous equation $\hat{v}_j$ symbolizes the unit vector.
+
 \subsection{Epipolar geometry}
 \label{subsection:epipolar-geometry}
 
 \begin{figure}[t]
 	\begin{center}
 		{\includegraphics[width=.8\textwidth, height=5cm, keepaspectratio]{images/epipolar-geometry-2}}
-\caption{Epipolar geometry. Image point $p_L$ back-projects to a ray in a 3D space defined by $C$ and $p_L$. This ray becomes a line, the epipolar line to $p_L$, in the second view. The image of $P$, i.e. $p_R$, must lie on this line}
+\caption{Epipolar geometry. Image point $x_L$ back-projects to a ray in a 3D space defined by $O_R$ and $x_L$. This ray becomes a line, the epipolar line to $x_L$, in the second view. The image of $X$, i.e. $x_R$, must lie on that red line - Credits to \href{https://commons.wikimedia.org/wiki/User:Norro}{Arne Nordmann}}
 \label{fig:epipolargeom-2}
 	\end{center}
 \end{figure}
@@ -173,35 +175,35 @@ The $3 \times 3$ rank 2 matrix that defines this geometry is the fundamental mat
 The epipolar geometry is the basis for finding corresponding points in stereo matching. 
 It is basically defined by the intersection between image planes and the one on which the cameras baseline lies.\\
 A fundamental property, that makes this geometry extremely useful, is that image points, space point and camera centers are coplanar. 
-Considering Figure~\ref{fig:epipolargeom-2} and assuming that only $p_L$ is known, that geometry allows to constraint the corresponding point $p_R$. 
-The epipolar plane is defined by the baseline and the ray that comes from $p_L$. 
-Hence, knowing that $p_R$ lies on the same plane, that point belongs to $l_R$, i.e. the intersection between the epipolar plane and the second image plane, knows as the epipolar line to $p_L$.
+Considering Figure~\ref{fig:epipolargeom-2} and assuming that only $\mathbf{x_L}$ is known, that geometry allows to constraint the corresponding point $\mathbf{x_R}$. 
+The epipolar plane is defined by the baseline and the ray that comes from $\mathbf{x_L}$. 
+Hence, knowing that $\mathbf{x_R}$ lies on the same plane, that point belongs to $\mathbf{l_R}$, i.e. the intersection between the epipolar plane and the second image plane, knows as the epipolar line to $\mathbf{x_L}$.
 Therefore, exploiting this property, the searching of corresponding points is constrained to only one line inside the image.\\
 Mathematical definition of the epipolar geometry is the fundamental matrix $F$.
-As already demonstrated through Figure~\ref{fig:epipolargeom-2}, for each point $p_L$ in one image, the corresponding epipolar line $l_R$ to that point belongs to the other image plane. 
-Moreover, any point $p_R$ in the second image, which is related to point $p_L$, lies on $l_R$.
+As already demonstrated through Figure~\ref{fig:epipolargeom-2}, for each point $\mathbf{x_L}$ in one image, the corresponding epipolar line $\mathbf{l_R}$ to that point belongs to the other image plane. 
+Moreover, any point $\mathbf{x_R}$ in the second image, which is related to point $\mathbf{x_L}$, lies on $\mathbf{l_R}$.
 Hence, the epipolar line is described as the projection in the second image of the ray that comes from the point in the first image, passing through its camera center.
-This defines a map, $p_L \rightarrow l_R$, which relates the points in one image with the corresponding epipolar lines in the second image.
+This defines a map, $\mathbf{x_L} \rightarrow \mathbf{l_R}$, which relates the points in one image with the corresponding epipolar lines in the second image.
 This correlation, between points and lines, is represented by the fundamental matrix $F$.\\
-Considering the aforementioned map $p_L \rightarrow l_R$ described by $F$, an important property of the fundamental matrix is defined,
+Considering the aforementioned map $\mathbf{x_L} \rightarrow \mathbf{l_R}$ described by $F$, an important property of the fundamental matrix is defined,
 
 \begin{equation}
 \label{eqn:fundmatprop}
-	p_R^\top F p_L = 0
+	x_R^\top F x_L = 0
 \end{equation}
 
-Therefore, assuming two corresponding points $p_L$ and $p_R$, it is known that $p_R$ lies on the epipolar line $l_R = F p_L$. 
+Therefore, assuming two corresponding points $\mathbf{x_L}$ and $\mathbf{x_R}$, it is known that $\mathbf{x_R}$ lies on the epipolar line $\mathbf{l_R} = F \mathbf{x_L}$. 
 Thus, the mathematical correlation is,
 
 \begin{equation}
-	0 = p_R^\top l_R = p_R^\top F p_L
+	0 = x_R^\top l_R = x_R^\top F x_L
 \end{equation}
 
 Reciprocally, if image points comply the relation \ref{eqn:fundmatprop}, then the rays identified by these points are coplanar. 
 For corresponding points this is a necessary condition.
-Equation \ref{eqn:fundmatprop} is extremely important because it allows to characterize the fundamental matrix without reference to the camera matrices \cite{hartley2004multiple}.
+Equation~\ref{eqn:fundmatprop} is extremely important because it allows to characterize the fundamental matrix without reference to the camera matrices \cite{hartley2004multiple}.
 Thus, using at least 7 correspondences, it is possible to recover the fundamental matrix $F$. 
-This estimation is known as \textit{weak calibration}.\\
+This estimation is known as \textit{weak calibration}.
 
 \subsection{Rectification}
 \label{subsection:rectification}
@@ -210,7 +212,7 @@ As introduced in section~\ref{subsection:rectification-basics}, image rectificat
 In the rectified projections the epipolar lines become parallel with respect to the x-axis. 
 Thus, they match between the stereo pair and so the disparities are in the x-direction only.\\
 In order to obtain a rectified stereo pair, 2D projective transformations are employed to the images, so that the epipolar lines can match.
-Using this method, the transformations are built up in a way that the corresponding points have almost the same x-coordinate.
+Using this method, the transformations are built up in a way that the corresponding points have almost the same y-coordinate.
 Actually, this strategy leads to a minimal distortion on the images, being the two transformations arbitrary. 
 However, working on rectified images, the matching problem is highly simplified, being correlated only to epipolar geometry and near-correspondence. \\
 Core problem of this section is to find the appropriate projective transformation $H$. 
@@ -231,7 +233,7 @@ Then the matching transformation $H$ is defined minimizing the sum-of-square dis
 
 \begin{equation}
 \label{eqn:match-transf-constr}
-	\sum_i d(H p_{L_i}, H'p_{R_i})^2
+	\sum_i d(H x_{L_i}, H'x_{R_i})^2
 \end{equation}
 
 Therefore, the full algorithm can be summarized as follows.\\
@@ -262,9 +264,9 @@ Between these two classes there are iterative and hierarchical algorithms.
 The latter aim to constraint gradually the disparity estimation from the coarser to the finer level \cite{Hirschmuller2008}.\\
 Considering the first general step of stereo matching algorithms, the matching cost, there are multiple measures to define it.
 Among the most prevalent pixel-based algorithm can be included square intensity differences, absolute intensity differences, mean-squared error and mean absolute difference.\\
-Other common matching cost comprehend normalized cross-correlation, which is similar to sum-of-squared-difference (SSD), and binary methods, which, however, tend to not be used any longer. \\
+Other common matching cost comprehend normalized cross-correlation, which is similar to sum of squared difference (SSD), and binary methods, which, however, tend to not be used any longer. \\
 On the other hand, more robust algorithms are generally used for their insensitivity to non-stationary exposure and illumination changes. 
-Entropy measures and non-parametric functions such as, rank and census transform \cite{Zabih1994}, sampling insensitive difference\cite{Birchfield1999} and hierarchical mutual information \cite{Hirschmuller2008}, are some examples.
+Entropy measures and non-parametric functions such as, Rank and Census transform~\cite{Zabih1994}, sampling insensitive difference~\cite{Birchfield1999} and hierarchical mutual information~\cite{Hirschmuller2008}, are some examples.
 In particular, they allow to obtain accurate performance when considerable exposure or appearance variations are present. \\
 Drawing up some conclusion regarding the local methods, the core steps are the matching cost calculation and the aggregation phase. 
 Disparity estimation, then, becomes trivial. 
@@ -362,12 +364,12 @@ Consequently, starting from classical stereo-based methods and building up a nov
 
 Considering that disparity estimation from a rectified stereo pair is still one of the most important tasks in computer vision, the latest years have seen an important development of deep learning based methods. \\
 Usually these approaches comprises a main pipeline, based on a standard local or global method, whose parameters are finely tuned exploiting Convolutional Neural Networks (CNNs). 
-Therefore, in most of the cases, Semi Global Matching (SGM) is used as regularization method, because of its accuracy and relatively low computational time. 
+Therefore, in most of the cases, Semi-Global Matching (SGM) is used as regularization method, because of its accuracy and relatively low computational time. 
 Then, deep learning based methods are used for tuning the penalty parameters, which are related to smoothness and discontinuity of the disparity map. 
 As described above, those penalties are empirically adjusted in the standard methods. 
 Therefore, the CNNs based approach aims at learn the penalties, in correlation with the 3D structure of the objects in the scene, to achieve an improvement in the disparity map. \\
 As aforementioned, several of these deep learning approaches has been proposed in the latest years, and some of them has been able to reach state-of-the-art level of accuracy on the KITTI datasets~\cite{menze2015object}.\\
-Even though these method suffer drop in accuracy when shifting from synthetic to real images, it is worth to describe some of them, which are ranked among the state of the art methods in the KITTI benchmark. \\
+Even though these method suffer drop in accuracy when shifting from synthetic to real images, it is worth to describe some of them, which are ranked among the state-of-the-art methods in the KITTI benchmark. \\
 Seki and Pollefeys proposed \textbf{SGM-Nets}~\cite{Seki2017}, a CNNs based method for penalty estimation, which exploit SGM as regularization technique in the main pipeline. 
 They used small image patches and their locations as inputs to the network to predict penalties for the 3D object structures. 
 Actually, they developed a novel loss function for training the network, whose inputs are small image patches and their related positions. 
@@ -696,7 +698,7 @@ Some basic segmentation techniques related to the morphological filters has alre
 In this section, the analysis of some commonly used algorithm is carried out.
 Since in this field the researches have been numerous simple explanations of some of them, such as \textit{active contours}, \textit{region splitting and merging}, \textit{mean shift}, \textit{normalized cuts} and \textit{binary Markov random fields} are presented. \\
 Since the merely theoretical purpose of this analysis and considering that these specific methods have not been widely tested in this project, it is not necessary to describe in detail all of these algorithms.
-Therefore, if there would be interest in the mathematical background of the aforementioned techniques, we remind to the manual by Szeliski \cite{Szeliski2011}.\\
+Therefore, if there would be interest in the mathematical background of the aforementioned techniques, we remind to the manual by Szeliski \cite{Szeliski2011}.
 
 \paragraph*{Active Contours}
 
@@ -716,7 +718,7 @@ Therefore, if it is below a certain threshold the adjacent portions of the image
 
 \paragraph*{Mean shift}
 
-Mean-shift algorithms, as well as mode finding, k-means and mixture of Gaussian, consider position, color or other features of image points and cluster them as they would be taken from a probability density function, finding the peaks of that distribution.\\
+Mean-shift algorithms, as well as mode finding, k-means and mixture of Gaussian, consider position, color or other features of image points and cluster them as they would be taken from a probability density function, finding the peaks of that distribution.
 
 \paragraph*{Normalized Cuts}
 
