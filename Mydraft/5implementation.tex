@@ -7,7 +7,9 @@ A path similar to the one followed during the actual designing of the algorithms
 First of all, the preparatory tests performed for evaluating the feasibility of the conceived idea are reported and explained. 
 Subsequently, the focus moves on the two main methods designed, the derivative based one and the strategy based on the standard SGM pipeline.
 After that, the side phases of the work are presented. 
-The pre and post-processing operations are accurately defined and the comparison among the different filtering operations are carried out.
+The pre and post-processing operations are accurately defined and the comparisons among the different filtering operations are carried out.\\
+Regarding the description of the designed algorithms outlined in this chapter, some specific details related to the actual code are omitted, thus to not make the explanation too much convoluted.
+Therefore, pseudocode concerning the main section of the algorithm pipeline is proposed in Chapter\ref{chapter:pseudocode}, thus to be checked if further details about the methods are needed.
 
 \section{Preparatory and testing phase on MATLAB}
 \label{section:prep-pahse-matlab}
@@ -22,7 +24,7 @@ The pre and post-processing operations are accurately defined and the comparison
  		 \includegraphics[width=0.4\textwidth, height= 5cm, keepaspectratio]{images/disparity-plus-grid-test-right-01.png}
  		 \label{fig:test-matlab-right-01}
 }
-\caption{Ground truth images from the Middlebury dataset used for the initial testing phase}
+\caption{Ground truth images from the Middlebury dataset~\cite{Scharstein2014} used for the initial testing phase}
 \label{fig:test-matlab-01}
 \end{figure}
 
@@ -42,7 +44,7 @@ As an example, if the matching cost phase is taken into account, different appro
 As a matter of fact, as introduced in Chapter~\ref{chapter:methods}, the Hamming distance between corresponding pixels can be exploited to determine that measure. 
 In relation to that, different algorithms exist to apply a transformation to the input images, making them available for an appropriate implementation of the aforementioned matching cost calculation.
 For the actual tests carried out, local methods have been mainly analysed, being more appropriate for the type of data available and for the purposes of the designed strategy.\\
-Therefore, as matching cost measures, simple operations have been initially taken into account, such as the sum of absolute differences (SAD) and the sum of squared differences (SSD). 
+Therefore, as matching cost measures, simple operations have been initially taken into account, such as the Sum of Absolute Difference (SAD) and the Sum of Squared Difference (SSD). 
 Moreover, more accurate methods have been later evaluated, i.e. the Rank transform, and its improved version, the Complete Rank transform, broadly discussed in~\cite{Demetz2013}.
 Then, the Census transform and the Center-Symmetric Census transform proposed by Spangenberg et al. in~\cite{Spangenberg2013} have been investigated.
 Considering all of those algorithm, it resulted that the most suitable methods are equivalently the Rank and the Census transform.
@@ -124,7 +126,7 @@ Its neighboring points are, hence, identified by:
 	\item \textbf{left} neighbor: with coordinates $r$ and $c - 1$;
 	\item \textbf{right} neighbor: with coordinates $r$ and $c + 1$;
 \end{itemize}
-Using that scheme the four derivatives estimated for each point will contain the difference between the actual point  \textbf{\textit{full location components}} and the ones of the relative neighbor regarding.
+Using that scheme the four derivatives estimated for each point will contain the difference between the actual point  \textbf{\textit{full location components}} and the ones of the relative neighbor.
 In the implemented code, the introduced \textbf{\textit{full location components}} are in the order: the $X$, $Y$ and $Z$ space coordinates of the point, in meters, the $x$ and $y$ components of the point projected in the principal image plane, therefore they are measured in pixels, and finally, $d$ is the disparity value, in pixel, related to the depth of the point, which can be evaluated through equation~\ref{eqn:disparity-depth} and adding the relative \textit{disparity offset} if required.
 This gain was, in fact, necessary when using the data from the Middlebury dataset, where the relation between the ground truth disparity values and the corresponding depths is defined as in the equality~\ref{eqn:middlebury-depth-disp}
 \begin{equation}
@@ -154,7 +156,7 @@ where $TL$, $TR$, $BL$ and $BR$ respectively point to the estimation done with r
 Then, $i$ and $j$ are the relative $x$ and $y$ coordinates of the estimated point, whose values range between 0 and 1.
 Finally, in the notation employed, $der_{dir}$ stands for the different derivative vectors related to each corner point and visualized by the arrows in Figure~\ref{fig:subpatch-estimation}.
 Here, in order to keep the generality of the notation, no distinction has been made between internal and external derivatives.
-As a matter of fact, in both cases the calculation performed are actually the same.
+As a matter of fact, in both cases the calculations performed are actually the same.
 The difference only interests the specific values of the vectors and the analysed case, considering that the internal derivatives are in general used.
 The external ones are exploited when some sort of edge is detected inside the analysed patch, after having verified that other edges are not located on the close neighborhood of the targeted subwindow. \\
 Once, these estimations are achieved exploiting the derivatives, as equations in~\ref{eqn:point-patch-estimation} define, the best evaluation is obtained by calculating each matching cost between the corresponding pixels between the stereo images. 
@@ -289,12 +291,12 @@ Therefore, for the initial testing phase of the algorithm designing, when multip
 This structure has been easily built by progressively numbering the simulated gridpoints, so that their values correspond to the row index of the \textit{complete data matrix}.
 That is the matrix that actually contains the space and relative pixel information for all the point belonging to the initial grid, i.e. $X$, $Y$ and $Z$ in meters or millimetres and $x$, $y$ and \textit{disparity} in pixels. \\
 Regarding the implementation run over the real data, instead, some pre-processing operations have been necessary to adjust the initial device data, which were not always perfect. 
-As a matter of fact, a low percentage of points of the laser grid, which ranges between 2.7 and 3.2 \% depending on the specific scene (\textbf{check the error percentage, not sure}), was missing. 
+As a matter of fact, a low percentage of points of the laser grid, which ranges between 3.5 and 5.0 \%, for the \textit{micro} device and between 7.5 and 9.0 \%, for the \textit{4-eye} device, depending on the specific scene, was missing. 
 It used to happen that the points were, in fact, not visible in the grid, as overlapped to the raw image, however, the raw data coming from the device present their grid coordinates alone, without any further information about their location.
 Therefore, those points were labelled and ordered by the algorithm running on the device, however no data were available regarding their space or image positions.
 This behaviour usually happened for the points located close to edges, and thus close or even above occlusions. 
 In those cases the accuracy of the device drops locally and the provided results are, in fact, missing. 
-So that, pre-processing procedures were necessary in order to reduce the percentage of initial errors, which usually diminishes between 0.8 and 1.2 \%, depending on the density of missing data in the occluded regions.
+So that, pre-processing procedures were necessary in order to reduce the percentage of initial errors, which usually diminishes between 0.8 and 1.2 \%, for the \textit{micro} device, and between 1.5 and 2.0 \%, for the \textit{4-eye} device, depending on the density of missing data in the occluded regions.
 However, even if in general the error dropping was not high, it marginally impacts on the overall performance of the algorithm, providing more accurate results in regions interested by edges and, hence, occlusions. \\
 Specifically, two main operations have been performed over the initial raw data to reduce the errors.
 First of all, the grid points have been entirely analysed in order to identify the area where the percentage of missing data were low enough to allow a highly accurate reconstruction of the values of those point.
@@ -303,7 +305,7 @@ Hence, where enough raw data were present in the neighborhood of occlusions, the
 Related to this, it was proved that performing a bilinear interpolation or using a weighted average to estimate missing values had the same grade of efficiency as the simple average, employing at least two orthogonal neighbours. \\
 After the data filling a minor percentage of missing values was generally still present. 
 Therefore, before running the algorithm those grid points was removed, being useless in the whole pipeline.
-In regard to this, it is worth to make notice that the \textit{bad} points were in most of the cases almost the 2.5 - 3 \% of the entire grid data. 
+In regard to this, it is worth to make notice that the \textit{bad} points were in most of the cases almost the 2.5 - 6 \% of the entire grid data. 
 Therefore, it can be concluded that the value would not affect sensibly the overall accuracy of the final result and that a high density of point could be certainly reached with the available amount of raw data.\\
 On the other hand, the application of a high expensive method, which would probably only provide an additional error reduction of the 0.5 \% would be worth noting and it would most likely affect the speed of the algorithm, without providing a reasonable improvement of the density of the final point cloud.
 Therefore, it was considered beneficial to apply the aforementioned data recovering, over the condition of filling the missing data with a high accuracy. 

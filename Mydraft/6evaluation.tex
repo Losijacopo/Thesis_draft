@@ -32,7 +32,7 @@ That was, in fact, extremely useful for having, from the very beginning, a quali
 	\includegraphics[width=0.8\textwidth, height=5cm, keepaspectratio]{images/disparity-map-playtable-test.png}
 	\label{fig:disparity-test-02}
 }
-\caption{Test images from the Middlebury 2014 dataset with disparity image estimated with linear simple semi-global matching based method to test feasibility of thought strategy}
+\caption{Test images from the Middlebury 2014~\cite{Scharstein2014} dataset with disparity image estimated with linear simple Semi-Global Matching based method to test feasibility of thought strategy}
 \label{fig:test-matlab-02}
 \end{figure}
 
@@ -104,7 +104,7 @@ They are, most likely, due to the occlusions presents in the two stereo images, 
 More interesting results can be then visualized when taking into account the outcomes of the different algorithms obtained using images acquired by the company device.
 As a matter of fact, in this case, contrarily to the images from widely-used datasets, such as the Middlebury 2014, the KITTI 2012 and KITTI 2015, there could likely be calibration errors in the stereo pair.
 This leads to a mismatch between the epipolar lines of the two images, which should be overlapped to the image scanlines, when using a rectified stereo pair. 
-Therefore, this problem causes a complete failure of the normal SGBM procedure, as Figure \textbf{reference bad sgm images} demonstrates.\\
+Therefore, this problem causes a complete failure of the normal SGBM procedure.\\
 On the other hand, the designed method, thanks to the information coming from the points grid, is able to recover from small mismatching errors.
 This condition proves the suitability of such a method in various situations, making it appropriate for those situations in which errors, even if minimal, cannot be avoided. 
 It is, in fact, well known that in most of the real environment conditions it is generally difficult to have stable and controlled conditions, especially for lighting and for the physical stability of the hardware. 

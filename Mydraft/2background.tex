@@ -385,7 +385,7 @@ The core of their method is the prediction of the local parameters of cost volum
 Thus, as in \cite{Seki2017}, they avoid to apply deep learning of pixel appearance descriptors, using classical matching scores instead. 
 Thus, they refuse learning high dimensional descriptors and matching them, as it used to happen in most of the first deep learning based algorithms.
 On the contrary, they focus the learning on the cost-aggregation step. 
-Thus, they defined the overall matching cost using a combination of Census transform and sum-of-absolute-differences (SAD). 
+Thus, they defined the overall matching cost using a combination of Census transform and Sum of Absolute Difference (SAD). 
 Then, they carry out the cost-aggregation phase, which is peculiar for smoothing the general matching cost and correct the wrong matches, applying the domain transform (\cite{Gastal2011},\cite{Pham2013}).
 Basically, they develop a deep CNN to estimate on a pixel basis the cost-aggregation parameters and make them spatially varying. 
 In this way, they were able to have smoother disparities on the same object and avoid smoothing across object boundaries. 
@@ -404,10 +404,10 @@ After that, post processing steps are applied: cross-based cost aggregation, sem
 Technically speaking, they present a network that is trained on pairs of small image patches, for which the disparity value is known. 
 Then, they initialize the matching cost using the output of the network.
 After that, they propose a series of common post-processing steps, which are though crucial to obtain accurate results.
-Cross-based cost aggregation is exploited for combining matching cost between neighbouring pixels with similar intensities. 
+Cross-based cost aggregation is exploited for combining matching cost between neighboring pixels with similar intensities. 
 Then, constraints are enforced for smoothness and left-right consistency check applied for detect and eliminate errors in occluded regions. 
 The final disparity map is then obtained applying median and bilateral filters, useful for subpixel enhancement. \\
-Related problems to \cite{Zbontar2016} are the works by Haeusler et al.~\cite{Haeusler2013} and by Spyropoulos et al.~\cite{Spyropoulos2014}. 
+Related implementations to \cite{Zbontar2016} are the works by Haeusler et al.~\cite{Haeusler2013} and by Spyropoulos et al.~\cite{Spyropoulos2014}. 
 Using a similar approach, they concentrate their attention on predicting the confidence of the calculated matching cost. 
 Specifically, in \cite{Haeusler2013}, the aim was using a random forest classifier to connect multiple confidence measures. 
 Similarly, the authors of \cite{Spyropoulos2014} focused in estimating the confidence of the matching cost by training a random forest classifier. 

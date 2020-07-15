@@ -14,7 +14,6 @@ Specifically, the \textbf{consistency check} function added to the evaluation of
 %\end{algorithm} 
 %
 \begin{algorithm}
-	\label{alg:local-deriv-cal}
 	\caption{Local derivatives calculation (only one case highlighted)}
 	\begin{algorithmic}[1]
 		\For {$i = 0, 1, 2, \ldots, lookup\_table.rows$}
@@ -35,6 +34,7 @@ Specifically, the \textbf{consistency check} function added to the evaluation of
 			\EndFor
 		\EndFor
 	\end{algorithmic} 
+	\label{alg:local-deriv-cal}
 \end{algorithm} 
 
 Regarding the pipeline presented in Algorithm~\ref{alg:local-deriv-cal}, the other cases are omitted in order to not make the comprehension of the algorithm convoluted, being the procedure for the other conditions similar to the scheme outlined.\\
@@ -48,7 +48,7 @@ Let us consider, as an example, the point on the top-left corner of the grid.
 It has only two neighbors, the right and the bottom ones. 
 Hence, the right and bottom local derivatives are exactly estimated computing the differences among the complete data. 
 The left and top derivatives are, then, set equal to the ones previously evaluated, where the values are changed in sign.\\
-Regarding the \textit{consistency check}, it is worth to present the pseudocode related to its implementation.
+Regarding the \textit{consistency check}, it is worth to present the pseudocode related to its implementation, shown in Algorithm\ref{alg:consistency-check}.
 As a matter of fact, it represents an important step of the designed algorithm, allowing to reach interesting result when dealing with the simulated grid, as already explained in Section~\ref{subsection:result-consistency-check}.
 
 \begin{algorithm}
@@ -76,10 +76,32 @@ As a matter of fact, it represents an important step of the designed algorithm, 
 	\end{algorithmic} 
 \end{algorithm} 
 
+Moreover, pseudocode related to the general pipeline of the \textit{lightweight} algorithm is worth to be reported, considering that this method resulted to be the best performing among the one tested.
 
-\begin{figure}[b]
-	\begin{center}
-		\AaltoLogoLarge{1}{!}{aaltoRed}
-	\end{center}
-\end{figure}
+\begin{algorithm}
+	\caption{Main pipeline of the \textit{lightweight} algorithm}
+	\begin{algorithmic}[1]
+		\State Import calibration data and images
+		\State Import initial raw point cloud data
+		\State Set the initial observed values obtained from the raw data
+		\State Define the LaDiMo grid
+		\State Define the grid squares
+		\State Calculate the internal and external derivatives
+		\State Image preprocessing
+		\State Set the estimations
+		\Procedure{Grid Point estimation}{}
+			\State Evaluate specific edge case
+			\State Calculate matching cost
+			\State Get best estimated values accordingly
+		\EndProcedure
+		\State Post processing over estimations
+	\end{algorithmic} 
+	\label{alg:lightweight-method}
+\end{algorithm} 
+
+%\begin{figure}[b]
+%	\begin{center}
+%		\AaltoLogoLarge{1}{!}{aaltoRed}
+%	\end{center}
+%\end{figure}
 
