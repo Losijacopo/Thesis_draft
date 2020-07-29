@@ -220,16 +220,16 @@
 
 % This command adds a PDF bookmark to the cover page. You may leave
 % it out if you don't like it...
-%\pdfbookmark[0]{Cover page}{bookmark.0.cover}
+\pdfbookmark[0]{Cover page}{bookmark.0.cover}
 % This command is defined in aalto-thesis.sty. It controls the page 
 % numbering based on whether the doublenumbering option is specified
-%\startcoverpage
+\startcoverpage
 
 % Cover page
 % ------------------------------------------------------------------
 % Options: finnish, english, and swedish
 % These control in which language the cover-page information is shown
-%\coverpage{english}
+\coverpage{english}
 
 
 % Abstracts
@@ -239,70 +239,48 @@
 
 % Abstract in English
 % ------------------------------------------------------------------
-% FRONTESPIZIO ITALIANO
-\newpage
-\pagestyle{empty}
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=12cm]{images/logo-eit-fronte}
-\end{figure}
-
-\vspace*{1.5cm}
-
-
-\begin{center}
-    \large{Master’s Degree in}\\
-    \Huge{Mechatronics Engineering}\\
-    \vspace*{2.5cm}
-    \LARGE{STRUCTURED LIGHT ASSISTED REAL TIME STEREO PHOTOGRAMMETRY FOR ROBOTICS AND AUTOMATION}\\
-    \Large{Novel implementation of stereo matching}
-\end{center}
-
-\vspace*{3cm}
-
-\begin{table}[h!]
-\centering
-\begin{tabular}{p{7cm}p{7cm}}
-Supervisor University of Trento    & Supervisor Aalto University \\
-Prof. Daniele Fontanelli & Prof. Juho Kannala \\
-Prof. Nicola Conci & 						   \\
-                       &                          \\
-                       Student & \\
-                       Losi Jacopo 206605
-\end{tabular}
-\end{table}
-
-
-
-\vfill
-\begin{center}
-    ACADEMIC YEAR 2019/2020
-\end{center}
-
-\newgeometry{voffset=1cm,bottom=0cm}
-\chapter*{Abstract}
-In this Master's thesis project a novel implementation of a stereo matching based method is proposed.
-Moreover, an exhaustive analysis of the state-of-the-art algorithms in that field is outlined.
-Specifically, both standard and deep learning based methods have been extensively investigated, thus to provide useful insights for the designed implementation.
-Regarding the developed work, it is basically structured in the following manner.\\
-At first a research phase has been carried out, hence to simply and rapidly test the thought strategy.
-Subsequently, a first implementation of the algorithm has been designed and tested using data available from the Middlebury 2014 dataset, which is one of the most exploited dataset in the computer vision area.
-At this stage, numerous tests have been completed and consequently various changes to the algorithm pipeline have been made, in order to improve the final result.\\
-Finally, after that exhaustive researching phase the actual method has been designed and tested using real environment images obtained from the stereo device developed by the company, in which this work has been produced.\\
-Fundamental element of the project is indeed that stereo device.
-As a matter of fact, the designed algorithm in based on the data produced by the cameras that constitute it.
-Specifically, the main function of the system designed by LaDiMo is to make the built stereo matching based procedure simultaneously faster and accurate.
-As a matter of fact, one of the main prerogative of the project was to create an algorithm that has to prove potential real-time results.\\
-This has been, in fact, achieved by applying one of the two methods created.
-Specifically, it is a lightweight implementation, which strongly exploits the information coming from the LaDiMo device, thus to provide accurate results, keeping the computational time short.\\
-At the end of this Master's thesis images showing the main outcomes obtained are proposed.
-Moreover, a discussion regarding the further improvements that are going to be added to the project is stated.
-In fact, the method implemented, being not optimized only demonstrate a potential real-time implementation, which would be certainly achieved through an efficient refactoring of the main pipeline.
-\restoregeometry
-
+%% FRONTESPIZIO ITALIANO
 %\newpage
-%\thispagestyle{empty}
-%\thesisabstract{english}{
+%\pagestyle{empty}
+%\begin{figure}[t]
+%    \centering
+%    \includegraphics[width=12cm]{images/logo-eit-fronte}
+%\end{figure}
+%
+%\vspace*{1.5cm}
+%
+%
+%\begin{center}
+%    \large{Master’s Degree in}\\
+%    \Huge{Mechatronics Engineering}\\
+%    \vspace*{2.5cm}
+%    \LARGE{STRUCTURED LIGHT ASSISTED REAL TIME STEREO PHOTOGRAMMETRY FOR ROBOTICS AND AUTOMATION}\\
+%    \Large{Novel implementation of stereo matching}
+%\end{center}
+%
+%\vspace*{3cm}
+%
+%\begin{table}[h!]
+%\centering
+%\begin{tabular}{p{7cm}p{7cm}}
+%Supervisor University of Trento    & Supervisor Aalto University \\
+%Prof. Daniele Fontanelli & Prof. Juho Kannala \\
+%Prof. Nicola Conci & 						   \\
+%                       &                          \\
+%                       Student & \\
+%                       Losi Jacopo 206605
+%\end{tabular}
+%\end{table}
+%
+%
+%
+%\vfill
+%\begin{center}
+%    ACADEMIC YEAR 2019/2020
+%\end{center}
+%
+%\newgeometry{voffset=1cm,bottom=0cm}
+%\chapter*{Abstract}
 %In this Master's thesis project a novel implementation of a stereo matching based method is proposed.
 %Moreover, an exhaustive analysis of the state-of-the-art algorithms in that field is outlined.
 %Specifically, both standard and deep learning based methods have been extensively investigated, thus to provide useful insights for the designed implementation.
@@ -320,7 +298,29 @@ In fact, the method implemented, being not optimized only demonstrate a potentia
 %At the end of this Master's thesis images showing the main outcomes obtained are proposed.
 %Moreover, a discussion regarding the further improvements that are going to be added to the project is stated.
 %In fact, the method implemented, being not optimized only demonstrate a potential real-time implementation, which would be certainly achieved through an efficient refactoring of the main pipeline.
-%}
+%\restoregeometry
+
+\newpage
+\thispagestyle{empty}
+\thesisabstract{english}{
+In this Master's thesis project a novel implementation of a stereo matching based method is proposed.
+Moreover, an exhaustive analysis of the state-of-the-art algorithms in that field is outlined.
+Specifically, both standard and deep learning based methods have been extensively investigated, thus to provide useful insights for the designed implementation.
+Regarding the developed work, it is basically structured in the following manner.\\
+At first a research phase has been carried out, hence to simply and rapidly test the thought strategy.
+Subsequently, a first implementation of the algorithm has been designed and tested using data available from the Middlebury 2014 dataset, which is one of the most exploited dataset in the computer vision area.
+At this stage, numerous tests have been completed and consequently various changes to the algorithm pipeline have been made, in order to improve the final result.\\
+Finally, after that exhaustive researching phase the actual method has been designed and tested using real environment images obtained from the stereo device developed by the company, in which this work has been produced.\\
+Fundamental element of the project is indeed that stereo device.
+As a matter of fact, the designed algorithm in based on the data produced by the cameras that constitute it.
+Specifically, the main function of the system designed by LaDiMo is to make the built stereo matching based procedure simultaneously faster and accurate.
+As a matter of fact, one of the main prerogative of the project was to create an algorithm that has to prove potential real-time results.\\
+This has been, in fact, achieved by applying one of the two methods created.
+Specifically, it is a lightweight implementation, which strongly exploits the information coming from the LaDiMo device, thus to provide accurate results, keeping the computational time short.\\
+At the end of this Master's thesis images showing the main outcomes obtained are proposed.
+Moreover, a discussion regarding the further improvements that are going to be added to the project is stated.
+In fact, the method implemented, being not optimized only demonstrate a potential real-time implementation, which would be certainly achieved through an efficient refactoring of the main pipeline.
+}
 
 % Acknowledgements
 % ------------------------------------------------------------------
