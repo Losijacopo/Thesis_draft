@@ -2,7 +2,7 @@
 \label{chapter:discussion}
 
 The predetermined main objective of this project was to estimate a 3D dense point cloud starting from an initial sparse set of points and a pair of stereo undistorted images.
-Moreover, this overall algorithm should have been executed in real time, in order to be following embedded in a stereo device, thus to be suitable for autonomous driving, automotive and object detection related purposes.
+Moreover, this overall algorithm should have been executed in real-time, in order to be following embedded in a stereo device, thus to be suitable for autonomous driving, automotive and object detection related purposes.
 Therefore, tests for guaranteeing a potentiality for this type of usability have to be carried out. \\
 Overall, this can be evaluated as a challenging work, also considering the different algorithms developed since the early nineties in this field, which is considered as one of the most researched areas in computer vision, especially nowadays.\\
 Moreover, since the initial stages of the project, there was the need of studying and understanding the company device and, thus, find the optimal way to embed it in the algorithm pipeline.
@@ -23,7 +23,12 @@ Besides that, if the initial requirements and the different challenges faced dur
 
 Considering the overall project designed and especially comparing the outcomes achieved with the results of the OpenCV based Semi-Global Block Matching (SGBM) algorithm, which has been used as the baseline, the work done certainly showed that the strategy adopted is actually feasible for the predetermined goals.\\
 However, a certain lack in accuracy is visible.
-Moreover, the initial pre-processing section of the algorithm should be slightly improved, first of all the calibration of the stereo device, which is still not perfect. 
+Moreover, the initial pre-processing section of the algorithm should be slightly improved, first of all the calibration of the stereo device, which is still not perfect. \\
+Furthermore, more specific post-processing operations should be tested.
+As a matter of fact, if multiple pipelines of the algorithm are run in parallel, such as exploiting the left stereo image as the principal one in one case and employing the right one as the primary one in the other case, and implementing at the end a sort of left-right consistency check, a final improved result could be probably achieved. \\
+Therefore, defining an overall consideration of the project developed, the main objectives set at the beginning of the work have been generally reached and, as aforementioned, a potential real-time execution of the algorithm has been proved.\\
+Hence, successful outcome have been acquired.
+Regarding this, the need of further improvements, which would most likely bring the overall project to compete with most of the state-of-the-art methods, can be thought as a valuable target. 
 
 \section{Drawbacks of the designed algorithm}
 \label{section:algorithm-drawbacks}
